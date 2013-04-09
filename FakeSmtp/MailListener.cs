@@ -16,6 +16,7 @@ namespace FakeSmtp
         private System.IO.StreamWriter writer;
         private Thread thread = null;
         private SMTPServer owner;
+        private bool test;
         const string SUBJECT = "Subject: ";
         const string FROM = "From: ";
         const string TO = "To: ";
@@ -60,16 +61,27 @@ namespace FakeSmtp
                 {
                     line = reader.ReadLine();
                     Console.Error.WriteLine("Read line {0}", line);
-
-                    switch (line)
+                    string linecases = line.Substring(0,4);
+                    switch (linecases)
                     {
-                        case "RCPT TO":
+                        case "RCPT": 
                             string recipient = "";
-                            line = reader.ReadLine();
-
-                            recipient = line.Substring(SUBJECT.Length);
-
-
+                            string[] adresses = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
+                            recipient = line.Substring("RCPT TO:".Length);
+                            test = false;
+                            foreach (string adress in adresses)
+                            {
+                                if (adress == recipient)
+                                {
+                                    writer.WriteLine("251 OK");
+                                    test = true;
+                                    break;
+                                }
+                            }
+                            if (test == false)
+                            {
+                                writer.WriteLine("550 No such user here ");
+                            }
                             break;
                             
                         case "DATA":
