@@ -1,6 +1,9 @@
 using System;
+using System.Configuration;
 using System.Net;
 using System.Threading;
+
+
 
 namespace FakeSmtp
 {
@@ -19,8 +22,10 @@ namespace FakeSmtp
 
             do
             {
+                int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
+
                 Console.WriteLine("New MailListener started");
-                listener = new MailListener(this, IPAddress.Loopback, 25);
+                listener = new MailListener(this, IPAddress.Loopback, receptionPort);
                 listener.OutputToFile = true;
                 listener.Start();
                 while (listener.IsThreadAlive)

@@ -37,7 +37,7 @@ namespace FakeSmtp
             base.Start();
 
             client = AcceptTcpClient();
-            client.ReceiveTimeout = 5000;
+            client.ReceiveTimeout = 50000;
             stream = client.GetStream();
             reader = new System.IO.StreamReader(stream);
             writer = new System.IO.StreamWriter(stream);
@@ -63,6 +63,15 @@ namespace FakeSmtp
 
                     switch (line)
                     {
+                        case "RCPT TO":
+                            string recipient = "";
+                            line = reader.ReadLine();
+
+                            recipient = line.Substring(SUBJECT.Length);
+
+
+                            break;
+                            
                         case "DATA":
                             writer.WriteLine("354 Start input, end data with <CRLF>.<CRLF>");
                             StringBuilder data = new StringBuilder();
@@ -127,6 +136,7 @@ namespace FakeSmtp
                             break;
 
                         default:
+                            Thread.Sleep(1);
                             writer.WriteLine("250 OK");
                             break;
                     }
