@@ -18,7 +18,7 @@ using NUnit.Framework;
                 string body = "coucou comment ca va?";
                 string cc = "robbert@test.fr";
                 string subject = "coucou";
-                MailTransfer NewMail = new MailTransfer(to, from, cc, subject, body);
+                MailTransfer NewMail = new MailTransfer(to, from, cc, subject, body, "coucou", 32);
                 Assert.That(NewMail.To, Is.EqualTo("tutu@intechinfo.fr"));
                 Assert.That(NewMail.From, Is.EqualTo("boby@hotmail.net"));
                 Assert.That(NewMail.Cc, Is.EqualTo("robbert@test.fr"));

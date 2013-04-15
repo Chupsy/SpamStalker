@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Configuration;
 
 namespace FakeSmtp
 {
@@ -23,8 +24,11 @@ namespace FakeSmtp
         const string MIME_VERSION = "MIME-Version: ";
         const string DATE = "Date: ";
         const string CONTENT_TYPE = "Content-Type: ";
-        const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";   
-        
+        const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";
+        string host = ConfigurationManager.AppSettings["hostAdress"];
+        int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
+        bool sendAuthorization;
+        MailTransfer sendMail;
 
 
         public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
@@ -32,6 +36,7 @@ namespace FakeSmtp
         {
             owner = aOwner;
             OutputDirectory = "mail/";
+            sendAuthorization = true;
         }
 
         new public void Start()
@@ -53,9 +58,10 @@ namespace FakeSmtp
         protected void RunThread()
         {
             string line = null;
-
+            string sender = null;
+            string recipient = null;
             writer.WriteLine("220 localhost -- Fake proxy server");
-
+            sendAuthorization = true;
             try
             {
                 while (reader != null)
@@ -66,9 +72,10 @@ namespace FakeSmtp
                     switch (linecases)
                     {
                         case "RCPT": 
-                            string recipient = "";
+                            recipient = "";
                             string[] adresses = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
-                            recipient = line.Substring("RCPT TO:".Length);
+                            recipient = line.Substring("RCPT TO:<".Length);
+                            recipient = recipient.Remove(recipient.Length - 1);
                             test = false;
                             foreach (string adress in adresses)
                             {
@@ -81,19 +88,22 @@ namespace FakeSmtp
                             }
                             if (test == false)
                             {
+                                sendAuthorization = false;
                                 writer.WriteLine("550 No such user here ");
                             }
                             break;
 
                         case "MAIL":
-                            string sender = "";
+                            sender = "";
                             string[] senderAdresses = System.IO.File.ReadAllLines(@"..\..\senderAdresses.txt");
-                            sender = line.Substring("MAIL FROM:".Length);
+                            sender = line.Substring("MAIL FROM:<".Length);
+                            sender = sender.Remove(sender.Length - 1);
                             test = false;
                             foreach (string senderAdress in senderAdresses)
                             {
                                 if (senderAdress == sender)
                                 {
+                                    sendAuthorization = false;
                                     writer.WriteLine("Importuner");
                                     test = true;
                                     break;
@@ -108,13 +118,14 @@ namespace FakeSmtp
                         case "DATA":
                             writer.WriteLine("354 Start input, end data with <CRLF>.<CRLF>");
                             StringBuilder data = new StringBuilder();
-                            String subject = "";
+                            string subject = "";
                             string from = "";
                             string to = "";
                             string mimeVersion = "";
                             string date = "";
                             string contentType = "";
                             string contentTransferEncoding = "";
+                            string content = "";
 
                             line = reader.ReadLine();
 
@@ -150,16 +161,21 @@ namespace FakeSmtp
                                 }
                                 else
                                 {
-                                    data.AppendLine(line);
+                                    content += line;
                                 }
 
                                 line = reader.ReadLine();
                             }
 
                             String message = data.ToString();
-
+                            writer.WriteLine(recipient, " ", sender, " ", subject, " ");
                             WriteMessage(from, to, subject, message, contentType, contentTransferEncoding);
 
+                            if (recipient != null && sender != null && subject != null && content != null && host != null && destinationPort >= 0 && sendAuthorization == true)
+                            {
+                                sendMail = new MailTransfer(recipient, sender, "noreply@tamaman.com", subject, content, host, destinationPort);
+                                sendMail.sendMessage();
+                            }
                             writer.WriteLine("250 OK");
                             break;
 

@@ -1,2 +1,2 @@
-﻿<toto@tata.com>
-<titi@msn.fr>
+﻿toto@tata.com
+titi@msn.fr
