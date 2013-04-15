@@ -23,7 +23,8 @@ namespace FakeSmtp
         const string MIME_VERSION = "MIME-Version: ";
         const string DATE = "Date: ";
         const string CONTENT_TYPE = "Content-Type: ";
-        const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";        
+        const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";   
+        
 
 
         public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
