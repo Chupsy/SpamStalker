@@ -19,11 +19,11 @@ using NUnit.Framework;
                 string cc = "robbert@test.fr";
                 string subject = "coucou";
                 MailTransfer NewMail = new MailTransfer(to, from, cc, subject, body);
-                Assert.That(NewMail.to, Is.EqualTo("tutu@intechinfo.fr"));
-                Assert.That(NewMail.from, Is.EqualTo("boby@hotmail.net"));
-                Assert.That(NewMail.cc, Is.EqualTo("robbert@test.fr"));
-                Assert.That(NewMail.body, Is.EqualTo(body));
-                Assert.That(NewMail.subject, Is.EqualTo(subject));
+                Assert.That(NewMail.To, Is.EqualTo("tutu@intechinfo.fr"));
+                Assert.That(NewMail.From, Is.EqualTo("boby@hotmail.net"));
+                Assert.That(NewMail.Cc, Is.EqualTo("robbert@test.fr"));
+                Assert.That(NewMail.Body, Is.EqualTo(body));
+                Assert.That(NewMail.Subject, Is.EqualTo(subject));
             }
 
         }
