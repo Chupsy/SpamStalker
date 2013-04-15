@@ -14,14 +14,36 @@ namespace FakeSmtp
         string _subject;
         string _body;
 
-        public MailTransfer(string to, string from, string cc, string subject, string body)
+        MailMessage mail;
+        MailAddress sender;
+        MailAddress recipient;
+        MailAddress cc_adress;
+        SmtpClient clientSmtp;
+
+        public MailTransfer(string to, string from, string cc, string subject, string body, string host, Int32 port)
         {
             _to = to;
             _from = from;
             _cc = cc;
             _subject = subject;
             _body = body;
-        
+
+            sender = new MailAddress(to);
+            recipient = new MailAddress(from);
+            cc_adress = new MailAddress(cc);
+
+            mail = new MailMessage(sender, recipient);
+
+            mail.CC.Add(cc_adress);
+            mail.Subject = subject;
+            mail.Body = body;
+
+            clientSmtp = new SmtpClient(host, port);
+        }
+
+        public void sendMessage()
+        {
+            clientSmtp.Send(mail);
         }
 
         public string To
