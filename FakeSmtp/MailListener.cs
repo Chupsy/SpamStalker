@@ -73,7 +73,7 @@ namespace FakeSmtp
                             {
                                 if (adress == recipient)
                                 {
-                                    writer.WriteLine("251 OK");
+                                    writer.WriteLine("250 OK");
                                     test = true;
                                     break;
                                 }
@@ -81,6 +81,26 @@ namespace FakeSmtp
                             if (test == false)
                             {
                                 writer.WriteLine("550 No such user here ");
+                            }
+                            break;
+
+                        case "MAIL":
+                            string sender = "";
+                            string[] senderAdresses = System.IO.File.ReadAllLines(@"..\..\senderAdresses.txt");
+                            sender = line.Substring("MAIL FROM:".Length);
+                            test = false;
+                            foreach (string senderAdress in senderAdresses)
+                            {
+                                if (senderAdress == sender)
+                                {
+                                    writer.WriteLine("Importuner");
+                                    test = true;
+                                    break;
+                                }
+                            }
+                            if (test == false)
+                            {
+                                writer.WriteLine("251 OK");
                             }
                             break;
                             
