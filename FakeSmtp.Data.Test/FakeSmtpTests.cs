@@ -13,6 +13,8 @@ using NUnit.Framework;
             [Test]
             public void MailIncomeToMailMessage()
             {
+                string 
+                MailTransfer NewMail = new MailTransfer;
 
             }
 
