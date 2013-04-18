@@ -25,10 +25,11 @@ namespace FakeSmtp
         const string DATE = "Date: ";
         const string CONTENT_TYPE = "Content-Type: ";
         const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";
-        string host = ConfigurationManager.AppSettings["hostAdress"];
+        string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
         int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
         bool sendAuthorization;
         MailTransfer sendMail;
+        
 
 
         public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
@@ -88,7 +89,6 @@ namespace FakeSmtp
                             }
                             if (test == false)
                             {
-                                sendAuthorization = false;
                                 writer.WriteLine("550 No such user here ");
                             }
                             break;
@@ -98,21 +98,16 @@ namespace FakeSmtp
                             string[] senderAdresses = System.IO.File.ReadAllLines(@"..\..\senderAdresses.txt");
                             sender = line.Substring("MAIL FROM:<".Length);
                             sender = sender.Remove(sender.Length - 1);
-                            test = false;
                             foreach (string senderAdress in senderAdresses)
                             {
                                 if (senderAdress == sender)
                                 {
                                     sendAuthorization = false;
                                     writer.WriteLine("Importuner");
-                                    test = true;
                                     break;
                                 }
                             }
-                            if (test == false)
-                            {
                                 writer.WriteLine("251 OK");
-                            }
                             break;
                             
                         case "DATA":
@@ -171,9 +166,9 @@ namespace FakeSmtp
                             writer.WriteLine(recipient, " ", sender, " ", subject, " ");
                             WriteMessage(from, to, subject, message, contentType, contentTransferEncoding);
 
-                            if (recipient != null && sender != null && subject != null && content != null && host != null && destinationPort >= 0 && sendAuthorization == true)
+                            if (recipient != null && sender != null && subject != null && content != null && hostDestination != null && destinationPort >= 0 && sendAuthorization == true)
                             {
-                                sendMail = new MailTransfer(recipient, sender, "noreply@tamaman.com", subject, content, host, destinationPort);
+                                sendMail = new MailTransfer(recipient, sender, "noreply@tamaman.com", subject, content, hostDestination, destinationPort);
                                 sendMail.sendMessage();
                             }
                             writer.WriteLine("250 OK");

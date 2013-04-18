@@ -19,13 +19,14 @@ namespace FakeSmtp
         public void RunServer()
         {
             MailListener listener = null;
-
+            IPAddress ipadress;
+            ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             do
             {
                 int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
 
                 Console.WriteLine("New MailListener started");
-                listener = new MailListener(this, IPAddress.Loopback, receptionPort);
+                listener = new MailListener(this, ipadress, receptionPort);
                 listener.OutputToFile = true;
                 listener.Start();
                 while (listener.IsThreadAlive)
