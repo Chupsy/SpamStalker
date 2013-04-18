@@ -69,7 +69,12 @@ namespace FakeSmtp
                 {
                     line = reader.ReadLine();
                     Console.Error.WriteLine("Read line {0}", line);
-                    string linecases = line.Substring(0,4);
+                    string linecases = line;
+                    if (line.Length > 3)
+                    {
+                        linecases = line.Substring(0, 4);
+                    }
+
                     switch (linecases)
                     {
                         case "RCPT": 
@@ -196,7 +201,7 @@ namespace FakeSmtp
 
                         default:
                             Thread.Sleep(1);
-                            writer.WriteLine("250 OK");
+                            writer.WriteLine("550 command unknown");
                             break;
                     }
                 }
