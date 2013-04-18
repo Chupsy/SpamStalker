@@ -28,12 +28,13 @@ namespace FakeSmtp
             _subject = subject;
             _body = body;
 
-            sender = new MailAddress(to);
-            recipient = new MailAddress(from);
+            sender = new MailAddress(from);
+            recipient = new MailAddress(_to);
             cc_adress = new MailAddress(cc);
 
             mail = new MailMessage(sender, recipient);
 
+            mail.Sender = sender;
             mail.CC.Add(cc_adress);
             mail.Subject = subject;
             mail.Body = body;
