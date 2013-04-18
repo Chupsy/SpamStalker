@@ -168,9 +168,24 @@ namespace FakeSmtp
 
                             if (recipient != null && sender != null && subject != null && content != null && hostDestination != null && destinationPort >= 0 && sendAuthorization == true)
                             {
-                                sendMail = new MailTransfer(recipient, sender, "noreply@tamaman.com", subject, content, hostDestination, destinationPort);
+                                sendMail = new MailTransfer(recipient, sender, "noreply@jaimelesgauffres.com", subject, content, hostDestination, destinationPort);
                                 sendMail.sendMessage();
                             }
+                            writer.WriteLine("250 OK");
+                            break;
+
+                        case "RSET":
+                            recipient = "";
+                            sender = "";
+                            subject = "";
+                            from = "";
+                            to = "";
+                            mimeVersion = "";
+                            date = "";
+                            contentType = "";
+                            contentTransferEncoding = "";
+                            content = "";
+
                             writer.WriteLine("250 OK");
                             break;
 
