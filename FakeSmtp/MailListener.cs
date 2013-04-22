@@ -25,6 +25,8 @@ namespace FakeSmtp
         const string DATE = "Date: ";
         const string CONTENT_TYPE = "Content-Type: ";
         const string CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding: ";
+        string senderDomain;
+        bool initializeDiscussion;
         string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
         int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
         bool sendAuthorization;
@@ -65,6 +67,42 @@ namespace FakeSmtp
             sendAuthorization = true;
             try
             {
+                initializeDiscussion = false;
+                while (initializeDiscussion == false)
+                {
+                    line = reader.ReadLine();
+                    if (line.Length > 3)
+                    {
+                        if (line.Substring(0, 4) == "EHLO")
+                        {
+                            if (line.Substring(4).Trim().Length > 0)
+                            {
+                                senderDomain = line.Substring(4).Trim();
+                                writer.WriteLine("250 {0}", senderDomain);
+                                initializeDiscussion = true;
+                            }
+                            else
+                            {
+                                writer.WriteLine("501 Syntax error in parameters or arguments");
+                            }
+                        }
+                        else
+                        {
+                            writer.WriteLine("500 Syntax error, command unrecognized");
+                            writer.WriteLine("<SpamStalker> closing transmission channel");
+                            reader = null;
+                            initializeDiscussion = true;
+                        }
+                    }
+                    else
+                    {
+                        writer.WriteLine("500 Syntax error, command unrecognized");
+                        writer.WriteLine("<SpamStalker> closing transmission channel");
+                        reader = null;
+                        initializeDiscussion = true;
+                    }
+                }
+
                 while (reader != null)
                 {
                     line = reader.ReadLine();
@@ -224,7 +262,6 @@ namespace FakeSmtp
                                     string verify = "";
                                     string[] adresse = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
                                     verify = line.Substring(4).Trim();
-                                    verify = recipient.Remove(recipient.Length - 1);
                                     test = false;
                                     foreach (string adress in adresse)
                                     {
