@@ -61,7 +61,7 @@ namespace FakeSmtp
             string line = null;
             string sender = null;
             string recipient = null;
-            writer.WriteLine("220 localhost -- Fake proxy server");
+            writer.WriteLine("220 <SpamStalker> Service Ready");
             sendAuthorization = true;
             try
             {
@@ -101,18 +101,29 @@ namespace FakeSmtp
                         case "MAIL":
                             sender = "";
                             string[] senderAdresses = System.IO.File.ReadAllLines(@"..\..\senderAdresses.txt");
-                            sender = line.Substring("MAIL FROM:<".Length);
-                            sender = sender.Remove(sender.Length - 1);
-                            foreach (string senderAdress in senderAdresses)
+                            if (line.Length > "MAIL FROM:<".Length && line.StartsWith("MAIL FROM:<") && line.EndsWith(">"))
                             {
-                                if (senderAdress == sender)
+                                sender = line.Substring("MAIL FROM:<".Length);
+                                sender = sender.Remove(sender.Length - 1);
+                                foreach (string senderAdress in senderAdresses)
                                 {
-                                    sendAuthorization = false;
-                                    writer.WriteLine("Importuner");
-                                    break;
+                                    if (senderAdress == sender)
+                                    {
+                                        sendAuthorization = false;
+                                        writer.WriteLine("Importuner");
+                                        break;
+                                    }
                                 }
+                                writer.WriteLine("250 OK");
                             }
-                                writer.WriteLine("251 OK");
+                            else if(line.StartsWith("MAIL FROM:"))
+                            {
+                                writer.WriteLine("501 Syntax error in parameters or arguments");
+                            }
+                            else
+                            {
+                                writer.WriteLine("500 Syntax error, command unrecognized");
+                            }
                             break;
                             
                         case "DATA":
@@ -159,6 +170,12 @@ namespace FakeSmtp
                                 {
                                     contentTransferEncoding = line.Substring(CONTENT_TRANSFER_ENCODING.Length);
                                 }
+                                else if (line.StartsWith("QUIT"))
+                                {
+                                    writer.WriteLine("221 <SpamStalker> Service closing transmission channel");
+                                    reader = null;
+                                    break;
+                                }
                                 else
                                 {
                                     content += line;
@@ -179,6 +196,57 @@ namespace FakeSmtp
                             writer.WriteLine("250 OK");
                             break;
 
+                        case "HELP":
+                            writer.WriteLine("214 help message : \n");
+                            writer.WriteLine("EHLO <domain> : used to identify the SMTP client to the SMTP server\n");
+                            writer.WriteLine("HELO <domain> : same as EHLO\n");
+                            writer.WriteLine("MAIL FROM:<adress> : adress of sender of the mail\n");
+                            writer.WriteLine("RCPT TO:<adress> : adress of the recipient(s) of the mail\n");
+                            writer.WriteLine("DATA : data of the mail\n");
+                            writer.WriteLine("  Subject: subject of the mail \n");
+                            writer.WriteLine("  Date: date of the mail\n");
+                            writer.WriteLine("  To: destination adresses\n");
+                            writer.WriteLine("  Cc: copy adresses\n");
+                            writer.WriteLine("  From: sender adress\n");
+                            writer.WriteLine("VRFY: Verify if the adress is known by the server\n");
+                            writer.WriteLine("HELP: present all the actions that may be taken on this server\n");
+                            writer.WriteLine("NOOP: ask receiver to send 250 OK\n");
+                            writer.WriteLine("QUIT: close transmission channel\n");
+                            break;
+
+                        case "NOOP":
+                            writer.WriteLine("250 OK");
+                            break;
+
+                        case "VRFY":
+                            if (line.Substring(4).Trim().Length > 0)
+                            {
+                                    string verify = "";
+                                    string[] adresse = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
+                                    verify = line.Substring(4).Trim();
+                                    verify = recipient.Remove(recipient.Length - 1);
+                                    test = false;
+                                    foreach (string adress in adresse)
+                                    {
+                                        if (adress == verify)
+                                        {
+                                            writer.WriteLine("250 OK");
+                                            test = true;
+                                            break;
+                                        }
+                                    }
+                                    if (test == false)
+                                    {
+                                        writer.WriteLine("550 No such user here ");
+                                    }
+                                    break;
+                            }
+                            else
+                            {
+                                writer.WriteLine("501 Syntax error in parameters or arguments");
+                                break;
+                            }
+
                         case "RSET":
                             recipient = "";
                             sender = "";
@@ -195,20 +263,20 @@ namespace FakeSmtp
                             break;
 
                         case "QUIT":
-                            writer.WriteLine("250 OK");
+                            writer.WriteLine("221 <SpamStalker> Service closing transmission channel");
                             reader = null;
                             break;
 
                         default:
                             Thread.Sleep(1);
-                            writer.WriteLine("550 command unknown");
+                            writer.WriteLine("500 Syntax error, command unrecognized");
                             break;
                     }
                 }
             }
             catch (IOException)
             {
-                Console.WriteLine("Connection lost.");
+                Console.WriteLine("wp");
             }
             catch (Exception ex)
             {
