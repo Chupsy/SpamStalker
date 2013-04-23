@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F86B3FBE-67F4-43FB-B58A-2E86662A7C94}</ProjectGuid>
+    <ProjectGuid>{0628D425-0E90-4491-B474-1B88CEFEFA82}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SMPTPSupport</RootNamespace>
+    <RootNamespace>SMTPSupport</RootNamespace>
     <AssemblyName>SMPTPSupport</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
