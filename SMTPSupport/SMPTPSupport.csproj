@@ -42,6 +42,7 @@
     <Compile Include="EHLOCommand.cs" />
     <Compile Include="EHLOCommandToExecute.cs" />
     <Compile Include="RCPTCommandToExecute.cs" />
+    <Compile Include="SMTPCallingClient.cs" />
     <Compile Include="SMTPCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RCPTCommand.cs" />

@@ -15,10 +15,19 @@ namespace SMTPSupport
             _domainName = domainName;
         }
 
-        public override void Execute( SMTPSession session )
+        public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            throw new NotImplementedException();
+            if( session.IsInitialized )
+            {
+                client.SendError( 500 ); 
+            }
+            else
+            {
+                session.Initialize( _domainName );
+                client.SendSuccess();
+            }
         }
+
     }
 
 }

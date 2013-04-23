@@ -8,6 +8,6 @@ namespace SMTPSupport
 {
     public abstract class SMTPCommandToExecute
     {
-        public abstract void Execute( SMTPSession session );
+        public abstract void Execute( SMTPSession session, SMTPCallingClient client );
     }
 }

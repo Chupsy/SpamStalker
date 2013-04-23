@@ -9,9 +9,10 @@ namespace SMTPSupport
 {
     public class SMTPCommandParseResult
     {
-        internal SMTPCommandParseResult( string errorMessage )
+        internal SMTPCommandParseResult( int errorCode, string errorMessage )
         {
             Debug.Assert( errorMessage != null && errorMessage.Length > 0 );
+            ErrorCode = errorCode;
             ErrorMessage = errorMessage;
             Command = null;
         }
@@ -19,9 +20,12 @@ namespace SMTPSupport
         internal SMTPCommandParseResult( SMTPCommandToExecute command )
         {
             Debug.Assert( command != null );
+            ErrorCode = 250;
             ErrorMessage = null;
             Command = command;
         }
+
+        public int ErrorCode { get; private set; }
 
         public string ErrorMessage { get; private set; }
 

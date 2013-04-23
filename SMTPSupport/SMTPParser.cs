@@ -24,6 +24,39 @@ namespace SMTPSupport
             return cmd;
         }
 
+        public void Execute( string commandLine, SMTPSession session, SMTPCallingClient client )
+        {
+            if( commandLine == null ) throw new ArgumentNullException( "commandLine" );
+
+            SMTPCommand cmd = FindCommand( commandLine );
+            if( cmd == null )
+            {
+                client.SendError( 500 );
+                if( !session.IsInitialized ) client.Close();
+                return;
+            }
+            SMTPCommandParseResult r = cmd.Parse( commandLine );
+            if( r.ErrorMessage != null )
+            {
+                client.SendError( r.ErrorCode, r.ErrorMessage );
+                return;
+            }
+
+        }
+
+        SMTPCommand FindCommand( string commandLine )
+        {
+            SMTPCommand result = null;
+            if( commandLine.Length >= 4 )
+            {
+                string headCommand = commandLine.Substring( 0, 4 );
+                _commands.TryGetValue( headCommand, out result );
+            }
+            return result;
+        }
+
+
+
 
     }
 }

@@ -15,7 +15,7 @@ namespace SMTPSupport
             _mailAdress = mailAdress;
         }
 
-        public override void Execute( SMTPSession session )
+        public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             session.AddRecipient( _mailAdress );
         }

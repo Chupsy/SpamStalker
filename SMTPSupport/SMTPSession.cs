@@ -8,6 +8,12 @@ namespace SMTPSupport
 {
     public class SMTPSession
     {
+        public bool IsInitialized { get; }
+
+        public void Initialize( string domainName )
+        {
+        }
+
         public void AddRecipient( string mailAddres )
         {
         }
