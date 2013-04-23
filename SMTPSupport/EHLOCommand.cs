@@ -20,7 +20,7 @@ namespace SMTPSupport
 
             if( senderDomainName == null )
             {
-                return new SMTPCommandParseResult( "Missing domain name." );
+                return new SMTPCommandParseResult( 500, "Missing domain name." );
             }
             return new SMTPCommandParseResult( new EHLOCommandToExecute( senderDomainName ) );
         }
