@@ -33,7 +33,6 @@ namespace FakeSmtp
             cc_adress = new MailAddress(cc);
 
             mail = new MailMessage(sender, recipient);
-
             mail.Sender = sender;
             mail.CC.Add(cc_adress);
             mail.Subject = subject;
