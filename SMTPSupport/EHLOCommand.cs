@@ -15,7 +15,7 @@ namespace SMTPSupport
 
         public override SMTPCommandParseResult Parse( string firstLine )
         {
-            if( !firstLine.StartsWith( "EHLO" ) || !firstLine.StartsWith( "HELO" ) ) throw new ArgumentException( "Must start with EHLO." );
+            if( !firstLine.StartsWith( "EHLO" ) && !firstLine.StartsWith( "HELO" ) ) throw new ArgumentException( "Must start with EHLO." );
             string senderDomainName = null; // or one valid domain name.
 
             if( senderDomainName == null )
