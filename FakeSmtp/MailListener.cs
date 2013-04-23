@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Configuration;
+using SMTPSupport;
 
 namespace FakeSmtp
 {
@@ -31,8 +32,9 @@ namespace FakeSmtp
         int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
         bool sendAuthorization;
         MailTransfer sendMail;
-        
 
+        SMTPParser parser = new SMTPParser();
+        SMTPSession session = new SMTPSession();
 
         public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
             : base(localaddr, port)
@@ -115,7 +117,7 @@ namespace FakeSmtp
 
                     switch (linecases)
                     {
-                        case "RCPT": 
+                        case "RCPT":
                             recipient = "";
                             string[] adresses = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
                             recipient = line.Substring("RCPT TO:<".Length);
@@ -154,7 +156,7 @@ namespace FakeSmtp
                                 }
                                 writer.WriteLine("250 OK");
                             }
-                            else if(line.StartsWith("MAIL FROM:"))
+                            else if (line.StartsWith("MAIL FROM:"))
                             {
                                 writer.WriteLine("501 Syntax error in parameters or arguments");
                             }
@@ -163,7 +165,7 @@ namespace FakeSmtp
                                 writer.WriteLine("500 Syntax error, command unrecognized");
                             }
                             break;
-                            
+
                         case "DATA":
                             writer.WriteLine("354 Start input, end data with <CRLF>.<CRLF>");
                             StringBuilder data = new StringBuilder();
@@ -259,24 +261,24 @@ namespace FakeSmtp
                         case "VRFY":
                             if (line.Substring(4).Trim().Length > 0)
                             {
-                                    string verify = "";
-                                    string[] adresse = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
-                                    verify = line.Substring(4).Trim();
-                                    test = false;
-                                    foreach (string adress in adresse)
+                                string verify = "";
+                                string[] adresse = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
+                                verify = line.Substring(4).Trim();
+                                test = false;
+                                foreach (string adress in adresse)
+                                {
+                                    if (adress == verify)
                                     {
-                                        if (adress == verify)
-                                        {
-                                            writer.WriteLine("250 OK");
-                                            test = true;
-                                            break;
-                                        }
+                                        writer.WriteLine("250 OK");
+                                        test = true;
+                                        break;
                                     }
-                                    if (test == false)
-                                    {
-                                        writer.WriteLine("550 No such user here ");
-                                    }
-                                    break;
+                                }
+                                if (test == false)
+                                {
+                                    writer.WriteLine("550 No such user here ");
+                                }
+                                break;
                             }
                             else
                             {

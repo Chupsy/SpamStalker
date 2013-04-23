@@ -20,7 +20,7 @@ namespace SMTPSupport
 
             if( extractedMail == null )
             {
-                return new SMTPCommandParseResult( "Missing mail adress." );
+                return new SMTPCommandParseResult( 500, "Missing mail adress." );
             }
             // A valid mail exists.
             RCPTCommandToExecute toExecute = new RCPTCommandToExecute( extractedMail );

@@ -8,13 +8,23 @@ namespace SMTPSupport
 {
     public class SMTPCallingClient
     {
-        public void SendError( int errorNumber )
+        public virtual void SendError( int errorNumber )
         {
         }
 
-        public void SendSuccess()
+        public virtual void SendSuccess()
         {
         }
 
+
+        public virtual void Close()
+        {
+      
+        }
+
+        public virtual void SendError(int p1, string p2)
+        {
+            
+        }
     }
 }
