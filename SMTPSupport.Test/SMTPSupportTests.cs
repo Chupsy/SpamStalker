@@ -19,6 +19,9 @@ namespace SMTPSupport.Test
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
+            client.Clear();
+            parser.Execute("EHLO", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing Domain Name"));
         }
 
     }
