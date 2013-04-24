@@ -22,6 +22,11 @@ namespace SMTPSupport
         {
         }
 
+        public void AddSender(string mailAddres)
+        {
+        }
+    
+
         public void Clear()
         {
         }

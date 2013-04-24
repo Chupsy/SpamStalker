@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HELPCommand.cs" />
+    <Compile Include="HELPCommandToExecute.cs" />
+    <Compile Include="MAILCommand.cs" />
+    <Compile Include="MAILCommandToExecute.cs" />
     <Compile Include="EHLOCommand.cs" />
     <Compile Include="EHLOCommandToExecute.cs" />
     <Compile Include="RCPTCommandToExecute.cs" />

@@ -16,6 +16,8 @@ namespace SMTPSupport
             RegisterCommand( new RCPTCommand() );
             SMTPCommand helloCmd = RegisterCommand( new EHLOCommand() );
             _commands.Add( "HELO", helloCmd );
+            RegisterCommand(new MAILCommand());
+            RegisterCommand(new HELPCommand());
         }
 
         SMTPCommand RegisterCommand( SMTPCommand cmd )
