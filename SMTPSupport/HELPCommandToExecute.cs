@@ -9,14 +9,21 @@ namespace SMTPSupport
     public class HELPCommandToExecute : SMTPCommandToExecute
     {
 
-        public HELPCommandToExecute(  )
+        public HELPCommandToExecute( )
         {
-           
+            
         }
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-          
+            if (session.IsInitialized)
+            {
+                client.SendHelp();
+            }
+            else
+            {
+                client.SendError(500);
+            }
         }
 
     }

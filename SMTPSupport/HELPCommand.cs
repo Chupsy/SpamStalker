@@ -15,7 +15,7 @@ namespace SMTPSupport
 
         public override SMTPCommandParseResult Parse( string firstLine )
         {
-            if( !firstLine.StartsWith( "HELP" ) && !firstLine.StartsWith( "HELP" ) ) throw new ArgumentException( "Must start with EHLO." )
+            if (!firstLine.StartsWith("HELP") && !firstLine.StartsWith("HELP")) throw new ArgumentException("Must start with EHLO.");
 
             return new SMTPCommandParseResult( new HELPCommandToExecute() );
         }
