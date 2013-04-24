@@ -19,9 +19,42 @@ namespace SMTPSupport.Test
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(session.IsInitialized, Is.True);
             client.Clear();
+            session = new SMTPSession();
             parser.Execute("EHLO", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing Domain Name"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing domain name."));
+            Assert.That(session.IsInitialized, Is.False);
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("HELO tutu", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(session.IsInitialized, Is.True);
+            client.Clear();
+            session = new SMTPSession();
+            parser.Execute("HELO", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing domain name."));
+            Assert.That(session.IsInitialized, Is.False);
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("BO", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
+            Assert.That(session.IsInitialized, Is.False);
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("BOHOYT", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
+            Assert.That(session.IsInitialized, Is.False);
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
+            Assert.That(session.IsInitialized, Is.False);
+            client.Clear();
         }
 
     }
