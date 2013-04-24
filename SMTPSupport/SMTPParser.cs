@@ -18,6 +18,8 @@ namespace SMTPSupport
             _commands.Add( "HELO", helloCmd );
             RegisterCommand(new MAILCommand());
             RegisterCommand(new HELPCommand());
+            RegisterCommand(new NOOPCommand());
+            RegisterCommand(new QUITCommand());
         }
 
         SMTPCommand RegisterCommand( SMTPCommand cmd )

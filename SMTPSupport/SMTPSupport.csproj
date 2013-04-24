@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QUITCommand.cs" />
+    <Compile Include="QUITCommandToExecute.cs" />
+    <Compile Include="NOOPCommand.cs" />
+    <Compile Include="NOOPCommandToExecute.cs" />
     <Compile Include="HELPCommand.cs" />
     <Compile Include="HELPCommandToExecute.cs" />
     <Compile Include="MAILCommand.cs" />

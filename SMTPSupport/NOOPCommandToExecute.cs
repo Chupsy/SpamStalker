@@ -6,21 +6,18 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class RCPTCommandToExecute : SMTPCommandToExecute
+    public class NOOPCommandToExecute : SMTPCommandToExecute
     {
-        string _mailAdress;
 
-        public RCPTCommandToExecute( string mailAdress )
+        public NOOPCommandToExecute()
         {
-            _mailAdress = mailAdress;
         }
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.IsInitialized)
+            if( session.IsInitialized )
             {
-                session.AddRecipient(_mailAdress);
-                client.SendSuccess();
+                client.SendSuccess(); 
             }
             else
             {

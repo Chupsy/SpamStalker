@@ -12,7 +12,7 @@ namespace SMTPSupport.Test
     public class SMTPSupportTests
     {
         [Test]
-        public void testEHLO()
+        public void TestEHLO()
         {
             SMTPParser parser = new SMTPParser();
             SMTPSession session = new SMTPSession();
@@ -58,7 +58,7 @@ namespace SMTPSupport.Test
         }
 
         [Test]
-        public void testRCPT()
+        public void TestRCPT()
         {
             SMTPParser parser = new SMTPParser();
             SMTPSession session = new SMTPSession();
@@ -95,6 +95,52 @@ namespace SMTPSupport.Test
             Assert.That(session.Recipients.Count, Is.EqualTo(0));
             Assert.That(client.ToString(), Is.StringContaining("SendError: 550 No such user here."));
 
+            session = new SMTPSession();
+            parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
+            Assert.That(session.Recipients.Count, Is.EqualTo(0));
+        }
+
+
+        [Test]
+        public void TestNOOP()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            parser.Execute("EHLO tutu", session, client);
+            client.Clear();
+            parser.Execute("NOOP", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            client.Clear();
+            parser.Execute("NOOP dsfqfsqifoj", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("NOOP", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
+        }
+
+        [Test]
+        public void TestQUIT()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            parser.Execute("EHLO tutu", session, client);
+            client.Clear();
+            parser.Execute("QUIT", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
+            client.Clear();
+
+            parser.Execute("QUIT dsfqfsqifoj", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("QUIT", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
         }
         
     }
