@@ -35,13 +35,17 @@ namespace SMTPSupport
                 if( !session.IsInitialized ) client.Close();
                 return;
             }
-            SMTPCommandParseResult r = cmd.Parse( commandLine );
-            if( r.ErrorMessage != null )
+
+            SMTPCommandParseResult cmdExecute = cmd.Parse( commandLine );
+
+            if( cmdExecute.ErrorMessage != null )
             {
-                client.SendError( r.ErrorCode, r.ErrorMessage );
+                client.SendError( cmdExecute.ErrorCode, cmdExecute.ErrorMessage );
                 return;
             }
 
+            cmdExecute.Command.Execute(session, client);
+           
         }
 
         SMTPCommand FindCommand( string commandLine )
