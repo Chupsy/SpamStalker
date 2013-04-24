@@ -9,6 +9,7 @@ namespace SMTPSupport
     public class SMTPSession
     {
         string _domainName;
+        List<string> _recipients = new List<string>();
 
         public bool IsInitialized { get { return _domainName != null; } }
 
@@ -18,11 +19,12 @@ namespace SMTPSupport
             _domainName = domainName;
         }
 
-        public void AddRecipient( string mailAddres )
+        public void AddRecipient( string mailAddress )
         {
+            _recipients.Add(mailAddress);
         }
 
-        public void AddSender(string mailAddres)
+        public void AddSender(string mailAddress)
         {
         }
     

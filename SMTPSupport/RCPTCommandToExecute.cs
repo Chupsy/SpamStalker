@@ -17,7 +17,15 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            session.AddRecipient( _mailAdress );
+            if (session.IsInitialized)
+            {
+                session.AddRecipient(_mailAdress);
+                client.SendSuccess();
+            }
+            else
+            {
+                client.SendError(500);
+            }
         }
 
     }

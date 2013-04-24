@@ -57,5 +57,15 @@ namespace SMTPSupport.Test
             client.Clear();
         }
 
+        [Test]
+        public void testRCPT()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            parser.Execute("EHLO tutu", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+        }
+        
     }
 }

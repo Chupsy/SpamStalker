@@ -16,15 +16,50 @@ namespace SMTPSupport
         public override SMTPCommandParseResult Parse( string firstLine )
         {
             if( !firstLine.StartsWith( "RCPT" ) ) throw new ArgumentException( "Must start with RCPT." );
-            string extractedMail = null; // or one valid adress mail.
 
-            if( extractedMail == null )
+            string extractedMail = null;
+
+            if (firstLine.StartsWith("RCPT TO:<") && firstLine.EndsWith(">"))
             {
-                return new SMTPCommandParseResult( 500, "Missing mail adress." );
+                extractedMail = firstLine.Substring("RCPT TO:<".Length).Trim();
+                extractedMail = extractedMail.Remove(extractedMail.Length - 1);
             }
-            // A valid mail exists.
-            RCPTCommandToExecute toExecute = new RCPTCommandToExecute( extractedMail );
-            return new SMTPCommandParseResult( toExecute );
+            else
+            {
+                return new SMTPCommandParseResult(500,"syntax error");
+            }
+
+            if (extractedMail != "" && extractedMail != null)
+            {
+                if (!CheckAdress(extractedMail))
+                {
+                    return new SMTPCommandParseResult(550, "No such user here");
+                }
+            }
+            else
+            {
+                return new SMTPCommandParseResult( 501, "Missing mail adress." );
+            }
+
+            return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));
+        }
+
+        /// <summary>
+        /// Verify if the extracted mail exists in the adresses in adress.txt
+        /// </summary>
+        /// <param name="extractedMail"> extracted mail u.u </param>
+        /// <returns></returns>
+        private bool CheckAdress(string extractedMail)
+        {
+            string[] adresses = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
+            foreach (string adress in adresses)
+            {
+                if (adress == extractedMail)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
