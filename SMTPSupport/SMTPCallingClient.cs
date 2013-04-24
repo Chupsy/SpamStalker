@@ -22,6 +22,11 @@ namespace SMTPSupport
       
         }
 
+        public virtual void SendHelp()
+        {
+
+        }
+
         public virtual void SendError(int p1, string p2)
         {
             
