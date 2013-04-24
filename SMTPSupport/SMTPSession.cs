@@ -13,6 +13,11 @@ namespace SMTPSupport
 
         public bool IsInitialized { get { return _domainName != null; } }
 
+        public List<string> Recipients
+        {
+            get { return _recipients; }
+        }
+
         public void Initialize( string domainName )
         {
             if (domainName == null) throw new ArgumentNullException("domainName");

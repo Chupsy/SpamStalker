@@ -26,19 +26,19 @@ namespace SMTPSupport
             }
             else
             {
-                return new SMTPCommandParseResult(500,"syntax error");
+                return new SMTPCommandParseResult(500,"Syntax error.");
             }
 
             if (extractedMail != "" && extractedMail != null)
             {
                 if (!CheckAdress(extractedMail))
                 {
-                    return new SMTPCommandParseResult(550, "No such user here");
+                    return new SMTPCommandParseResult(550, "No such user here.");
                 }
             }
             else
             {
-                return new SMTPCommandParseResult( 501, "Missing mail adress." );
+                return new SMTPCommandParseResult( 501, "Missing mail address." );
             }
 
             return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));
@@ -51,10 +51,10 @@ namespace SMTPSupport
         /// <returns></returns>
         private bool CheckAdress(string extractedMail)
         {
-            string[] adresses = System.IO.File.ReadAllLines(@"..\..\adresses.txt");
-            foreach (string adress in adresses)
+            string[] addresses = System.IO.File.ReadAllLines(@"..\..\..\FakeSmtp\adresses.txt");
+            foreach (string address in addresses)
             {
-                if (adress == extractedMail)
+                if (address == extractedMail)
                 {
                     return true;
                 }
