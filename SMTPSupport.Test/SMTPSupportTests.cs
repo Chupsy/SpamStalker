@@ -142,6 +142,33 @@ namespace SMTPSupport.Test
             parser.Execute("QUIT", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
         }
-        
+
+        [Test]
+        public void TestMAIL()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            parser.Execute("EHLO tutu", session, client);
+            parser.Execute("MAIL TO:<vincentpu@despieds.com>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            parser.Execute("MAIL TO:<dufrasnes@cake.fr>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            client.Clear();
+
+            parser.Execute("MAIL TO:<>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 501 Missing mail address."));
+            client.Clear();
+
+            parser.Execute("MAIL TO:<johan@pcnul.com>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 550 No such user here."));
+            client.Clear();
+
+            parser.Execute("MAIL Blueberry is good", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Syntax error."));
+            client.Clear();
+
+
+        }      
     }
 }

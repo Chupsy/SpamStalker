@@ -15,15 +15,42 @@ namespace SMTPSupport
 
         public override SMTPCommandParseResult Parse( string firstLine )
         {
-            if (!firstLine.StartsWith("MAIL") && !firstLine.StartsWith("MAIL")) throw new ArgumentException("Must start with MAIL.");
-            string senderAdress = null; // or one valid domain name.
+            if (!firstLine.StartsWith("MAIL")) throw new ArgumentException("Must start with MAIL.");
+            string senderAddress = null; 
 
-            if( senderAdress == null )
+            if(firstLine.StartsWith("MAIL TO:<") && firstLine.EndsWith(">"))
             {
-                return new SMTPCommandParseResult( 500, "Missing adress." );
+                senderAddress = firstLine.Substring("MAIL TO:<".Length).Trim();
+                senderAddress = senderAddress.Remove(senderAddress.Length - 1);
             }
-            return new SMTPCommandParseResult( new MAILCommandToExecute( senderAdress ) );
+            else
+            {
+                return new SMTPCommandParseResult(500, "Syntax error.");
+            }
+
+            if (senderAddress != null && senderAddress != "")
+            {
+                if(!CheckMail(senderAddress))
+                {
+                    return new SMTPCommandParseResult(550, "No such user here.");
+                }
+            }
+            else
+            {
+                return new SMTPCommandParseResult(501, "Missing mail address.");
+            }
+            
+            return new SMTPCommandParseResult( new MAILCommandToExecute( senderAddress ) );
+        }
+
+        private bool CheckMail(string senderAddress)
+        {
+            string[] adresses = System.IO.File.ReadAllLines(@"..\..\..\FakeSmtp\senderAdresses.txt");
+            foreach(string adress in adresses)
+            {
+                if (adress == senderAddress) return true;
+            }
+            return false;
         }
     }
-
 }
