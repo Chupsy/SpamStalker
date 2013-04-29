@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RSETCommand.cs" />
+    <Compile Include="RSETCommandToExecute.cs" />
     <Compile Include="QUITCommand.cs" />
     <Compile Include="QUITCommandToExecute.cs" />
     <Compile Include="NOOPCommand.cs" />
