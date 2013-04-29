@@ -18,9 +18,9 @@ namespace SMTPSupport
             if (!firstLine.StartsWith("MAIL")) throw new ArgumentException("Must start with MAIL.");
             string senderAddress = null; 
 
-            if(firstLine.StartsWith("MAIL TO:<") && firstLine.EndsWith(">"))
+            if(firstLine.StartsWith("MAIL FROM:<") && firstLine.EndsWith(">"))
             {
-                senderAddress = firstLine.Substring("MAIL TO:<".Length).Trim();
+                senderAddress = firstLine.Substring("MAIL FROM:<".Length).Trim();
                 senderAddress = senderAddress.Remove(senderAddress.Length - 1);
             }
             else

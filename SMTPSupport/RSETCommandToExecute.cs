@@ -8,8 +8,7 @@ namespace SMTPSupport
 {
     public class RSETCommandToExecute : SMTPCommandToExecute
     {
-        string _domainName;
-
+        
         public RSETCommandToExecute()
         {
            

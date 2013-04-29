@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using SMTPSupport;
+using System.Net.Mail;
 
 namespace SMTPSupport.Test
 {
@@ -102,6 +103,7 @@ namespace SMTPSupport.Test
         }
 
 
+
         [Test]
         public void TestNOOP()
         {
@@ -149,21 +151,32 @@ namespace SMTPSupport.Test
             SMTPParser parser = new SMTPParser();
             SMTPSession session = new SMTPSession();
             SMTPClientTest client = new SMTPClientTest();
+            MailAddress testSender = new MailAddress("vincentpu@despieds.com");
             parser.Execute("EHLO tutu", session, client);
-            parser.Execute("MAIL TO:<vincentpu@despieds.com>", session, client);
+            parser.Execute("MAIL FROM:<vincentpu@despieds.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            parser.Execute("MAIL TO:<dufrasnes@cake.fr>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(session.Sender.Address == testSender.Address);
             client.Clear();
 
-            parser.Execute("MAIL TO:<>", session, client);
+            session = new SMTPSession();
+            testSender = new MailAddress("dufrasnes@cake.fr");
+            parser.Execute("EHLO tutu", session, client);
+            parser.Execute("MAIL FROM:<dufrasnes@cake.fr>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(session.Sender.Address == testSender.Address);
+            client.Clear();
+
+            session = new SMTPSession();
+            parser.Execute("MAIL FROM:<>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 501 Missing mail address."));
             client.Clear();
 
-            parser.Execute("MAIL TO:<johan@pcnul.com>", session, client);
+            session = new SMTPSession();
+            parser.Execute("MAIL FROM:<johan@pcnul.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 550 No such user here."));
             client.Clear();
 
+            session = new SMTPSession();
             parser.Execute("MAIL Blueberry is good", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Syntax error."));
             client.Clear();
