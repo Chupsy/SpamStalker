@@ -15,6 +15,10 @@ namespace SMTPSupport
         bool _ready = false;
         MailAddress _sender;
 
+        public SMTPSession()
+        {
+            _recipients = new MailAddressCollection();
+        }
         public bool IsInitialized { get { return _domainName != null; } }
 
         public MailAddressCollection Recipients

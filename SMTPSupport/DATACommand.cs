@@ -13,7 +13,7 @@ namespace SMTPSupport
         {
         }
 
-        public override SMTPCommandParseResult Parse( string firstLine )
+        internal override SMTPCommandParseResult Parse( string firstLine )
         {
             if( !firstLine.StartsWith( "DATA" )) throw new ArgumentException( "Must start with DATA." );
 

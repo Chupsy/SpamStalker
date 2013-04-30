@@ -24,7 +24,7 @@ namespace SMTPSupport
             HelpText = helpText ?? String.Empty;
         }
 
-        public abstract SMTPCommandParseResult Parse( string firstLine );
+        internal abstract SMTPCommandParseResult Parse( string firstLine );
     }
 
 
