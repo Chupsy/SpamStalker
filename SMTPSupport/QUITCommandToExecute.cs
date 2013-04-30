@@ -16,7 +16,7 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-                client.SendError(221, "<SpamStalker> Service closing transmission channel");
+                client.SendError(221);
                 Thread.Sleep(500);
                 client.Close();
         }

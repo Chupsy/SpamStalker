@@ -133,16 +133,16 @@ namespace SMTPSupport.Test
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
             parser.Execute("QUIT", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221\r\nClose\r\n"));
             client.Clear();
 
             parser.Execute("QUIT dsfqfsqifoj", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221\r\nClose\r\n"));
             client.Clear();
 
             session = new SMTPSession();
             parser.Execute("QUIT", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 221 <SpamStalker> Service closing transmission channel\r\nClose\r\n"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 221\r\nClose\r\n"));
         }
 
         [Test]
