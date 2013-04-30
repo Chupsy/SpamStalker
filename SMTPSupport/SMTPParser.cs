@@ -46,10 +46,17 @@ namespace SMTPSupport
 
             SMTPCommandParseResult cmdExecute = cmd.Parse( commandLine );
 
-            if( cmdExecute.ErrorMessage != null )
+            if( cmdExecute.Command == null)
             {
-                client.SendError( cmdExecute.ErrorCode, cmdExecute.ErrorMessage );
-                return;
+                if (cmdExecute.ErrorMessage == null)
+                {
+                    client.SendError(cmdExecute.ErrorCode);
+                    return;
+                }
+                else
+                {
+                    client.SendError(cmdExecute.ErrorCode, cmdExecute.ErrorMessage);
+                }
             }
 
             cmdExecute.Command.Execute(session, client);

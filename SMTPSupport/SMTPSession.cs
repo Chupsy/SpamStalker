@@ -19,6 +19,7 @@ namespace SMTPSupport
         {
             _recipients = new MailAddressCollection();
         }
+
         public bool IsInitialized { get { return _domainName != null; } }
 
         public MailAddressCollection Recipients

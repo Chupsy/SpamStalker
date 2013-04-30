@@ -16,6 +16,11 @@ namespace SMTPSupport
             ErrorMessage = errorMessage;
             Command = null;
         }
+        internal SMTPCommandParseResult(int errorCode)
+        {
+            ErrorCode = errorCode;
+            Command = null;
+        }
 
         internal SMTPCommandParseResult( SMTPCommandToExecute command )
         {

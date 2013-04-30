@@ -24,7 +24,7 @@ namespace SMTPSupport.Test
             client.Clear();
             session = new SMTPSession();
             parser.Execute("EHLO", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing domain name."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
@@ -35,7 +35,7 @@ namespace SMTPSupport.Test
             client.Clear();
             session = new SMTPSession();
             parser.Execute("HELO", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Missing domain name."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
