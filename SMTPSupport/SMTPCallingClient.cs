@@ -8,6 +8,14 @@ namespace SMTPSupport
 {
     public class SMTPCallingClient
     {
+        System.IO.StreamReader _reader;
+        System.IO.StreamWriter _writer;
+        string _line;
+        SMTPSession _session;
+        Dictionary<int, string> _errors;
+
+
+
         public virtual void SendError( int errorNumber )
         {
         }
@@ -22,7 +30,36 @@ namespace SMTPSupport
       
         }
 
+        public virtual void GetData()
+        {
+            _writer.WriteLine("354 Start input, end data with <CRLF>.<CRLF>");
+            do
+            {
+                _line = _reader.ReadLine();
+                AnalyzeData(_line);
+
+            } while (_line != ".");
+            _session.SetReadyToSend();
+        }
+
+        public virtual void AnalyzeData(string line)
+        {
+            if(line.StartsWith("Subject: "))
+            {
+                _session.mail.Subject = line.Substring("Subject: ".Length);
+                return;
+            }
+            else
+            {
+                _session.mail.Body += line;
+                return;
+            }
+        }
+
         public virtual void SendHelp()
+        {
+        }
+        public virtual void SendHelp(string parameter)
         {
 
         }
@@ -30,6 +67,20 @@ namespace SMTPSupport
         public virtual void SendError(int p1, string p2)
         {
             
+        }
+
+        public virtual void CreateDictionnaryErrors()
+        {
+            _errors.Add(250, "OK");
+            _errors.Add(214, "Help message");
+            _errors.Add(220, "<SpamStalker> Service ready");
+            _errors.Add(221, "<SpamStalker> Service closing transmission channel");
+            _errors.Add(354, "Start mail input; end with <CRLF>.<CRLF>");
+            _errors.Add(421, "<SpamStalker> Service not available, closing transmission channel");
+            _errors.Add(500, "Syntax error, command unrecognized");
+            _errors.Add(501, "Syntax error in parameters or arguments");
+            _errors.Add(502, "Command not implemented");
+            _errors.Add(502, "Bad sequence of commands");
         }
     }
 }

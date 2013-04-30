@@ -67,13 +67,13 @@ namespace SMTPSupport.Test
             client.Clear();
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Recipients.Contains("tutu@msn.com"));
+            Assert.That(session.Recipients[0].Address.Contains("tutu@msn.com"));
             client.Clear();
 
             parser.Execute("RCPT TO:<arnold@shwartz.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Recipients.Contains("arnold@shwartz.com"));
-            Assert.That(session.Recipients.Contains("tutu@msn.com"));
+            Assert.That(session.Recipients[1].Address.Contains("arnold@shwartz.com"));
+            Assert.That(session.Recipients[0].Address.Contains("tutu@msn.com"));
 
             session = new SMTPSession();
             parser.Execute("EHLO tutu", session, client);

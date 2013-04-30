@@ -17,7 +17,21 @@ namespace SMTPSupport
         {
             if (!firstLine.StartsWith("HELP") && !firstLine.StartsWith("HELP")) throw new ArgumentException("Must start with EHLO.");
 
-            return new SMTPCommandParseResult( new HELPCommandToExecute() );
+            if (firstLine.Trim().Length > 4)
+            {
+                if (firstLine.Substring(4).Length < 4)
+                {
+                    return new SMTPCommandParseResult(500, "Syntax Error");
+                }
+                else
+                {
+                    return new SMTPCommandParseResult(new HELPCommandToExecute(firstLine.Substring(4).ToUpper()));
+                }
+            }
+            else
+            {
+                return new SMTPCommandParseResult(new HELPCommandToExecute());
+            }
         }
     }
 

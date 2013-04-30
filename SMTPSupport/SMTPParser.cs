@@ -20,6 +20,7 @@ namespace SMTPSupport
             RegisterCommand(new HELPCommand());
             RegisterCommand(new NOOPCommand());
             RegisterCommand(new QUITCommand());
+            RegisterCommand(new DATACommand());
         }
 
         SMTPCommand RegisterCommand( SMTPCommand cmd )
@@ -27,6 +28,8 @@ namespace SMTPSupport
             _commands.Add( cmd.Name, cmd );
             return cmd;
         }
+
+        public Dictionary<string, SMTPCommand> Commands { get { return _commands; } }
 
         public void Execute( string commandLine, SMTPSession session, SMTPCallingClient client )
         {

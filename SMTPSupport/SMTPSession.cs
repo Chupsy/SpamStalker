@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Mail;
 
 namespace SMTPSupport
 {
     public class SMTPSession
     {
         string _domainName;
-        List<string> _recipients = new List<string>();
+        MailAddressCollection _recipients;
+        public MailMessage mail = new MailMessage();
+        bool _ready = false;
 
         public bool IsInitialized { get { return _domainName != null; } }
 
-        public List<string> Recipients
+        public MailAddressCollection Recipients
         {
             get { return _recipients; }
         }
+
 
         public void Initialize( string domainName )
         {
@@ -26,11 +30,13 @@ namespace SMTPSupport
 
         public void AddRecipient( string mailAddress )
         {
-            _recipients.Add(mailAddress);
+            _recipients.Add(new MailAddress(mailAddress));
         }
 
         public void AddSender(string mailAddress)
         {
+            mail.Sender = new MailAddress(mailAddress);
+            mail.From = new MailAddress(mailAddress);
         }
     
 
@@ -38,8 +44,13 @@ namespace SMTPSupport
         {
         }
 
+        public bool IsReady()
+        {
+            return _ready;
+        }
         public void SetReadyToSend()
         {
+            _ready = true;
         }
 
     }

@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DATACommand.cs" />
+    <Compile Include="DATACommandToExecute.cs" />
     <Compile Include="QUITCommand.cs" />
     <Compile Include="QUITCommandToExecute.cs" />
     <Compile Include="NOOPCommand.cs" />

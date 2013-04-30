@@ -8,17 +8,29 @@ namespace SMTPSupport
 {
     public class HELPCommandToExecute : SMTPCommandToExecute
     {
-
+        string _parameter;
         public HELPCommandToExecute( )
         {
-            
+            _parameter = null;
+        }
+
+        public HELPCommandToExecute(string parameter)
+        {
+            _parameter = parameter;
         }
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             if (session.IsInitialized)
             {
-                client.SendHelp();
+                if (_parameter == null || _parameter == "")
+                {
+                    client.SendHelp();
+                }
+                else
+                {
+                    client.SendHelp(_parameter);
+                }
             }
             else
             {
