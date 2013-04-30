@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class QUITCommand : SMTPCommand
+    internal class QUITCommand : SMTPCommand
     {
         public QUITCommand()
             : base( "QUIT", "Shut down session." )

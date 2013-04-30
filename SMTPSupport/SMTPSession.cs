@@ -13,7 +13,7 @@ namespace SMTPSupport
         MailAddressCollection _recipients;
         public MailMessage mail = new MailMessage();
         bool _ready = false;
-        MailAdress _sender;
+        MailAddress _sender;
 
         public bool IsInitialized { get { return _domainName != null; } }
 

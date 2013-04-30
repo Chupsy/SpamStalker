@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace SMTPSupport
 {
-    public class QUITCommandToExecute : SMTPCommandToExecute
+    internal class QUITCommandToExecute : SMTPCommandToExecute
     {
 
         public QUITCommandToExecute()

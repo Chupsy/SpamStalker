@@ -17,7 +17,7 @@ namespace SMTPSupport
             SMTPCommand helloCmd = RegisterCommand( new EHLOCommand() );
             _commands.Add( "HELO", helloCmd );
             RegisterCommand(new MAILCommand());
-            RegisterCommand(new HELPCommand());
+            RegisterCommand(new HELPCommand(this));
             RegisterCommand(new NOOPCommand());
             RegisterCommand(new QUITCommand());
             RegisterCommand(new DATACommand());
@@ -30,7 +30,7 @@ namespace SMTPSupport
             return cmd;
         }
 
-        public Dictionary<string, SMTPCommand> Commands { get { return _commands; } }
+        public IEnumerable<SMTPCommand> Commands { get { return _commands.Values; } }
 
         public void Execute( string commandLine, SMTPSession session, SMTPCallingClient client )
         {
