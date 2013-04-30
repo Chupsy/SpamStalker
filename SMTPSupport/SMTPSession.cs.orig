@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net.Mail;
+
+namespace SMTPSupport
+{
+    public class SMTPSession
+    {
+        string _domainName;
+<<<<<<< HEAD
+        MailAddressCollection _recipients;
+        public MailMessage mail = new MailMessage();
+        bool _ready = false;
+=======
+        List<string> _recipients = new List<string>();
+        MailAddress _sender;
+>>>>>>> fd912f30fa0c752a2fc466b5f0c5ed3971734f78
+
+        public bool IsInitialized { get { return _domainName != null; } }
+
+        public MailAddressCollection Recipients
+        {
+            get { return _recipients; }
+        }
+
+<<<<<<< HEAD
+=======
+        public MailAddress Sender
+        {
+            get { return _sender; }
+        }
+>>>>>>> fd912f30fa0c752a2fc466b5f0c5ed3971734f78
+
+        public void Initialize( string domainName )
+        {
+            if (domainName == null) throw new ArgumentNullException("domainName");
+            _domainName = domainName;
+        }
+
+        public void AddRecipient( string mailAddress )
+        {
+            _recipients.Add(new MailAddress(mailAddress));
+        }
+
+        public void AddSender(string mailAddress)
+        {
+<<<<<<< HEAD
+            mail.Sender = new MailAddress(mailAddress);
+            mail.From = new MailAddress(mailAddress);
+=======
+            _sender = new MailAddress(mailAddress);
+>>>>>>> fd912f30fa0c752a2fc466b5f0c5ed3971734f78
+        }
+    
+
+        public void Clear()
+        {
+            _recipients.Clear();
+            _sender = null;
+        }
+
+        public bool IsReady()
+        {
+            return _ready;
+        }
+        public void SetReadyToSend()
+        {
+            _ready = true;
+        }
+
+    }
+}
