@@ -21,6 +21,7 @@ namespace SMTPSupport
             RegisterCommand(new NOOPCommand());
             RegisterCommand(new QUITCommand());
             RegisterCommand(new DATACommand());
+            RegisterCommand(new RSETCommand());
         }
 
         SMTPCommand RegisterCommand( SMTPCommand cmd )

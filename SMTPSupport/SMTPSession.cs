@@ -13,6 +13,7 @@ namespace SMTPSupport
         MailAddressCollection _recipients;
         public MailMessage mail = new MailMessage();
         bool _ready = false;
+        MailAdress _sender;
 
         public bool IsInitialized { get { return _domainName != null; } }
 
@@ -21,6 +22,10 @@ namespace SMTPSupport
             get { return _recipients; }
         }
 
+        public MailAddress Sender
+        {
+            get { return _sender; }
+        }
 
         public void Initialize( string domainName )
         {
@@ -35,13 +40,14 @@ namespace SMTPSupport
 
         public void AddSender(string mailAddress)
         {
-            mail.Sender = new MailAddress(mailAddress);
-            mail.From = new MailAddress(mailAddress);
+            _sender = new MailAddress(mailAddress);
         }
     
 
         public void Clear()
         {
+            _recipients.Clear();
+            _sender = null;
         }
 
         public bool IsReady()
