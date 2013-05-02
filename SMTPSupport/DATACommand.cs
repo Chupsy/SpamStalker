@@ -19,9 +19,9 @@ namespace SMTPSupport
 
             if (firstLine.Substring(4).Trim().Length > 0)
             {
-                return new SMTPCommandParseResult(500, "Syntax Error");
+                return new SMTPCommandParseResult(500);
             }
-            return new SMTPCommandParseResult( new QUITCommandToExecute() );
+            return new SMTPCommandParseResult( new DATACommandToExecute() );
         }
     }
 

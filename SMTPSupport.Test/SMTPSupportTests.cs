@@ -80,21 +80,21 @@ namespace SMTPSupport.Test
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
             parser.Execute("RCPT TO", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Syntax error."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
 
             client.Clear();
             parser.Execute("RCPT TO:<tutu@msn.com", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Syntax error."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
 
             client.Clear();
             parser.Execute("RCPT TO:<>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 501 Missing mail address."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 501"));
 
 
             client.Clear();
             parser.Execute("RCPT TO:<toto@robert.com>", session, client);
             Assert.That(session.Recipients.Count, Is.EqualTo(0));
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 550 No such user here."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
 
             session = new SMTPSession();
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
@@ -149,9 +149,9 @@ namespace SMTPSupport.Test
             SMTPParser parser = new SMTPParser();
             SMTPSession session = new SMTPSession();
             SMTPClientTest client = new SMTPClientTest();
-            MailAddress testSender = new MailAddress("vincentpu@despieds.com");
+            MailAddress testSender = new MailAddress("vincent@test.com");
             parser.Execute("EHLO tutu", session, client);
-            parser.Execute("MAIL FROM:<vincentpu@despieds.com>", session, client);
+            parser.Execute("MAIL FROM:<vincent@test.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
             Assert.That(session.Sender.Address == testSender.Address);
             client.Clear();
@@ -166,20 +166,40 @@ namespace SMTPSupport.Test
 
             session = new SMTPSession();
             parser.Execute("MAIL FROM:<>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 501 Missing mail address."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 501"));
             client.Clear();
 
             session = new SMTPSession();
-            parser.Execute("MAIL FROM:<johan@pcnul.com>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 550 No such user here."));
+            parser.Execute("MAIL FROM:<johan@bouh.com>", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
             client.Clear();
 
             session = new SMTPSession();
             parser.Execute("MAIL Blueberry is good", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 500 Syntax error."));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
 
-        }      
+        }
+
+        [Test]
+        public void TestRSET()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            MailAddress testSender = new MailAddress("vincent@test.com");
+            parser.Execute("EHLO tutu", session, client);
+            parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
+            parser.Execute("MAIL FROM:<vincent@test.com>", session, client);
+            client.Clear();
+
+            parser.Execute("RSET", session, client);
+            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(session.Recipients.Count, Is.EqualTo(0));
+            Assert.That(session.Sender, Is.Null);
+
+       }
+
     }
 }

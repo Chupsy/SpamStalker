@@ -48,15 +48,8 @@ namespace SMTPSupport
 
             if( cmdExecute.Command == null)
             {
-                if (cmdExecute.ErrorMessage == null)
-                {
                     client.SendError(cmdExecute.ErrorCode);
                     return;
-                }
-                else
-                {
-                    client.SendError(cmdExecute.ErrorCode, cmdExecute.ErrorMessage);
-                }
             }
 
             cmdExecute.Command.Execute(session, client);

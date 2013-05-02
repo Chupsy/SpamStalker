@@ -24,16 +24,19 @@ namespace SMTPSupport
 
         public virtual void SendError( int errorNumber )
         {
+            _writer.WriteLine(GetError(errorNumber));
+        
         }
 
         public virtual void SendSuccess()
         {
+            _writer.WriteLine(GetError(250));
         }
 
 
         public virtual void Close()
         {
-      
+            _writer.WriteLine(GetError(221));
         }
 
         public virtual void GetData()
@@ -46,6 +49,7 @@ namespace SMTPSupport
 
             } while (_line != ".");
             _session.SetReadyToSend();
+            SendSuccess();
         }
 
         public virtual void AnalyzeData(string line)
@@ -70,10 +74,10 @@ namespace SMTPSupport
 
         }
 
-        public virtual void SendError(int p1, string p2)
-        {
+        //public virtual void SendError(int p1, string p2)
+        //{
             
-        }
+        //}
 
         internal string GetError(int errorNumber)
         {

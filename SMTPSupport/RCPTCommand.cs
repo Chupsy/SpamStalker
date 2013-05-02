@@ -26,19 +26,19 @@ namespace SMTPSupport
             }
             else
             {
-                return new SMTPCommandParseResult(500,"Syntax error.");
+                return new SMTPCommandParseResult(500);
             }
 
             if (extractedMail != "" && extractedMail != null)
             {
                 if (!CheckAdress(extractedMail))
                 {
-                    return new SMTPCommandParseResult(550, "No such user here.");
+                    return new SMTPCommandParseResult(550);
                 }
             }
             else
             {
-                return new SMTPCommandParseResult( 501, "Missing mail address." );
+                return new SMTPCommandParseResult( 501 );
             }
 
             return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));

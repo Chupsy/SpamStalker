@@ -21,7 +21,7 @@ namespace SMTPSupport
             {
                 if (firstLine.Substring(4).Length < 4)
                 {
-                    return new SMTPCommandParseResult(500, "Syntax Error");
+                    return new SMTPCommandParseResult(500);
                 }
                 else
                 {
