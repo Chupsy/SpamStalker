@@ -102,8 +102,6 @@ namespace SMTPSupport.Test
             Assert.That(session.Recipients.Count, Is.EqualTo(0));
         }
 
-
-
         [Test]
         public void TestNOOP()
         {
