@@ -32,7 +32,7 @@ namespace SMTPSupport
             {
                 if(!CheckMail(senderAddress))
                 {
-                    return new SMTPCommandParseResult(550);
+                    return new SMTPCommandParseResult(500);
                 }
             }
             else

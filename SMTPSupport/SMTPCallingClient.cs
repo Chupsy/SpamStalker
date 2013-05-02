@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
 
 namespace SMTPSupport
 {
@@ -11,8 +13,10 @@ namespace SMTPSupport
         System.IO.StreamReader _reader;
         System.IO.StreamWriter _writer;
         string _line;
+        bool _closed;
         SMTPSession _session;
         Dictionary<int, string> _errors;
+        TcpClient _clientTcp;
 
         public SMTPCallingClient()
         {
@@ -20,6 +24,16 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
         }
 
+        public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient clientTcp)
+        {
+            _reader = reader;
+            _writer = writer;
+            _session = session;
+            _errors = new Dictionary<int, string>();
+            CreateDictionnaryErrors();
+            _closed = false;
+            _clientTcp = clientTcp;
+        }
 
 
         public virtual void SendError( int errorNumber )
@@ -37,6 +51,8 @@ namespace SMTPSupport
         public virtual void Close()
         {
             _writer.WriteLine(GetError(221));
+            _clientTcp.Close();
+            _closed = true;
         }
 
         public virtual void GetData()
@@ -49,7 +65,9 @@ namespace SMTPSupport
 
             } while (_line != ".");
             _session.SetReadyToSend();
-            SendSuccess();
+            SendError(221);
+            _clientTcp.Close();
+            _closed = true;
         }
 
         public virtual void AnalyzeData(string line)
@@ -74,10 +92,10 @@ namespace SMTPSupport
 
         }
 
-        //public virtual void SendError(int p1, string p2)
-        //{
-            
-        //}
+        public virtual bool IsClosed()
+        {
+            return _closed;
+        }
 
         internal string GetError(int errorNumber)
         {
@@ -105,6 +123,7 @@ namespace SMTPSupport
             _errors.Add(501, "Syntax error in parameters or arguments");
             _errors.Add(502, "Command not implemented");
             _errors.Add(503, "Bad sequence of commands");
+            _errors.Add(550, "Mail adress not found");
         }
     }
 }
