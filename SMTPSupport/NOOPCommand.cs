@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class NOOPCommand : SMTPCommand
+    internal class NOOPCommand : SMTPCommand
     {
         public NOOPCommand()
             : base( "NOOP", "Require 250 OK")

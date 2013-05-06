@@ -8,7 +8,7 @@ using System.Net.Sockets;
 
 namespace SMTPSupport
 {
-    public class SMTPCallingClient
+    internal class SMTPCallingClient
     {
         System.IO.StreamReader _reader;
         System.IO.StreamWriter _writer;

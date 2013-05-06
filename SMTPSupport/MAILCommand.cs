@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class MAILCommand : SMTPCommand
+    internal class MAILCommand : SMTPCommand
     {
         public MAILCommand()
             : base( "MAIL", "Specifies sender mail adress." )

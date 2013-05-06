@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class EHLOCommandToExecute : SMTPCommandToExecute
+    internal class EHLOCommandToExecute : SMTPCommandToExecute
     {
         string _domainName;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class MAILCommandToExecute : SMTPCommandToExecute
+    internal class MAILCommandToExecute : SMTPCommandToExecute
     {
         string _senderAdress;
         bool _alertSpamer = false;

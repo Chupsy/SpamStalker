@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class RCPTCommand : SMTPCommand
+    internal class RCPTCommand : SMTPCommand
     {
         public RCPTCommand()
             : base( "RCPT", "Adds a recipient mail address." )

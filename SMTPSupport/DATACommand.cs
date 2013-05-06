@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class DATACommand : SMTPCommand
+    internal class DATACommand : SMTPCommand
     {
         public DATACommand()
             : base( "DATA", "Get data from user" )

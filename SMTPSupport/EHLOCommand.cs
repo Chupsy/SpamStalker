@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class EHLOCommand : SMTPCommand
+    internal class EHLOCommand : SMTPCommand
     {
         public EHLOCommand()
             : base( "EHLO", "Initialize a stream." )

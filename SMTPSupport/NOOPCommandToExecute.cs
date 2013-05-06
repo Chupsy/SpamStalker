@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class NOOPCommandToExecute : SMTPCommandToExecute
+    internal class NOOPCommandToExecute : SMTPCommandToExecute
     {
 
         public NOOPCommandToExecute()

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace SMTPSupport
 {
-    public class DATACommandToExecute : SMTPCommandToExecute
+    internal class DATACommandToExecute : SMTPCommandToExecute
     {
 
         public DATACommandToExecute()

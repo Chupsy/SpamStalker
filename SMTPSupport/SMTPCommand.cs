@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public abstract class SMTPCommand
+    internal abstract class SMTPCommand
     {
         public string Name { get; private set; }
         

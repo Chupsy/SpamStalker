@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class RCPTCommandToExecute : SMTPCommandToExecute
+    internal class RCPTCommandToExecute : SMTPCommandToExecute
     {
         string _mailAdress;
         int _error;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class HELPCommandToExecute : SMTPCommandToExecute
+    internal class HELPCommandToExecute : SMTPCommandToExecute
     {
         string _parameter;
         public HELPCommandToExecute( )

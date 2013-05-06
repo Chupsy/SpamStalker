@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public class HELPCommand : SMTPCommand
+    internal class HELPCommand : SMTPCommand
     {
         public HELPCommand(SMTPParser parser)
             : base( "HELP", "Shows SMTP commands help." )
