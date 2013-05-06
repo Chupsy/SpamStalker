@@ -70,7 +70,7 @@ namespace FakeSmtp
                     smtpDestination.Send(session.mail);
                     callingClient.Close();
                 }
-                else
+                else if(!callingClient.IsClosed())
                 {
                     callingClient.Close();
                 }

@@ -13,13 +13,20 @@ namespace SMTPSupport
         public MailMessage mail = new MailMessage();
         bool _ready = false;
         MailAddress _sender;
+        bool _knownAdress;
 
         public SMTPSession()
         {
+            _knownAdress = false;
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
 
+        public bool KnownAdress
+        {
+            get { return _knownAdress; }
+            set { _knownAdress = value; }
+        }
 
         public MailAddress Sender
         {
@@ -48,16 +55,23 @@ namespace SMTPSupport
             mail.To.Clear();
             _sender = null;
         }
-
+        
         public bool IsReady()
         {
             return _ready;
         }
         public void SetReadyToSend()
         {
-            mail.From = _sender;
-            mail.ReplyToList.Add(_sender);
-            _ready = true;
+            if (_knownAdress == true)
+            {
+                mail.From = _sender;
+                mail.ReplyToList.Add(_sender);
+                _ready = true;
+            }
+            else
+            {
+                _ready = false;
+            }
         }
 
     }

@@ -65,8 +65,14 @@ namespace SMTPSupport
 
             } while (_line != ".");
             _session.SetReadyToSend();
-            SendError(221);
-            _clientTcp.Close();
+            if (!_session.IsReady())
+            {
+                SendError(550);
+            }
+            else
+            {
+                SendError(221);
+            }
             _closed = true;
         }
 
