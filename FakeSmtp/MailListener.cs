@@ -68,7 +68,6 @@ namespace FakeSmtp
                 if (session.IsReady())
                 {
                     smtpDestination.Send(session.mail);
-                    callingClient.Close();
                 }
                 else if(!callingClient.IsClosed())
                 {

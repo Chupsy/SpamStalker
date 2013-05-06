@@ -73,6 +73,7 @@ namespace SMTPSupport
             {
                 SendError(221);
             }
+            Close();
             _closed = true;
         }
 

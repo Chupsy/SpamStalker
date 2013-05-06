@@ -29,6 +29,7 @@ namespace SMTPSupport
                 if (_error == 0)
                 {
                     session.AddRecipient(_mailAdress);
+                    session.KnownAdress = true;
                     client.SendSuccess();
                 }
                 else
