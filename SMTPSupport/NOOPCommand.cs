@@ -15,7 +15,7 @@ namespace SMTPSupport
 
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
-            if( !firstLine.StartsWith( "NOOP" )) throw new ArgumentException( "Must start with EHLO." );
+            if( !firstLine.StartsWith( "NOOP" )) throw new ArgumentException( "Must start with NOOP." );
             
             return new SMTPCommandParseResult( new NOOPCommandToExecute() );
         }

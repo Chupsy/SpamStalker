@@ -27,7 +27,6 @@ namespace FakeSmtp
 
                 Console.WriteLine("New MailListener started");
                 listener = new MailListener(this, ipadress, receptionPort);
-                listener.OutputToFile = true;
                 listener.Start();
                 while (listener.IsThreadAlive)
                 {

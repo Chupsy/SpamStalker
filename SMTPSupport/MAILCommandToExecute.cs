@@ -20,6 +20,7 @@ namespace SMTPSupport
             if (session.IsInitialized)
             {
                 session.AddSender(_senderAdress);
+                client.SendSuccess();
             }
             else
             {
