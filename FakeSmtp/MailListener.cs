@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Configuration;
 using SMTPSupport;
+using System.Net.Mail;
 
 namespace FakeSmtp
 {
@@ -20,8 +21,7 @@ namespace FakeSmtp
         private SMTPServer owner;
         string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
         int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
-        MailTransfer sendMail;
-
+        SmtpClient smtpDestination ;
         SMTPParser parser;
         SMTPSession session;
         SMTPCallingClient callingClient;
@@ -29,6 +29,7 @@ namespace FakeSmtp
         public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
             : base(localaddr, port)
         {
+            smtpDestination = new SmtpClient(hostDestination, destinationPort);
             owner = aOwner;
         }
 
@@ -64,13 +65,21 @@ namespace FakeSmtp
                 {
                     parser.Execute(reader.ReadLine(), session, callingClient);
                 }
+                if (session.IsReady())
+                {
+                    smtpDestination.Send(session.mail);
+                    callingClient.Close();
+                }
+                else
+                {
+                    callingClient.Close();
+                }
                 Stop();
 
             }
             catch (IOException)
             {
                 Console.WriteLine("Connection lost.");
-                client.Close();
                 Stop();
             }
         }

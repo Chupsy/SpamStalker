@@ -40,7 +40,7 @@ namespace SMTPSupport
 
         public void AddRecipient( string mailAddress )
         {
-            _recipients.Add(new MailAddress(mailAddress));
+            mail.To.Add(mailAddress);
         }
 
         public void AddSender(string mailAddress)
@@ -61,6 +61,8 @@ namespace SMTPSupport
         }
         public void SetReadyToSend()
         {
+            mail.From = _sender;
+            mail.ReplyToList.Add(_sender);
             _ready = true;
         }
 

@@ -22,6 +22,10 @@ namespace SMTPSupport
             {
                 senderAddress = firstLine.Substring("MAIL FROM:<".Length).Trim();
                 senderAddress = senderAddress.Remove(senderAddress.Length - 1);
+                if (senderAddress.Length <= 0)
+                {
+                    return new SMTPCommandParseResult(501);
+                }
             }
             else
             {
@@ -32,7 +36,7 @@ namespace SMTPSupport
             {
                 if(!CheckMail(senderAddress))
                 {
-                    return new SMTPCommandParseResult(500);
+                    return new SMTPCommandParseResult(new MAILCommandToExecute(senderAddress));
                 }
             }
             else
