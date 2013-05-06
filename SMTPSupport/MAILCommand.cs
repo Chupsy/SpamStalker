@@ -17,6 +17,7 @@ namespace SMTPSupport
         {
             if (!firstLine.StartsWith("MAIL")) throw new ArgumentException("Must start with MAIL.");
             string senderAddress = null; 
+            bool alertSpamer = false;
 
             if(firstLine.StartsWith("MAIL FROM:<") && firstLine.EndsWith(">"))
             {
@@ -41,7 +42,8 @@ namespace SMTPSupport
             }
             else
             {
-                return new SMTPCommandParseResult(501);
+                alertSpamer = true;
+                return new SMTPCommandParseResult(new MAILCommandToExecute(senderAddress, alertSpamer));
             }
             
             return new SMTPCommandParseResult( new MAILCommandToExecute( senderAddress ) );

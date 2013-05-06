@@ -48,8 +48,12 @@ namespace SMTPSupport
         {
             _sender = new MailAddress(mailAddress);
         }
-    
 
+        public void spamReact(string mailAdress)
+        {
+            
+        }
+    
         public void Clear()
         {
             mail.To.Clear();
