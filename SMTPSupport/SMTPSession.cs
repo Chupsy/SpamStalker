@@ -10,22 +10,16 @@ namespace SMTPSupport
     public class SMTPSession
     {
         string _domainName;
-        MailAddressCollection _recipients;
         public MailMessage mail = new MailMessage();
         bool _ready = false;
         MailAddress _sender;
 
         public SMTPSession()
         {
-            _recipients = new MailAddressCollection();
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
 
-        public MailAddressCollection Recipients
-        {
-            get { return _recipients; }
-        }
 
         public MailAddress Sender
         {
@@ -51,7 +45,7 @@ namespace SMTPSupport
 
         public void Clear()
         {
-            _recipients.Clear();
+            mail.To.Clear();
             _sender = null;
         }
 
