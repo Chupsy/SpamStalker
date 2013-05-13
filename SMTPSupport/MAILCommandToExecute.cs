@@ -23,7 +23,7 @@ namespace SMTPSupport
             }
             else
             {
-                client.SendError(500);
+                client.SendError(ErrorCode.Unrecognized);
             }
            
         }

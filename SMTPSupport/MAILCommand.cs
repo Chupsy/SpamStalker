@@ -25,19 +25,19 @@ namespace SMTPSupport
             }
             else
             {
-                return new SMTPCommandParseResult(500);
+                return new SMTPCommandParseResult(ErrorCode.Unrecognized);
             }
 
             if (senderAddress != null && senderAddress != "")
             {
                 if(!CheckMail(senderAddress))
                 {
-                    return new SMTPCommandParseResult(550);
+                    return new SMTPCommandParseResult(ErrorCode.Unrecognized);
                 }
             }
             else
             {
-                return new SMTPCommandParseResult(501);
+                return new SMTPCommandParseResult(ErrorCode.ArgumentError);
             }
             
             return new SMTPCommandParseResult( new MAILCommandToExecute( senderAddress ) );

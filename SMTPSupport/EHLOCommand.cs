@@ -26,7 +26,7 @@ namespace SMTPSupport
 
             if( senderDomainName == null )
             {
-                return new SMTPCommandParseResult( 500 );
+                return new SMTPCommandParseResult( ErrorCode.Unrecognized );
             }
             return new SMTPCommandParseResult( new EHLOCommandToExecute( senderDomainName ) );
         }

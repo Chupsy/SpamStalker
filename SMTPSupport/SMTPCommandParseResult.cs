@@ -9,20 +9,20 @@ namespace SMTPSupport
 {
     public class SMTPCommandParseResult
     {
-        internal SMTPCommandParseResult(int errorCode)
+        internal SMTPCommandParseResult(ErrorCode errorName)
         {
-            ErrorCode = errorCode;
+            ErrorCode = errorName;
             Command = null;
         }
 
         internal SMTPCommandParseResult( SMTPCommandToExecute command )
         {
             Debug.Assert( command != null );
-            ErrorCode = 250;
+            ErrorCode = ErrorCode.Ok;
             Command = command;
         }
 
-        public int ErrorCode { get; private set; }
+        public ErrorCode ErrorCode { get; private set; }
 
 
         public SMTPCommandToExecute Command { get; private set; }

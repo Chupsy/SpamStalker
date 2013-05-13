@@ -176,7 +176,7 @@ namespace SMTPSupport.Test
 
             session = new SMTPSession();
             parser.Execute("MAIL FROM:<johan@bouh.com>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
             session = new SMTPSession();

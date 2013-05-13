@@ -12,9 +12,9 @@ namespace SMTPSupport.Test
         StringWriter _w = new StringWriter();
 
 
-        public override void SendError(int errorNumber)
+        public override void SendError(ErrorCode errorName)
         {
-            _w.WriteLine("SendError: {0}", errorNumber);
+            _w.WriteLine("SendError: {0}", (int)errorName);
         }
 
         public override void Close()
