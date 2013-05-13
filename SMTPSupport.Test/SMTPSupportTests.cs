@@ -13,6 +13,11 @@ namespace SMTPSupport.Test
     public class SMTPSupportTests
     {
         [Test]
+        public void TestEnum()
+        {
+            Assert.That((int)ErrorCode.Ok, Is.EqualTo(250));
+        }
+        [Test]
         public void TestEHLO()
         {
             SMTPParser parser = new SMTPParser();
