@@ -8,7 +8,7 @@ using System.Net.Sockets;
 
 namespace SMTPSupport
 {
-    internal class SMTPCallingClient
+    public class SMTPCallingClient
     {
         System.IO.StreamReader _reader;
         System.IO.StreamWriter _writer;
@@ -17,6 +17,10 @@ namespace SMTPSupport
         SMTPSession _session;
         Dictionary<int, string> _errors;
         TcpClient _clientTcp;
+        private System.IO.StreamReader reader;
+        private System.IO.StreamWriter writer;
+        private SMTPSession session;
+        private TcpClient client;
 
         public SMTPCallingClient()
         {
@@ -24,7 +28,7 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
         }
 
-        public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient clientTcp)
+        public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient client)
         {
             _reader = reader;
             _writer = writer;
@@ -32,7 +36,7 @@ namespace SMTPSupport
             _errors = new Dictionary<int, string>();
             CreateDictionnaryErrors();
             _closed = false;
-            _clientTcp = clientTcp;
+            _clientTcp = client;
         }
 
 
