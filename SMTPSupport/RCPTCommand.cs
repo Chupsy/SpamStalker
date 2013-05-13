@@ -26,19 +26,19 @@ namespace SMTPSupport
             }
             else
             {
-                return new SMTPCommandParseResult(500);
+                return new SMTPCommandParseResult(ErrorCode.Unrecognized);
             }
 
             if (extractedMail != "" && extractedMail != null)
             {
                 if (!CheckAdress(extractedMail))
                 {
-                    return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail,550));
+                    return new SMTPCommandParseResult(ErrorCode.AdressUnknow);
                 }
             }
             else
             {
-                return new SMTPCommandParseResult( 501 );
+                return new SMTPCommandParseResult(ErrorCode.ArgumentError);
             }
 
             return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));

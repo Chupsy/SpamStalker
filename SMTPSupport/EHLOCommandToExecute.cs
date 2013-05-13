@@ -19,7 +19,7 @@ namespace SMTPSupport
         {
             if( session.IsInitialized )
             {
-                client.SendError( 500 ); 
+                client.SendError(ErrorCode.Unrecognized); 
             }
             else
             {

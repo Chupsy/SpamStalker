@@ -13,6 +13,11 @@ namespace SMTPSupport.Test
     public class SMTPSupportTests
     {
         [Test]
+        public void TestEnum()
+        {
+            Assert.That((int)ErrorCode.Ok, Is.EqualTo(250));
+        }
+        [Test]
         public void TestEHLO()
         {
             SMTPParser parser = new SMTPParser();
@@ -171,7 +176,7 @@ namespace SMTPSupport.Test
 
             session = new SMTPSession();
             parser.Execute("MAIL FROM:<johan@bouh.com>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
             session = new SMTPSession();

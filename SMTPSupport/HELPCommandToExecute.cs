@@ -11,7 +11,6 @@ namespace SMTPSupport
         string _parameter;
         public HELPCommandToExecute( )
         {
-            _parameter = null;
         }
 
         public HELPCommandToExecute(string parameter)
@@ -23,7 +22,7 @@ namespace SMTPSupport
         {
             if (session.IsInitialized)
             {
-                if (_parameter == null || _parameter == "")
+                if (_parameter == string.Empty)
                 {
                     client.SendHelp();
                 }
@@ -34,10 +33,8 @@ namespace SMTPSupport
             }
             else
             {
-                client.SendError(500);
+                client.SendError(ErrorCode.Unrecognized);
             }
         }
-
     }
-
 }

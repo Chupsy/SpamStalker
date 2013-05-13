@@ -15,13 +15,13 @@ namespace SMTPSupport
 
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
-            if (!firstLine.StartsWith("HELP") && !firstLine.StartsWith("HELP")) throw new ArgumentException("Must start with EHLO.");
+            if (!firstLine.StartsWith("HELP")) throw new ArgumentException("Must start with HELP.");
 
             if (firstLine.Trim().Length > 4)
             {
                 if (firstLine.Substring(4).Length < 4)
                 {
-                    return new SMTPCommandParseResult(500);
+                    return new SMTPCommandParseResult(ErrorCode.Unrecognized);
                 }
                 else
                 {

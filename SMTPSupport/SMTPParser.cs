@@ -39,7 +39,7 @@ namespace SMTPSupport
             SMTPCommand cmd = FindCommand( commandLine );
             if( cmd == null )
             {
-                client.SendError( 500 );
+                client.SendError(ErrorCode.Unrecognized);
                 if( !session.IsInitialized ) client.Close();
                 return;
             }
