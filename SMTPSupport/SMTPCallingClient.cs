@@ -90,12 +90,19 @@ namespace SMTPSupport
         {
             foreach (KeyValuePair<string, string> _temp in _commands)
             {
-                _writer.WriteLine("");
+                _writer.WriteLine("{0}",_temp.Value);
             }
         }
         public virtual void SendHelp(string parameter)
         {
-
+            if (_commands.ContainsKey(parameter)) _writer.WriteLine("{0}", _commands[parameter]);
+            else
+            {
+                foreach (KeyValuePair<string, string> _temp in _commands)
+                {
+                    _writer.WriteLine("{0}", _temp.Value);
+                }
+            }
         }
 
         //public virtual void SendError(int p1, string p2)
@@ -142,7 +149,7 @@ namespace SMTPSupport
             _commands.Add("DATA", "DATA => Syntaxe: DATA ");
             _commands.Add("NOOP", "NOOP => NOOP ");
             _commands.Add("HELP", "HELP => Syntaxe: HELP or HELP Commandname");
-            _commands.Add("EHLO", "EHLO => Syntaxe: EHLO");
+            _commands.Add("EHLO", "EHLO => Syntaxe: EHLO domain@name.com");
 
         }
     }
