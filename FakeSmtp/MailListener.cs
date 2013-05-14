@@ -54,7 +54,7 @@ namespace FakeSmtp
 
         protected void RunThread()
         {
-            callingClient.SendError(220);
+            callingClient.SendError(ErrorCode.Ready);
 
             try
             {

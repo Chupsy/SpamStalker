@@ -25,7 +25,7 @@ namespace SMTPSupport
                 senderAddress = senderAddress.Remove(senderAddress.Length - 1);
                 if (senderAddress.Length <= 0)
                 {
-                    return new SMTPCommandParseResult(ErrorCode.ArgumentError);
+                    return new SMTPCommandParseResult(501);
                 }
             }
             else
@@ -37,12 +37,21 @@ namespace SMTPSupport
             {
                 if(!CheckMail(senderAddress))
                 {
+<<<<<<< HEAD
+                    return new SMTPCommandParseResult(new MAILCommandToExecute(senderAddress));
+=======
                     return new SMTPCommandParseResult(ErrorCode.Unrecognized);
+>>>>>>> MartinDev
                 }
             }
             else
             {
+<<<<<<< HEAD
+                alertSpamer = true;
+                return new SMTPCommandParseResult(new MAILCommandToExecute(senderAddress, alertSpamer));
+=======
                 return new SMTPCommandParseResult(ErrorCode.ArgumentError);
+>>>>>>> MartinDev
             }
             
             return new SMTPCommandParseResult( new MAILCommandToExecute( senderAddress ) );

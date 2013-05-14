@@ -4,10 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Sockets;
 
 namespace SMTPSupport
 {
+<<<<<<< HEAD
+    internal class SMTPCallingClient
+=======
     public enum ErrorCode
     { 
         Ok = 250,
@@ -24,15 +28,20 @@ namespace SMTPSupport
     }
 
     public class SMTPCallingClient
+>>>>>>> MartinDev
     {
         System.IO.StreamReader _reader;
         System.IO.StreamWriter _writer;
         string _line;
         bool _closed;
         SMTPSession _session;
-        Dictionary<ErrorCode, string> _errors;
+<<<<<<< HEAD
+        Dictionary<int, string> _errors;
         TcpClient _clientTcp;
+=======
+        Dictionary<ErrorCode, string> _errors;
         Dictionary<string, string> _commands;
+>>>>>>> MartinDev
 
         public SMTPCallingClient()
         {
@@ -48,7 +57,7 @@ namespace SMTPSupport
             _reader = reader;
             _writer = writer;
             _session = session;
-            _errors = new Dictionary<ErrorCode, string>();
+            _errors = new Dictionary<int, string>();
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = clientTcp;
@@ -69,9 +78,13 @@ namespace SMTPSupport
 
         public virtual void Close()
         {
-            _writer.WriteLine(GetError(ErrorCode.Closing));
+<<<<<<< HEAD
+            _writer.WriteLine(GetError(221));
             _clientTcp.Close();
             _closed = true;
+=======
+            _writer.WriteLine(GetError(ErrorCode.Closing));
+>>>>>>> MartinDev
         }
 
         public virtual void GetData()
@@ -86,11 +99,11 @@ namespace SMTPSupport
             _session.SetReadyToSend();
             if (!_session.IsReady())
             {
-                SendError(ErrorCode.AdressUnknow);
+                SendError(550);
             }
             else
             {
-                SendError(ErrorCode.Closing);
+                SendError(221);
             }
             Close();
             _closed = true;
@@ -153,6 +166,19 @@ namespace SMTPSupport
 
         private void CreateDictionnaryErrors()
         {
+<<<<<<< HEAD
+            _errors.Add(250, "OK");
+            _errors.Add(214, "Help message");
+            _errors.Add(220, "<SpamStalker> Service ready");
+            _errors.Add(221, "<SpamStalker> Service closing transmission channel");
+            _errors.Add(354, "Start mail input; end with <CRLF>.<CRLF>");
+            _errors.Add(421, "<SpamStalker> Service not available, closing transmission channel");
+            _errors.Add(500, "Syntax error, command unrecognized");
+            _errors.Add(501, "Syntax error in parameters or arguments");
+            _errors.Add(502, "Command not implemented");
+            _errors.Add(503, "Bad sequence of commands");
+            _errors.Add(550, "Mail adress not found");
+=======
             _errors.Add(ErrorCode.Ok, "OK");
             _errors.Add(ErrorCode.Help, "Help message");
             _errors.Add(ErrorCode.Ready, "<SpamStalker> Service ready");
@@ -175,6 +201,7 @@ namespace SMTPSupport
             _commands.Add("HELP", "HELP => Syntaxe: HELP or HELP Commandname");
             _commands.Add("EHLO", "EHLO => Syntaxe: EHLO domain@name.com");
 
+>>>>>>> MartinDev
         }
     }
 }
