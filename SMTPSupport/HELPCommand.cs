@@ -19,13 +19,13 @@ namespace SMTPSupport
 
             if (firstLine.Trim().Length > 4)
             {
-                if (firstLine.Substring(4).Length < 4)
+                if (firstLine.Substring(4).Trim().Length < 4)
                 {
-                    return new SMTPCommandParseResult(ErrorCode.Unrecognized);
+                    return new SMTPCommandParseResult(new HELPCommandToExecute());
                 }
                 else
                 {
-                    return new SMTPCommandParseResult(new HELPCommandToExecute(firstLine.Substring(4).ToUpper()));
+                    return new SMTPCommandParseResult(new HELPCommandToExecute(firstLine.Substring(4).ToUpper().Trim()));
                 }
             }
             else
