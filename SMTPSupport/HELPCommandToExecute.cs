@@ -22,7 +22,7 @@ namespace SMTPSupport
         {
             if (session.IsInitialized)
             {
-                if (_parameter == string.Empty)
+                if (_parameter == string.Empty || _parameter == null)
                 {
                     client.SendHelp();
                 }

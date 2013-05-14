@@ -99,7 +99,7 @@ namespace SMTPSupport.Test
             client.Clear();
             parser.Execute("RCPT TO:<toto@robert.com>", session, client);
             Assert.That(session.mail.To.Count, Is.EqualTo(1));
-            Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 550\r\n"));
 
             session = new SMTPSession();
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);

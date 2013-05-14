@@ -20,7 +20,7 @@ namespace SMTPSupport
         ArgumentError = 501,
         NotImplemented = 502,
         BadSequence = 503,
-        AdressUnknow = 550
+        AddressUnknow = 550
     }
 
     public class SMTPCallingClient
@@ -52,6 +52,8 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = client;
+            _commands = new Dictionary<string, string>();
+            CreateDictionaryCommands();
         }
 
 
@@ -86,7 +88,7 @@ namespace SMTPSupport
             _session.SetReadyToSend();
             if (!_session.IsReady())
             {
-                SendError(ErrorCode.AdressUnknow);
+                SendError(ErrorCode.AddressUnknow);
             }
             else
             {
@@ -163,7 +165,7 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.ArgumentError, "Syntax error in parameters or arguments");
             _errors.Add(ErrorCode.NotImplemented, "Command not implemented");
             _errors.Add(ErrorCode.BadSequence, "Bad sequence of commands");
-            _errors.Add(ErrorCode.AdressUnknow, "Adress Unknow");
+            _errors.Add(ErrorCode.AddressUnknow, "Adress Unknow");
         }
 
         private void CreateDictionaryCommands()

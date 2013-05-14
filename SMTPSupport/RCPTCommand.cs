@@ -33,7 +33,7 @@ namespace SMTPSupport
             {
                 if (!CheckAdress(extractedMail))
                 {
-                    return new SMTPCommandParseResult(ErrorCode.AdressUnknow);
+                    return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail, 550));
                 }
             }
             else
