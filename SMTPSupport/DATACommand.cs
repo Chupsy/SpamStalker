@@ -9,7 +9,7 @@ namespace SMTPSupport
     internal class DATACommand : SMTPCommand
     {
         public DATACommand()
-            : base( "DATA", "Get data from user" )
+            : base( "DATA", "Get data from user." )
         {
         }
 

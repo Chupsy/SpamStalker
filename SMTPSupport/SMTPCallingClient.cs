@@ -33,6 +33,7 @@ namespace SMTPSupport
         Dictionary<ErrorCode, string> _errors;
         TcpClient _clientTcp;
         Dictionary<string, string> _commands;
+        SMTPParser _parser;
 
         public SMTPCallingClient()
         {
@@ -52,8 +53,10 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = client;
+            _parser = new SMTPParser();
             _commands = new Dictionary<string, string>();
             CreateDictionaryCommands();
+            
         }
 
 
@@ -116,17 +119,17 @@ namespace SMTPSupport
         {
             foreach (KeyValuePair<string, string> _temp in _commands)
             {
-                _writer.WriteLine("{0}",_temp.Value);
+                _writer.WriteLine("{0} : {1}", _temp.Key,_temp.Value);
             }
         }
         public virtual void SendHelp(string parameter)
         {
-            if (_commands.ContainsKey(parameter)) _writer.WriteLine("{0}", _commands[parameter]);
+            if (_commands.ContainsKey(parameter)) _writer.WriteLine("{0} : {1}", parameter.ToUpper(), _commands[parameter]);
             else
             {
                 foreach (KeyValuePair<string, string> _temp in _commands)
                 {
-                    _writer.WriteLine("{0}", _temp.Value);
+                    _writer.WriteLine("{0} : {1}", _temp.Key, _temp.Value);
                 }
             }
         }
@@ -170,13 +173,14 @@ namespace SMTPSupport
 
         private void CreateDictionaryCommands()
         {
-            _commands.Add("MAIL", "MAIL => Syntaxe: MAIL FROM:<domain@name.com>");
-            _commands.Add("RCPT", "RCPT => Syntaxe: RCPT TO:<domain@name.com>");
-            _commands.Add("DATA", "DATA => Syntaxe: DATA ");
-            _commands.Add("NOOP", "NOOP => NOOP ");
-            _commands.Add("HELP", "HELP => Syntaxe: HELP or HELP Commandname");
-            _commands.Add("EHLO", "EHLO => Syntaxe: EHLO domain@name.com");
-
+            foreach (SMTPCommand test in _parser.Commands)
+            {
+                if (!_commands.ContainsKey(test.Name))
+                {
+                    _commands.Add(test.Name, test.HelpText);
+                }
+            }
+            _commands.Add("HELO", "Initialize a stream.");
         }
     }
 }

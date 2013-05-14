@@ -9,7 +9,7 @@ namespace SMTPSupport
     internal class EHLOCommand : SMTPCommand
     {
         public EHLOCommand()
-            : base( "EHLO", "Initialize a stream." )
+            : base( "EHLO", "Initialize a stream. (HELO is also working)" )
         {
         }
 

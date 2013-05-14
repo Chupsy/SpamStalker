@@ -9,7 +9,7 @@ namespace SMTPSupport
     internal class RSETCommand : SMTPCommand
     {
         public RSETCommand()
-            : base( "RSET", "Clear all session" )
+            : base( "RSET", "Clear all session." )
         {
         }
 

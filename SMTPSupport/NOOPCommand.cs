@@ -9,7 +9,7 @@ namespace SMTPSupport
     internal class NOOPCommand : SMTPCommand
     {
         public NOOPCommand()
-            : base( "NOOP", "Require 250 OK")
+            : base( "NOOP", "Require 250 OK.")
         {
         }
 
