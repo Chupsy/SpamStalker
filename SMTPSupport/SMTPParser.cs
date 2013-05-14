@@ -30,7 +30,7 @@ namespace SMTPSupport
             return cmd;
         }
 
-        public IEnumerable<SMTPCommand> Commands { get { return _commands.Values; } }
+        IEnumerable<SMTPCommand> Commands { get { return _commands.Values; } }
 
         public void Execute( string commandLine, SMTPSession session, SMTPCallingClient client )
         {

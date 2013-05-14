@@ -17,10 +17,6 @@ namespace SMTPSupport
         SMTPSession _session;
         Dictionary<int, string> _errors;
         TcpClient _clientTcp;
-        private System.IO.StreamReader reader;
-        private System.IO.StreamWriter writer;
-        private SMTPSession session;
-        private TcpClient client;
 
         public SMTPCallingClient()
         {
