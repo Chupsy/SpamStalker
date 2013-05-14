@@ -73,13 +73,13 @@ namespace SMTPSupport.Test
             client.Clear();
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Recipients[0].Address.Contains("tutu@msn.com"));
+            Assert.That(session.mail.To[0].Address.Contains("tutu@msn.com"));
             client.Clear();
 
             parser.Execute("RCPT TO:<arnold@shwartz.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Recipients[1].Address.Contains("arnold@shwartz.com"));
-            Assert.That(session.Recipients[0].Address.Contains("tutu@msn.com"));
+            Assert.That(session.mail.To[1].Address.Contains("arnold@shwartz.com"));
+            Assert.That(session.mail.To[0].Address.Contains("tutu@msn.com"));
 
             session = new SMTPSession();
             parser.Execute("EHLO tutu", session, client);
@@ -98,13 +98,13 @@ namespace SMTPSupport.Test
 
             client.Clear();
             parser.Execute("RCPT TO:<toto@robert.com>", session, client);
-            Assert.That(session.Recipients.Count, Is.EqualTo(0));
+            Assert.That(session.mail.To.Count, Is.EqualTo(1));
             Assert.That(client.ToString(), Is.StringContaining("SendError: 550"));
 
             session = new SMTPSession();
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
-            Assert.That(session.Recipients.Count, Is.EqualTo(0));
+            Assert.That(session.mail.To.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -201,7 +201,7 @@ namespace SMTPSupport.Test
 
             parser.Execute("RSET", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Recipients.Count, Is.EqualTo(0));
+            Assert.That(session.mail.To.Count, Is.EqualTo(0));
             Assert.That(session.Sender, Is.Null);
 
        }

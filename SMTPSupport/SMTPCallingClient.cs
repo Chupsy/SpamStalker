@@ -43,7 +43,7 @@ namespace SMTPSupport
             CreateDictionaryCommands();
         }
 
-        public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient clientTcp)
+        public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient client)
         {
             _reader = reader;
             _writer = writer;
@@ -51,7 +51,7 @@ namespace SMTPSupport
             _errors = new Dictionary<ErrorCode, string>();
             CreateDictionnaryErrors();
             _closed = false;
-            _clientTcp = clientTcp;
+            _clientTcp = client;
         }
 
 
