@@ -11,49 +11,39 @@ using System.Net.Mail;
 
 namespace FakeSmtp
 {
-    public class MailListener : TcpListener
+    public class ProtocolHandler
     {
-        private TcpClient client;
+        private TcpClient _client;
         private NetworkStream stream;
         private System.IO.StreamReader reader;
         private System.IO.StreamWriter writer;
-        private Thread thread = null;
-        private SMTPServer owner;
-        string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
-        int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
         SmtpClient smtpDestination ;
         SMTPParser parser;
         SMTPSession session;
         SMTPCallingClient callingClient;
+        string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
+        int destinationPort = Convert.ToInt32(ConfigurationManager.AppSettings["destinationPort"]);
 
-        public MailListener(SMTPServer aOwner, IPAddress localaddr, int port)
-            : base(localaddr, port)
+        public ProtocolHandler(TcpClient client)
         {
+            _client = client;
             smtpDestination = new SmtpClient(hostDestination, destinationPort);
-            owner = aOwner;
         }
 
-        new public void Start()
+        public void Start()
         {
-            base.Start();
-
-            client = AcceptTcpClient();
-            client.ReceiveTimeout = 50000;
-            stream = client.GetStream();
+            _client.ReceiveTimeout = 50000;
+            stream = _client.GetStream();
             reader = new System.IO.StreamReader(stream);
             writer = new System.IO.StreamWriter(stream);
             writer.NewLine = "\r\n";
             writer.AutoFlush = true;
 
-            thread = new System.Threading.Thread(new ThreadStart(RunThread));
             session = new SMTPSession();
             parser = new SMTPParser();
-            callingClient = new SMTPCallingClient(reader, writer, session, client);
-            thread.Start();
-        }
+            callingClient = new SMTPCallingClient(reader, writer, session, _client);
 
-        protected void RunThread()
-        {
+
             callingClient.SendError(ErrorCode.Ready);
 
             try
@@ -73,19 +63,15 @@ namespace FakeSmtp
                 {
                     callingClient.Close();
                 }
-                Stop();
+                _client.Close();
 
             }
             catch (IOException)
             {
                 Console.WriteLine("Connection lost.");
-                Stop();
+                _client.Close();
             }
         }
 
-        public bool IsThreadAlive
-        {
-            get { return thread.IsAlive; }
-        }
     }
 }

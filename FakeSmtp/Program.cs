@@ -2,7 +2,8 @@ using System;
 using System.Configuration;
 using System.Net;
 using System.Threading;
-
+using System.Net.Mail;
+using System.Net.Sockets;
 
 
 namespace FakeSmtp
@@ -18,21 +19,22 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-            MailListener listener = null;
+            ProtocolHandler dialogueSession = null;
+            Thread threadSession = null;
+
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
+            int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
+            
+            TcpListener listener = new TcpListener(ipadress, receptionPort);
+            listener.Start();
+
             do
             {
-                int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
-
-                Console.WriteLine("New MailListener started");
-                listener = new MailListener(this, ipadress, receptionPort);
-                listener.Start();
-                while (listener.IsThreadAlive)
-                {
-                    Thread.Sleep(500);
-                }
-            } while (listener != null);
+                dialogueSession = new ProtocolHandler(listener.AcceptTcpClient());
+                threadSession = new System.Threading.Thread(new ThreadStart(dialogueSession.Start));
+                threadSession.Start();
+            } while (dialogueSession != null);
 
         }
     }
