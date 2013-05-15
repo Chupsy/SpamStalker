@@ -38,6 +38,7 @@ namespace FakeSmtp
             writer = new System.IO.StreamWriter(stream);
             writer.NewLine = "\r\n";
             writer.AutoFlush = true;
+            string testRead;
 
             session = new SMTPSession();
             parser = new SMTPParser();
@@ -48,12 +49,27 @@ namespace FakeSmtp
 
             try
             {
-                parser.Execute(reader.ReadLine(), session, callingClient);
-
+                testRead =  reader.ReadLine();
+                if (testRead != null)
+                {
+                    parser.Execute(testRead, session, callingClient);
+                }
+                else
+                {
+                    callingClient.ForceClose();
+                }
 
                 while (!callingClient.IsClosed())
                 {
-                    parser.Execute(reader.ReadLine(), session, callingClient);
+                    testRead =  reader.ReadLine();
+                    if (testRead != null)
+                    {
+                        parser.Execute(testRead, session, callingClient);
+                    }
+                    else
+                    {
+                        callingClient.ForceClose();
+                    }
                 }
                 if (session.IsReady())
                 {

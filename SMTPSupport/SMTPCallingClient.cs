@@ -79,6 +79,11 @@ namespace SMTPSupport
             _closed = true;
         }
 
+        public virtual void ForceClose()
+        {
+            _closed = true;
+        }
+
         public virtual void GetData()
         {
             _writer.WriteLine("354 Start input, end data with <CRLF>.<CRLF>");
