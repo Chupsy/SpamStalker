@@ -8,14 +8,18 @@ namespace SMTPSupport
 {
     public class SMTPParser
     {
-        static Dictionary<string,SMTPCommand> _commands;
+        static Dictionary<string, SMTPCommand> _commands;
 
         public SMTPParser()
         {
-            InitializeCommands();
         }
 
-        static Dictionary<string, SMTPCommand> InitializeCommands()
+        static SMTPParser()
+        {
+            _commands = CreateCommands();
+        }
+
+        static Dictionary<string, SMTPCommand> CreateCommands()
         {
             var dic = new Dictionary<string, SMTPCommand>();
             RegisterCommand(dic, new RCPTCommand());
@@ -27,6 +31,7 @@ namespace SMTPSupport
             RegisterCommand(dic, new QUITCommand());
             RegisterCommand(dic, new DATACommand());
             RegisterCommand(dic, new RSETCommand());
+            return dic;
         }
 
         static SMTPCommand RegisterCommand( Dictionary<string, SMTPCommand> dic, SMTPCommand cmd )
@@ -39,7 +44,6 @@ namespace SMTPSupport
         { 
             get 
             {
-                InitializeCommands();
                 return _commands.Values; 
             } 
         }
@@ -47,7 +51,6 @@ namespace SMTPSupport
 
         static public SMTPCommand FindCommand(string commandLine)
         {
-            InitializeCommands();
             SMTPCommand result = null;
             if (commandLine.Length >= 4)
             {

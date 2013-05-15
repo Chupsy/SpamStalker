@@ -35,7 +35,7 @@ namespace SMTPSupport
                 else
                 {
                     session.AddRecipient(_mailAdress);
-                    client.SendError(ErrorCode.AddressUnknow);
+                    client.SendError(ErrorCode.AddressUnknown);
                 }
             }
             else

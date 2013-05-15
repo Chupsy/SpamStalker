@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace FakeSmtp
 {
-    public interface IMetaCommandAPI
+
+    public enum ServerStatus
+    {
+        Running,
+        ShuttingDown,
+        Paused
+    }
+
+    public interface IMetaCommandAPI 
     {
         void Shutdown();
 
@@ -14,5 +22,6 @@ namespace FakeSmtp
 
         void Resume();
 
+        ServerStatus Status { get; }
     }
 }

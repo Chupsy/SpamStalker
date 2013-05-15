@@ -20,7 +20,7 @@ namespace SMTPSupport
         ArgumentError = 501,
         NotImplemented = 502,
         BadSequence = 503,
-        AddressUnknow = 550
+        AddressUnknown = 550
     }
 
     public class SMTPCallingClient
@@ -89,7 +89,7 @@ namespace SMTPSupport
             _session.SetReadyToSend();
             if (!_session.IsReady())
             {
-                SendError(ErrorCode.AddressUnknow);
+                SendError(ErrorCode.AddressUnknown);
             }
             else
             {
@@ -115,14 +115,14 @@ namespace SMTPSupport
 
         public virtual void SendHelp()
         {
-            foreach (KeyValuePair<string, SMTPCommand> temp in SMTPParser.Commands )
+            foreach (SMTPCommand temp in SMTPParser.Commands )
             {
-                _writer.WriteLine("{0} : {1}", temp.Key, temp.Value.HelpText );
+                _writer.WriteLine("{0} : {1}", temp.Name, temp.HelpText );
             }
         }
         public virtual void SendHelp(string parameter)
         {
-            SMTPCommand cmd = SMTPParser.FindCommands(parameter);
+            SMTPCommand cmd = SMTPParser.FindCommand(parameter);
             if ( cmd != null )
             {
                 _writer.WriteLine("{0} : {1}", parameter.ToUpper(), cmd.HelpText );
@@ -164,7 +164,7 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.ArgumentError, "Syntax error in parameters or arguments");
             _errors.Add(ErrorCode.NotImplemented, "Command not implemented");
             _errors.Add(ErrorCode.BadSequence, "Bad sequence of commands");
-            _errors.Add(ErrorCode.AddressUnknow, "Adress Unknow");
+            _errors.Add(ErrorCode.AddressUnknown, "Adress Unknow");
         }
 
     }
