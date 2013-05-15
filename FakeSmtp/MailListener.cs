@@ -58,6 +58,7 @@ namespace FakeSmtp
 
             try
             {
+                Console.WriteLine(reader.ReadLine());
                 parser.Execute(reader.ReadLine(), session, callingClient);
 
 

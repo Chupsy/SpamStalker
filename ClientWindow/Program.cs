@@ -17,10 +17,10 @@ namespace ClientWindow
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            Client client = new Client();
-            string serverIP = "localhost";
-            string message = "Helloa";
-            client.Connect(serverIP, message);
+            //Client client = new Client();
+            //string serverIP = "localhost";
+            //string message = "EHLO";
+            //client.Connect(serverIP, message);
 
             Application.Run(new Form1());
 
