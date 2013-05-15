@@ -8,29 +8,54 @@ namespace SMTPSupport
 {
     public class SMTPParser
     {
-        Dictionary<string,SMTPCommand> _commands;
+        static Dictionary<string,SMTPCommand> _commands;
 
         public SMTPParser()
         {
-            _commands = new Dictionary<string, SMTPCommand>();
-            RegisterCommand( new RCPTCommand() );
-            SMTPCommand helloCmd = RegisterCommand( new EHLOCommand() );
-            _commands.Add( "HELO ", helloCmd );
-            RegisterCommand(new MAILCommand());
-            RegisterCommand(new HELPCommand(this));
-            RegisterCommand(new NOOPCommand());
-            RegisterCommand(new QUITCommand());
-            RegisterCommand(new DATACommand());
-            RegisterCommand(new RSETCommand());
+            InitializeCommands();
         }
 
-        SMTPCommand RegisterCommand( SMTPCommand cmd )
+        static Dictionary<string, SMTPCommand> InitializeCommands()
         {
-            _commands.Add( cmd.Name, cmd );
+            var dic = new Dictionary<string, SMTPCommand>();
+            RegisterCommand(dic, new RCPTCommand());
+            SMTPCommand helloCmd = RegisterCommand( dic, new EHLOCommand());
+            dic.Add("HELO", helloCmd);
+            RegisterCommand(dic, new MAILCommand());
+            RegisterCommand(dic, new HELPCommand());
+            RegisterCommand(dic, new NOOPCommand());
+            RegisterCommand(dic, new QUITCommand());
+            RegisterCommand(dic, new DATACommand());
+            RegisterCommand(dic, new RSETCommand());
+        }
+
+        static SMTPCommand RegisterCommand( Dictionary<string, SMTPCommand> dic, SMTPCommand cmd )
+        {
+            dic.Add( cmd.Name, cmd );
             return cmd;
         }
 
-        public IEnumerable<SMTPCommand> Commands { get { return _commands.Values; } }
+        static public IEnumerable<SMTPCommand> Commands 
+        { 
+            get 
+            {
+                InitializeCommands();
+                return _commands.Values; 
+            } 
+        }
+
+
+        static public SMTPCommand FindCommand(string commandLine)
+        {
+            InitializeCommands();
+            SMTPCommand result = null;
+            if (commandLine.Length >= 4)
+            {
+                string headCommand = commandLine.Substring(0, 4);
+                _commands.TryGetValue(headCommand, out result);
+            }
+            return result;
+        }
 
         public void Execute( string commandLine, SMTPSession session, SMTPCallingClient client )
         {
@@ -56,16 +81,6 @@ namespace SMTPSupport
            
         }
 
-        SMTPCommand FindCommand( string commandLine )
-        {
-            SMTPCommand result = null;
-            if( commandLine.Length >= 4 )
-            {
-                string headCommand = commandLine.Substring( 0, 4 );
-                _commands.TryGetValue( headCommand, out result );
-            }
-            return result;
-        }
 
 
 

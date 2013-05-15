@@ -4,12 +4,15 @@ using System.Net;
 using System.Threading;
 using System.Net.Mail;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 
 namespace FakeSmtp
 {
     public class SMTPServer
     {
+        bool _shutdown;
+
         [STAThread] 
         static void Main(string[] args)
         {
@@ -19,8 +22,7 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-            ProtocolHandler dialogueSession = null;
-            Thread threadSession = null;
+
 
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
@@ -28,13 +30,22 @@ namespace FakeSmtp
             
             TcpListener listener = new TcpListener(ipadress, receptionPort);
             listener.Start();
-
+            List<Thread> allThreads = new List<Thread>();
             do
             {
-                dialogueSession = new ProtocolHandler(listener.AcceptTcpClient());
-                threadSession = new System.Threading.Thread(new ThreadStart(dialogueSession.Start));
-                threadSession.Start();
-            } while (dialogueSession != null);
+                TcpClient client = listener.AcceptTcpClient();
+                ProtocolHandler p = new ProtocolHandler( client );
+                Thread t = new Thread( p.Start );
+                allThreads.Add(t);
+                t.Start();
+                for (int i = 0; i < allThreads.Count; ++i )
+                {
+                    if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
+                }
+            } 
+            while (!_shutdown);
+            listener.Stop();
+            foreach (Thread t in allThreads) t.Join();
 
         }
     }

@@ -32,17 +32,13 @@ namespace SMTPSupport
         SMTPSession _session;
         Dictionary<ErrorCode, string> _errors;
         TcpClient _clientTcp;
-        Dictionary<string, string> _commands;
         SMTPParser _parser;
 
         public SMTPCallingClient()
         {
             _errors = new Dictionary<ErrorCode,string>();
             CreateDictionnaryErrors();
- 
-            _commands = new Dictionary<string, string>();
-            CreateDictionaryCommands();
-        }
+         }
 
         public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient client)
         {
@@ -53,10 +49,7 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = client;
-            _parser = new SMTPParser();
-            _commands = new Dictionary<string, string>();
-            CreateDictionaryCommands();
-            
+            _parser = new SMTPParser();            
         }
 
 
@@ -122,21 +115,19 @@ namespace SMTPSupport
 
         public virtual void SendHelp()
         {
-            foreach (KeyValuePair<string, string> _temp in _commands)
+            foreach (KeyValuePair<string, SMTPCommand> temp in SMTPParser.Commands )
             {
-                _writer.WriteLine("{0} : {1}", _temp.Key,_temp.Value);
+                _writer.WriteLine("{0} : {1}", temp.Key, temp.Value.HelpText );
             }
         }
         public virtual void SendHelp(string parameter)
         {
-            if (_commands.ContainsKey(parameter)) _writer.WriteLine("{0} : {1}", parameter.ToUpper(), _commands[parameter]);
-            else
+            SMTPCommand cmd = SMTPParser.FindCommands(parameter);
+            if ( cmd != null )
             {
-                foreach (KeyValuePair<string, string> _temp in _commands)
-                {
-                    _writer.WriteLine("{0} : {1}", _temp.Key, _temp.Value);
-                }
+                _writer.WriteLine("{0} : {1}", parameter.ToUpper(), cmd.HelpText );
             }
+            else SendHelp();
         }
 
         public virtual bool IsClosed()
@@ -176,16 +167,5 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.AddressUnknow, "Adress Unknow");
         }
 
-        private void CreateDictionaryCommands()
-        {
-            foreach (SMTPCommand test in _parser.Commands)
-            {
-                if (!_commands.ContainsKey(test.Name))
-                {
-                    _commands.Add(test.Name, test.HelpText);
-                }
-            }
-            _commands.Add("HELO", "Initialize a stream.");
-        }
     }
 }

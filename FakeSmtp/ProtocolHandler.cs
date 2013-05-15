@@ -82,9 +82,9 @@ namespace FakeSmtp
                 _client.Close();
 
             }
-            catch (IOException)
+            catch (IOException ex)
             {
-                Console.WriteLine("Connection lost.");
+                Console.WriteLine("Connection lost : {0}", ex);
                 _client.Close();
             }
         }
