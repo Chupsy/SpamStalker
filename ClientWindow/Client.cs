@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.Configuration;
+
 
 namespace ClientWindow
 {
@@ -14,44 +16,36 @@ namespace ClientWindow
         {
         }
 
-        public void Connect(string serverIP, string message)
+        public void Connect(string message)
         {
             string output = "";
+            System.IO.StreamReader reader;
+            System.IO.StreamWriter writer;
+            NetworkStream stream;
+            TcpClient client;
+            
+            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            int port = Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
 
             try
             {
-                // Create a TcpClient.
-                // The client requires a TcpServer that is connected
-                // to the same address specified by the server and port
-                // combination.
-                Int32 port = 13;
-                TcpClient client = new TcpClient(serverIP, port);
+               
+                client = new TcpClient(serverIP, port);
+                stream = client.GetStream();
+                reader = new System.IO.StreamReader(stream);
+                writer = new System.IO.StreamWriter(stream);
+                writer.AutoFlush = true;
+                output = reader.ReadLine();
 
-                // Translate the passed message into ASCII and store it as a byte array.
-                Byte[] data = new Byte[256];
-                data = System.Text.Encoding.ASCII.GetBytes(message);
-
-                // Get a client stream for reading and writing.
-                // Stream stream = client.GetStream();
-                NetworkStream stream = client.GetStream();
-
-                // Send the message to the connected TcpServer. 
-                stream.Write(data, 0, data.Length);
-
-                output = "Sent: " + message;
-                MessageBox.Show(output);
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                output = "Received: " + responseData;
-                MessageBox.Show(output);
+                if (output == "220 <SpamStalker> Service ready")
+                {
+                    writer.WriteLine(message);
+                    output = reader.ReadLine();
+                    if (output != "250 OK")
+                    {
+                        MessageBox.Show("Sever Error");
+                    }
+                }
 
                 // Close everything.
                 stream.Close();

@@ -35,18 +35,15 @@ namespace ClientWindow
 
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            // In this code example, use a hard-coded
-            // IP address and message
-            string serverIP = "localhost";
-            string message = "Hello";
-            client.Connect(serverIP, message);
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            string message = "EHLO tutu";
+            client.Connect(message);
         }
     }
 }
