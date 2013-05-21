@@ -12,9 +12,17 @@ namespace ClientWindow
 {
     public partial class Form2 : Form
     {
+        Client client = new Client();
         public Form2()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string logins = textBox1.Text +" "+ textBox2.Text;
+            string message = "!EHLO " + logins;
+            client.Connect(message);
         }
     }
 }
