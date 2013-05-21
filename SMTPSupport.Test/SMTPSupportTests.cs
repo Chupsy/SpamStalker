@@ -17,6 +17,7 @@ namespace SMTPSupport.Test
         {
             Assert.That((int)ErrorCode.Ok, Is.EqualTo(250));
         }
+
         [Test]
         public void TestEHLO()
         {
@@ -207,5 +208,20 @@ namespace SMTPSupport.Test
 
        }
 
+        [Test]
+        public void TestHELP()
+        {
+            SMTPParser parser = new SMTPParser();
+            SMTPSession session = new SMTPSession();
+            SMTPClientTest client = new SMTPClientTest();
+            MailAddress testSender = new MailAddress("vincent@test.com");
+            parser.Execute("HELO tutu", session, client);
+            parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
+            parser.Execute("MAIL FROM:<vincent@test.com>", session, client);
+            client.Clear();
+
+            parser.Execute("HELP", session, client);
+            Assert.That(client.ToString(), Is.StringContaining(""));
+        }
     }
 }
