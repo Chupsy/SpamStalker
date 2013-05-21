@@ -1,6 +1,6 @@
 ﻿namespace ClientWindow
 {
-    partial class Form2
+    partial class Form3
     {
         /// <summary>
         /// Required designer variable.
@@ -37,59 +37,58 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(92, 12);
+            this.textBox1.Location = new System.Drawing.Point(137, 26);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(165, 20);
+            this.textBox1.Size = new System.Drawing.Size(187, 20);
             this.textBox1.TabIndex = 0;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(92, 45);
+            this.textBox2.Location = new System.Drawing.Point(137, 70);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(165, 20);
+            this.textBox2.Size = new System.Drawing.Size(187, 20);
             this.textBox2.TabIndex = 1;
-            this.textBox2.UseSystemPasswordChar = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 15);
+            this.label1.Location = new System.Drawing.Point(26, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "User Name :";
+            this.label1.Text = "Addres";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 52);
+            this.label2.Location = new System.Drawing.Point(26, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 13);
+            this.label2.Size = new System.Drawing.Size(82, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Password :";
+            this.label2.Text = "Description / url";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(182, 78);
+            this.button1.Location = new System.Drawing.Point(249, 116);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
-            this.button1.Text = "OK";
+            this.button1.Text = "Commit";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Form2
+            // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 113);
+            this.ClientSize = new System.Drawing.Size(348, 151);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
-            this.Name = "Form2";
-            this.Text = "Login";
+            this.Name = "Form3";
+            this.Text = "Form3";
             this.ResumeLayout(false);
             this.PerformLayout();
 

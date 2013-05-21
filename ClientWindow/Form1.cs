@@ -45,5 +45,11 @@ namespace ClientWindow
             string message = "EHLO tutu";
             client.Connect(message);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form3 adWindow = new Form3();
+            adWindow.ShowDialog();
+        }
     }
 }
