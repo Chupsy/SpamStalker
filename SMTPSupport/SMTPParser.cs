@@ -31,6 +31,7 @@ namespace SMTPSupport
             RegisterCommand(dic, new QUITCommand());
             RegisterCommand(dic, new DATACommand());
             RegisterCommand(dic, new RSETCommand());
+            RegisterCommand(dic, new MetaEHLOCommand());
             return dic;
         }
 
@@ -38,6 +39,26 @@ namespace SMTPSupport
         {
             dic.Add( cmd.Name, cmd );
             return cmd;
+        }
+
+
+        static Dictionary<string, SMTPCommand> CreateMetaCommands()
+        {
+            Dictionary<string, SMTPCommand> metaDic = new Dictionary<string, SMTPCommand>();
+            RegisterMetaCommand(metaDic, new MetaEHLOCommand());
+            RegisterMetaCommand(metaDic, new MetaCLOSECommand());
+            return metaDic;
+        }   
+
+        static SMTPCommand RegisterMetaCommand(Dictionary<string, SMTPCommand> metaDic, SMTPCommand cmd)
+        {
+            metaDic.Add(cmd.Name, cmd);
+            return cmd;
+        }
+
+        public void EnableMetaCommands()
+        {
+            _commands = CreateMetaCommands();
         }
 
         static public IEnumerable<SMTPCommand> Commands 
@@ -54,7 +75,15 @@ namespace SMTPSupport
             SMTPCommand result = null;
             if (commandLine.Length >= 4)
             {
-                string headCommand = commandLine.Substring(0, 4);
+                string headCommand;
+                if (commandLine.Length > 4)
+                {
+                    headCommand = commandLine.Substring(0, 5).Trim();
+                }
+                else
+                {
+                    headCommand = commandLine.Substring(0, 4).Trim();
+                }
                 _commands.TryGetValue(headCommand, out result);
             }
             return result;
@@ -83,10 +112,6 @@ namespace SMTPSupport
             cmdExecute.Command.Execute(session, client);
            
         }
-
-
-
-
 
     }
 }

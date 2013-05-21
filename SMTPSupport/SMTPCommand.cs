@@ -19,7 +19,7 @@ namespace SMTPSupport
 
         protected SMTPCommand( string name, string helpText )
         {
-            if( name == null || name.Length != 4 ) throw new ArgumentException( "A SMTP command must be 4 characters long." );
+            if( name == null || (name.Length != 4 && name.Length != 5) ) throw new ArgumentException( "A SMTP command must be 4 characters long." );
             Name = name;
             HelpText = helpText ?? String.Empty;
         }

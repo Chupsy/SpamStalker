@@ -14,10 +14,12 @@ namespace SMTPSupport
         bool _ready = false;
         MailAddress _sender;
         bool _knownAdress;
+        bool _isMeta;
 
         public SMTPSession()
         {
             _knownAdress = false;
+            _isMeta = false;
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
@@ -78,5 +80,15 @@ namespace SMTPSupport
             }
         }
 
+
+        internal void EnableMetaSession()
+        {
+            _isMeta = true;
+        }
+
+        public bool IsMeta
+        {
+            get { return _isMeta; }
+        }
     }
 }

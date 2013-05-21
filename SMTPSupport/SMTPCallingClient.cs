@@ -59,6 +59,10 @@ namespace SMTPSupport
         
         }
 
+        public virtual void WriteThis(string txt)
+        {
+            _writer.WriteLine(txt);
+        }
         public virtual void SendSuccess()
         {
             _writer.WriteLine(GetError(ErrorCode.Ok));
@@ -130,9 +134,19 @@ namespace SMTPSupport
             else SendHelp();
         }
 
+        public virtual void EHLOResponse(string domain)
+        {
+            _writer.WriteLine("250 {0}", domain);
+        }
+
         public virtual bool IsClosed()
         {
             return _closed;
+        }
+
+        public void SetMetaSession()
+        {
+            _session.EnableMetaSession();
         }
 
         internal string GetError(ErrorCode errorName)
@@ -166,6 +180,7 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.BadSequence, "Bad sequence of commands");
             _errors.Add(ErrorCode.AddressUnknown, "Adress Unknow");
         }
+
 
     }
 }

@@ -31,6 +31,10 @@ namespace SMTPSupport.Test
             _w.GetStringBuilder().Clear();
         }
 
+        public override void EHLOResponse(string domain)
+        {
+            _w.WriteLine("250 {0}", domain);
+        }
         public override string ToString()
         {
             return _w.ToString();

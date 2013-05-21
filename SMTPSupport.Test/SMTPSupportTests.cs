@@ -24,7 +24,7 @@ namespace SMTPSupport.Test
             SMTPSession session = new SMTPSession();
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(client.ToString(), Is.StringContaining("250 tutu"));
             Assert.That(session.IsInitialized, Is.True);
             client.Clear();
             session = new SMTPSession();
@@ -35,7 +35,7 @@ namespace SMTPSupport.Test
 
             session = new SMTPSession();
             parser.Execute("HELO tutu", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("Success"));
+            Assert.That(client.ToString(), Is.StringContaining("250 tutu"));
             Assert.That(session.IsInitialized, Is.True);
             client.Clear();
             session = new SMTPSession();
@@ -154,9 +154,10 @@ namespace SMTPSupport.Test
             SMTPParser parser = new SMTPParser();
             SMTPSession session = new SMTPSession();
             SMTPClientTest client = new SMTPClientTest();
-            MailAddress testSender = new MailAddress("vincent@test.com");
+            MailAddress testSender = new MailAddress("vincent@waza.com");
             parser.Execute("EHLO tutu", session, client);
-            parser.Execute("MAIL FROM:<vincent@test.com>", session, client);
+            client.Clear();
+            parser.Execute("MAIL FROM:<vincent@waza.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("Success"));
             Assert.That(session.Sender.Address == testSender.Address);
             client.Clear();
@@ -164,9 +165,9 @@ namespace SMTPSupport.Test
             session = new SMTPSession();
             testSender = new MailAddress("dufrasnes@cake.fr");
             parser.Execute("EHLO tutu", session, client);
+            client.Clear();
             parser.Execute("MAIL FROM:<dufrasnes@cake.fr>", session, client);
-            Assert.That(client.ToString(), Is.StringContaining("Success"));
-            Assert.That(session.Sender.Address == testSender.Address);
+            Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
             session = new SMTPSession();

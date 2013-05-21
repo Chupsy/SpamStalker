@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SMTPMetaCallingClient.cs" />
+    <Compile Include="SMTPMetaSession.cs" />
+    <Compile Include="MetaCLOSECommand.cs" />
+    <Compile Include="MetaCLOSECommandToExecute.cs" />
+    <Compile Include="MetaEHLOCommand.cs" />
+    <Compile Include="MetaEHLOCommandToExecute.cs" />
     <Compile Include="DATACommand.cs" />
     <Compile Include="DATACommandToExecute.cs" />
     <Compile Include="RSETCommand.cs" />

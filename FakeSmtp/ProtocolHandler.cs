@@ -53,6 +53,11 @@ namespace FakeSmtp
                 if (testRead != null)
                 {
                     parser.Execute(testRead, session, callingClient);
+                    if (session.IsMeta == true)
+                    {
+                        session = new SMTPMetaSession();
+                        callingClient = new SMTPMetaCallingClient(reader, writer, session, _client, parser);
+                    }
                 }
                 else
                 {
