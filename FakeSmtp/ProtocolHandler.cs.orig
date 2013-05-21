@@ -49,6 +49,7 @@ namespace FakeSmtp
 
             try
             {
+<<<<<<< HEAD:FakeSmtp/ProtocolHandler.cs
                 testRead =  reader.ReadLine();
                 if (testRead != null)
                 {
@@ -63,6 +64,11 @@ namespace FakeSmtp
                 {
                     callingClient.ForceClose();
                 }
+=======
+                Console.WriteLine(reader.ReadLine());
+                parser.Execute(reader.ReadLine(), session, callingClient);
+
+>>>>>>> 692c30a576285511e051c5a1925f7ee28309dfac:FakeSmtp/MailListener.cs
 
                 while (!callingClient.IsClosed())
                 {
@@ -78,14 +84,7 @@ namespace FakeSmtp
                 }
                 if (session.IsReady())
                 {
-                    try
-                    {
-                        smtpDestination.Send(session.mail);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Fail to send !");
-                    }
+                    smtpDestination.Send(session.mail);
                 }
                 else if(!callingClient.IsClosed())
                 {
