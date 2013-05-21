@@ -19,7 +19,6 @@ namespace SMTPSupport
         public SMTPSession()
         {
             _knownAdress = false;
-            _isMeta = false;
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
@@ -89,6 +88,7 @@ namespace SMTPSupport
         public bool IsMeta
         {
             get { return _isMeta; }
+            set { _isMeta = value; }
         }
     }
 }

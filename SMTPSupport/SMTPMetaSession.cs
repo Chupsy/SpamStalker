@@ -15,9 +15,9 @@ namespace SMTPSupport
         {
         }
 
-        public bool IsInitialized { get { return _userName != null; } }
+        new public bool IsInitialized { get { return _userName != null; } }
 
-        public void Initialize(string userName)
+        new public void Initialize(string userName)
         {
             if (userName == null) throw new ArgumentNullException("userName");
             _userName = userName;

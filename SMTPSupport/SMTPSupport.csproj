@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetaRMVAddressCommand.cs" />
+    <Compile Include="MetaRMVAddressCommandToExecute.cs" />
+    <Compile Include="MetaADDAddressCommand.cs" />
+    <Compile Include="MetaADDAddressCommandToExecute.cs" />
     <Compile Include="SMTPMetaCallingClient.cs" />
     <Compile Include="SMTPMetaSession.cs" />
     <Compile Include="MetaCLOSECommand.cs" />

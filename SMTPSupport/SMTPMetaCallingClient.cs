@@ -13,7 +13,6 @@ namespace SMTPSupport
     {
         System.IO.StreamReader _reader;
         System.IO.StreamWriter _writer;
-        string _line;
         SMTPSession _session;
         Dictionary<ErrorCode, string> _errors;
         TcpClient _clientTcp;
@@ -21,6 +20,7 @@ namespace SMTPSupport
 
 
         public SMTPMetaCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient client, SMTPParser parser)
+        :base(reader, writer, session, client)
         {
             _reader = reader;
             _writer = writer;
@@ -28,7 +28,8 @@ namespace SMTPSupport
             _errors = new Dictionary<ErrorCode, string>();
             CreateDictionnaryErrors();
             _clientTcp = client;
-            _parser = parser;            
+            _parser = parser;
+            ActivateMetaSession();
         }
 
         public void ActivateMetaSession()
@@ -36,6 +37,11 @@ namespace SMTPSupport
             _parser.EnableMetaCommands();
         }
 
+        public override void SendError(ErrorCode errorCode)
+        {
+            _writer.WriteLine(GetError(errorCode));
+
+        }
         private void CreateDictionnaryErrors()
         {
             _errors.Add(ErrorCode.Ok, "OK");

@@ -41,6 +41,7 @@ namespace FakeSmtp
             string testRead;
 
             session = new SMTPSession();
+            session.IsMeta = false;
             parser = new SMTPParser();
             callingClient = new SMTPCallingClient(reader, writer, session, _client);
 
