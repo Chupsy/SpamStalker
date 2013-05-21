@@ -35,7 +35,7 @@ namespace SMTPSupport
 
             if (senderAddress != null && senderAddress != "")
             {
-                if(!CheckMail(senderAddress))
+                if(CheckMail(senderAddress))
                 {
                     return new SMTPCommandParseResult(ErrorCode.Unrecognized);
                 }

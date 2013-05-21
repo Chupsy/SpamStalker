@@ -8,7 +8,7 @@ namespace SMTPSupport
 {
     internal class HELPCommand : SMTPCommand
     {
-        public HELPCommand(SMTPParser parser)
+        public HELPCommand()
             : base( "HELP", "Shows SMTP commands help." )
         {
         }

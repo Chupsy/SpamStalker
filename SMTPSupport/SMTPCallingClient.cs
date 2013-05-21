@@ -20,7 +20,7 @@ namespace SMTPSupport
         ArgumentError = 501,
         NotImplemented = 502,
         BadSequence = 503,
-        AddressUnknow = 550
+        AddressUnknown = 550
     }
 
     public class SMTPCallingClient
@@ -32,17 +32,13 @@ namespace SMTPSupport
         SMTPSession _session;
         Dictionary<ErrorCode, string> _errors;
         TcpClient _clientTcp;
-        Dictionary<string, string> _commands;
         SMTPParser _parser;
 
         public SMTPCallingClient()
         {
             _errors = new Dictionary<ErrorCode,string>();
             CreateDictionnaryErrors();
- 
-            _commands = new Dictionary<string, string>();
-            CreateDictionaryCommands();
-        }
+         }
 
         public SMTPCallingClient(System.IO.StreamReader reader, System.IO.StreamWriter writer, SMTPSession session, TcpClient client)
         {
@@ -53,10 +49,7 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = client;
-            _parser = new SMTPParser();
-            _commands = new Dictionary<string, string>();
-            CreateDictionaryCommands();
-            
+            _parser = new SMTPParser();            
         }
 
 
@@ -66,6 +59,10 @@ namespace SMTPSupport
         
         }
 
+        public virtual void WriteThis(string txt)
+        {
+            _writer.WriteLine(txt);
+        }
         public virtual void SendSuccess()
         {
             _writer.WriteLine(GetError(ErrorCode.Ok));
@@ -76,6 +73,11 @@ namespace SMTPSupport
         {
             _writer.WriteLine(GetError(ErrorCode.Closing));
             _clientTcp.Close();
+            _closed = true;
+        }
+
+        public virtual void ForceClose()
+        {
             _closed = true;
         }
 
@@ -91,7 +93,7 @@ namespace SMTPSupport
             _session.SetReadyToSend();
             if (!_session.IsReady())
             {
-                SendError(ErrorCode.AddressUnknow);
+                SendError(ErrorCode.AddressUnknown);
             }
             else
             {
@@ -117,26 +119,34 @@ namespace SMTPSupport
 
         public virtual void SendHelp()
         {
-            foreach (KeyValuePair<string, string> _temp in _commands)
+            foreach (SMTPCommand temp in SMTPParser.Commands )
             {
-                _writer.WriteLine("{0} : {1}", _temp.Key,_temp.Value);
+                _writer.WriteLine("{0} : {1}", temp.Name, temp.HelpText );
             }
         }
         public virtual void SendHelp(string parameter)
         {
-            if (_commands.ContainsKey(parameter)) _writer.WriteLine("{0} : {1}", parameter.ToUpper(), _commands[parameter]);
-            else
+            SMTPCommand cmd = SMTPParser.FindCommand(parameter);
+            if ( cmd != null )
             {
-                foreach (KeyValuePair<string, string> _temp in _commands)
-                {
-                    _writer.WriteLine("{0} : {1}", _temp.Key, _temp.Value);
-                }
+                _writer.WriteLine("{0} : {1}", parameter.ToUpper(), cmd.HelpText );
             }
+            else SendHelp();
+        }
+
+        public virtual void EHLOResponse(string domain)
+        {
+            _writer.WriteLine("250 {0}", domain);
         }
 
         public virtual bool IsClosed()
         {
             return _closed;
+        }
+
+        public void SetMetaSession()
+        {
+            _session.EnableMetaSession();
         }
 
         internal string GetError(ErrorCode errorName)
@@ -168,19 +178,9 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.ArgumentError, "Syntax error in parameters or arguments");
             _errors.Add(ErrorCode.NotImplemented, "Command not implemented");
             _errors.Add(ErrorCode.BadSequence, "Bad sequence of commands");
-            _errors.Add(ErrorCode.AddressUnknow, "Adress Unknow");
+            _errors.Add(ErrorCode.AddressUnknown, "Adress Unknow");
         }
 
-        private void CreateDictionaryCommands()
-        {
-            foreach (SMTPCommand test in _parser.Commands)
-            {
-                if (!_commands.ContainsKey(test.Name))
-                {
-                    _commands.Add(test.Name, test.HelpText);
-                }
-            }
-            _commands.Add("HELO", "Initialize a stream.");
-        }
+
     }
 }

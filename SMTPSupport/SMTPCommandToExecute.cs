@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    public abstract class SMTPCommandToExecute
+    public abstract class SMTPCommandToExecute 
     {
         public abstract void Execute( SMTPSession session, SMTPCallingClient client );
     }

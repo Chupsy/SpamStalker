@@ -24,7 +24,7 @@ namespace SMTPSupport
             else
             {
                 session.Initialize( _domainName );
-                client.SendSuccess();
+                client.EHLOResponse( _domainName);
             }
         }
 

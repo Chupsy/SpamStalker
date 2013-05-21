@@ -24,7 +24,7 @@ namespace SMTPSupport
                 senderDomainName = firstLine.Substring(4).Trim();
             }
 
-            if( senderDomainName == null )
+            if (senderDomainName == null )
             {
                 return new SMTPCommandParseResult( ErrorCode.Unrecognized );
             }
