@@ -12,20 +12,28 @@ namespace ClientWindow
 {
     public class Client
     {
+
+        System.IO.StreamReader reader;
+        System.IO.StreamWriter writer;
+        NetworkStream stream;
+        TcpClient client;
+
+        string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+        int port = Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
+
         public Client()
         {
         }
 
-        public void Connect(string message)
+        public void Send(string message)
+        {
+            writer.WriteLine(message);
+        }
+
+
+        public void Connect(string login, string pass)
         {
             string output = "";
-            System.IO.StreamReader reader;
-            System.IO.StreamWriter writer;
-            NetworkStream stream;
-            TcpClient client;
-            
-            string serverIP = ConfigurationManager.AppSettings["ServerIP"];
-            int port = Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
 
             try
             {
@@ -39,17 +47,13 @@ namespace ClientWindow
 
                 if (output == "220 <SpamStalker> Service ready")
                 {
-                    writer.WriteLine(message);
+                    writer.WriteLine("!EHLO " + login +" "+pass);
                     output = reader.ReadLine();
                     if (output != "250 OK")
                     {
                         MessageBox.Show("Sever Error");
                     }
-                }
-
-                // Close everything.
-                stream.Close();
-                client.Close();
+                }               
             }
             catch (ArgumentNullException e)
             {
@@ -61,6 +65,19 @@ namespace ClientWindow
                 output = "SocketException: " + e.ToString();
                 MessageBox.Show(output);
             }
+        }
+
+        public GetData()
+        {
+            writer.WriteLine("GETA");
+
+            return(data);
+        }
+
+        public void CloseStream()
+        {
+            stream.Close();
+            client.Close();
         }
     }
 }
