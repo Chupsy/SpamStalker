@@ -16,7 +16,7 @@ namespace SMTPSupport
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             client.SendError(ErrorCode.Closing);
-            
+            session.MetaSession.MetaAPI.Shutdown();
         }
 
     }

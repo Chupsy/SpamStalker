@@ -18,7 +18,7 @@ namespace SMTPSupport
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
             client.WriteThis(_display);
-            client.CreateMetaSession();
+            session.EnableMetaSession();
         }
 
     }

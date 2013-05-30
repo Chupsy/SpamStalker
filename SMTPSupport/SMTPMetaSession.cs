@@ -7,20 +7,30 @@ using System.Net.Mail;
 
 namespace SMTPSupport
 {
-    public class SMTPMetaSession : SMTPSession
+    public class SMTPMetaSession
     {
+        readonly SMTPSession _session;
+        readonly IMetaCommandAPI _metaAPI;
         string _userName;
 
-        public SMTPMetaSession()
+        internal SMTPMetaSession( SMTPSession session, IMetaCommandAPI metaAPI )
         {
+            _session = session;
+            _metaAPI = metaAPI;
         }
 
-        new public bool IsInitialized { get { return _userName != null; } }
+        public SMTPSession Session { get { return _session; } }
 
-        new public void Initialize(string userName)
+        public bool IsInitialized { get { return _userName != null; } }
+
+        public void Initialize(string userName)
         {
             if (userName == null) throw new ArgumentNullException("userName");
             _userName = userName;
         }
+
+        public IMetaCommandAPI MetaAPI { get { return _metaAPI; } }
+
+
     }
 }

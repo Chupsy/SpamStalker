@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMetaCommandAPI.cs" />
     <Compile Include="MetaCommandAPI.cs" />
     <Compile Include="ProtocolHandler.cs" />
     <Compile Include="MailTransfer.cs" />
