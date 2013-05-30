@@ -11,7 +11,6 @@ namespace SMTPSupport.Test
     {
         StringWriter _w = new StringWriter();
 
-
         public override void SendError(ErrorCode errorName)
         {
             _w.WriteLine("SendError: {0}", (int)errorName);
@@ -38,6 +37,28 @@ namespace SMTPSupport.Test
         public override string ToString()
         {
             return _w.ToString();
+        }
+
+        public override void SendHelp()
+        {
+
+            foreach (SMTPCommand temp in SMTPParser.Commands)
+            {
+                _w.WriteLine("{0} : {1}", temp.Name, temp.HelpText);
+
+            }
+
+        }
+
+        public override void SendHelp(string parameter)
+        {
+            SMTPCommand cmd = SMTPParser.FindCommand(parameter);
+            if (cmd != null)
+            {
+                _w.WriteLine("{0} : {1}", parameter.ToUpper(), cmd.HelpText);
+                
+            }
+            else SendHelp();
         }
     }
 }
