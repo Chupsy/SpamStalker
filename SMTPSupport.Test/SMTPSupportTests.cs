@@ -216,12 +216,9 @@ namespace SMTPSupport.Test
             SMTPClientTest client = new SMTPClientTest();
             MailAddress testSender = new MailAddress("vincent@test.com");
             parser.Execute("HELO tutu", session, client);
-            parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
-            parser.Execute("MAIL FROM:<vincent@test.com>", session, client);
-            client.Clear();
-
             parser.Execute("HELP", session, client);
-            Assert.That(client.ToString(), Is.StringContaining(""));
+            Assert.That(client.ToString(), Is.StringContaining("RCPT : Adds a recipient mail address.HELO : Initialize a stream. (HELO is also working)EHLO : Initialize a stream. (HELO is also working)MAIL : Specifies sender mail adress.HELP : Shows SMTP commands help.NOOP : Require 250 OK.QUIT : Shut down session.DATA : Get data from user.RSET : Clear all session.!EHLO : Initialize a mail owner - server transmission"));
+            Assert.That(client.ToString(), Is.StringContaining("250 OK"));
         }
     }
 }
