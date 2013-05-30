@@ -47,6 +47,8 @@ namespace SMTPSupport
             Dictionary<string, SMTPCommand> metaDic = new Dictionary<string, SMTPCommand>();
             RegisterMetaCommand(metaDic, new MetaEHLOCommand());
             RegisterMetaCommand(metaDic, new MetaCLOSECommand());
+            RegisterMetaCommand(metaDic, new MetaADDAddressCommand());
+            RegisterMetaCommand(metaDic, new MetaRMVAddressCommand());
             return metaDic;
         }   
 

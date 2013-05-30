@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FakeSmtp
+namespace SMTPSupport
 {
 
     public enum ServerStatus
@@ -21,6 +21,12 @@ namespace FakeSmtp
         void Pause();
 
         void Resume();
+
+        void AddAddress(string user, string newAddress, string relayAddress, string description);
+
+        void RemoveAddress(string user, string Address);
+
+        bool Identify(string user, string password);
 
         ServerStatus Status { get; }
     }

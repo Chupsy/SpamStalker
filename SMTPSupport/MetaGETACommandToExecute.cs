@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace SMTPSupport
 {
-    internal class MetaCLOSECommandToExecute : SMTPCommandToExecute
+    internal class MetaGETACommandToExecute : SMTPCommandToExecute
     {
 
-        public MetaCLOSECommandToExecute()
+        public MetaGETACommandToExecute()
         {
         }
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             client.SendError(ErrorCode.Closing);
-            
+            // Utiliser IMetaCommandAPI
         }
 
     }

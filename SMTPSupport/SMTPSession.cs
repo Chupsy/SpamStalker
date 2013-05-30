@@ -4,22 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
+using System.Diagnostics;
 
 namespace SMTPSupport
 {
     public class SMTPSession
     {
+        readonly IMetaCommandAPI _metaAPI;
         string _domainName;
         public MailMessage mail = new MailMessage();
         bool _ready = false;
         MailAddress _sender;
         bool _knownAdress;
-        bool _isMeta;
+        SMTPMetaSession _meta;
 
-        public SMTPSession()
+        public SMTPSession( IMetaCommandAPI metaAPI )
         {
+            _metaAPI = metaAPI;
             _knownAdress = false;
-            _isMeta = false;
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
@@ -66,6 +68,7 @@ namespace SMTPSupport
         {
             return _ready;
         }
+
         public void SetReadyToSend()
         {
             if (_knownAdress == true)
@@ -80,15 +83,21 @@ namespace SMTPSupport
             }
         }
 
-
         internal void EnableMetaSession()
         {
-            _isMeta = true;
+            Debug.Assert( _meta == null, "EnableMetaSession has already been called." );
+            _meta = new SMTPMetaSession( this, _metaAPI );
         }
 
-        public bool IsMeta
+        public bool HasMetaSession
         {
-            get { return _isMeta; }
+            get { return _meta != null; }
         }
+
+        public SMTPMetaSession MetaSession
+        {
+            get { return _meta; }
+        }
+
     }
 }

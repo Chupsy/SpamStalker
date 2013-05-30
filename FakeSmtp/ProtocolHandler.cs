@@ -19,6 +19,7 @@ namespace FakeSmtp
         private System.IO.StreamWriter writer;
         SmtpClient smtpDestination ;
         SMTPParser parser;
+        MetaCommandAPI _metaAPI;
         SMTPSession session;
         SMTPCallingClient callingClient;
         string hostDestination = ConfigurationManager.AppSettings["hostAdressDestination"];
@@ -33,14 +34,16 @@ namespace FakeSmtp
         public void Start()
         {
             _client.ReceiveTimeout = 50000;
+            _metaAPI = new MetaCommandAPI();
             stream = _client.GetStream();
             reader = new System.IO.StreamReader(stream);
             writer = new System.IO.StreamWriter(stream);
             writer.NewLine = "\r\n";
             writer.AutoFlush = true;
+
             string testRead;
 
-            session = new SMTPSession();
+            session = new SMTPSession( _metaAPI );
             parser = new SMTPParser();
             callingClient = new SMTPCallingClient(reader, writer, session, _client);
 
@@ -53,11 +56,7 @@ namespace FakeSmtp
                 if (testRead != null)
                 {
                     parser.Execute(testRead, session, callingClient);
-                    if (session.IsMeta == true)
-                    {
-                        session = new SMTPMetaSession();
-                        callingClient = new SMTPMetaCallingClient(reader, writer, session, _client, parser);
-                    }
+
                 }
                 else
                 {
@@ -84,7 +83,7 @@ namespace FakeSmtp
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Fail to send !");
+                        Console.WriteLine(ex);
                     }
                 }
                 else if(!callingClient.IsClosed())

@@ -9,13 +9,13 @@ namespace SMTPSupport
     internal class MetaCLOSECommand : SMTPCommand
     {
         public MetaCLOSECommand()
-            : base( "!CLOSE", "Shut down transmission server" )
+            : base( "!CLSE", "Shut down transmission server" )
         {
         }
 
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
-            if( !firstLine.StartsWith( "!CLOSE" ) ) throw new ArgumentException( "Must start with !CLOSE." );
+            if( !firstLine.StartsWith( "!CLSE" ) ) throw new ArgumentException( "Must start with !CLSE." );
             
 
             return new SMTPCommandParseResult(new MetaCLOSECommandToExecute(  ));
