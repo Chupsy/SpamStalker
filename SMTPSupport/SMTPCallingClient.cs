@@ -144,7 +144,7 @@ namespace SMTPSupport
             return _closed;
         }
 
-        public void SetMetaSession()
+        public void CreateMetaSession()
         {
             _session.EnableMetaSession();
         }
