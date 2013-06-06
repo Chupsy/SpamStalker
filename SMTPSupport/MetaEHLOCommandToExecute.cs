@@ -8,17 +8,35 @@ namespace SMTPSupport
 {
     internal class MetaEHLOCommandToExecute : SMTPCommandToExecute
     {
-        string _display;
+        string _username;
+        string _password;
 
-        public MetaEHLOCommandToExecute( string toDisplay )
+        public MetaEHLOCommandToExecute( string username, string password )
         {
-            _display = toDisplay;
+            _username = username;
+            _password = password;
         }
 
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
-            client.WriteThis(_display);
-            session.EnableMetaSession();
+            if (session.HasMetaSession == false && client.HasMeta == false)
+            {
+                session.EnableMetaSession();
+                client.EnableMetaClient();
+            }
+
+            string typeOfAccount = session.MetaSession.MetaAPI.Identify(_username, _password);
+            if( typeOfAccount != null)
+            {
+                client.SendError(ErrorCode.Ok);
+                session.MetaSession.UserName = _username;
+                session.MetaSession.TypeOfAccount = typeOfAccount;
+            }
+            else
+            {
+                client.SendError(ErrorCode.AddressUnknown);
+                client.Close();
+            }
         }
 
     }

@@ -22,42 +22,42 @@ namespace SMTPSupport.Test
         public void TestEHLO()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             Assert.That(client.ToString(), Is.StringContaining("250 tutu"));
             Assert.That(session.IsInitialized, Is.True);
             client.Clear();
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("EHLO", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("HELO tutu", session, client);
             Assert.That(client.ToString(), Is.StringContaining("250 tutu"));
             Assert.That(session.IsInitialized, Is.True);
             client.Clear();
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("HELO", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("BO", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("BOHOYT", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
             Assert.That(session.IsInitialized, Is.False);
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
             Assert.That(session.IsInitialized, Is.False);
@@ -68,7 +68,7 @@ namespace SMTPSupport.Test
         public void TestRCPT()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
@@ -82,7 +82,7 @@ namespace SMTPSupport.Test
             Assert.That(session.mail.To[1].Address.Contains("arnold@shwartz.com"));
             Assert.That(session.mail.To[0].Address.Contains("tutu@msn.com"));
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
             parser.Execute("RCPT TO", session, client);
@@ -102,7 +102,7 @@ namespace SMTPSupport.Test
             Assert.That(session.mail.To.Count, Is.EqualTo(1));
             Assert.That(client.ToString(), Is.StringContaining("SendError: 550\r\n"));
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("RCPT TO:<tutu@msn.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
             Assert.That(session.mail.To.Count, Is.EqualTo(0));
@@ -112,7 +112,7 @@ namespace SMTPSupport.Test
         public void TestNOOP()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
@@ -123,7 +123,7 @@ namespace SMTPSupport.Test
             Assert.That(client.ToString(), Is.StringContaining("Success"));
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("NOOP", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500\r\nClose\r\n"));
         }
@@ -132,7 +132,7 @@ namespace SMTPSupport.Test
         public void TestQUIT()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
@@ -144,7 +144,7 @@ namespace SMTPSupport.Test
             Assert.That(client.ToString(), Is.StringContaining("SendError: 221\r\nClose\r\n"));
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("QUIT", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 221\r\nClose\r\n"));
         }
@@ -153,7 +153,7 @@ namespace SMTPSupport.Test
         public void TestMAIL()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             MailAddress testSender = new MailAddress("vincent@waza.com");
             parser.Execute("EHLO tutu", session, client);
@@ -163,7 +163,7 @@ namespace SMTPSupport.Test
             Assert.That(session.Sender.Address == testSender.Address);
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             testSender = new MailAddress("dufrasnes@cake.fr");
             parser.Execute("EHLO tutu", session, client);
             client.Clear();
@@ -171,17 +171,17 @@ namespace SMTPSupport.Test
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("MAIL FROM:<>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 501"));
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("MAIL FROM:<johan@bouh.com>", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
 
-            session = new SMTPSession();
+            session = new SMTPSession(new MetaCommandAPI());
             parser.Execute("MAIL Blueberry is good", session, client);
             Assert.That(client.ToString(), Is.StringContaining("SendError: 500"));
             client.Clear();
@@ -193,7 +193,7 @@ namespace SMTPSupport.Test
         public void TestRSET()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             MailAddress testSender = new MailAddress("vincent@test.com");
             parser.Execute("EHLO tutu", session, client);
@@ -212,7 +212,7 @@ namespace SMTPSupport.Test
         public void TestHELP()
         {
             SMTPParser parser = new SMTPParser();
-            SMTPSession session = new SMTPSession();
+            SMTPSession session = new SMTPSession(new MetaCommandAPI());
             SMTPClientTest client = new SMTPClientTest();
             MailAddress testSender = new MailAddress("vincent@test.com");
             parser.Execute("HELO tutu", session, client);

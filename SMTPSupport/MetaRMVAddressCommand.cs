@@ -8,6 +8,7 @@ namespace SMTPSupport
 {
     internal class MetaRMVAddressCommand : SMTPCommand
     {
+        string _rmvAddress;
         public MetaRMVAddressCommand()
             : base("!REMA", "Shut down transmission server")
         {
@@ -18,7 +19,15 @@ namespace SMTPSupport
             if (!firstLine.StartsWith("!REMA")) throw new ArgumentException("Must start with !REMA.");
 
 
-            return new SMTPCommandParseResult(new MetaRMVAddressCommandToExecute());
+            if (firstLine.Substring(5).Trim().Length > 0)
+            {
+                _rmvAddress = firstLine.Substring(5).Trim();
+                return new SMTPCommandParseResult(new MetaRMVAddressCommandToExecute(_rmvAddress));
+            }
+            else
+            {
+                return new SMTPCommandParseResult(ErrorCode.BadSequence);
+            }
         }
     }
 

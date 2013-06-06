@@ -16,29 +16,17 @@ namespace SMTPSupport
             _senderAdress = senderAdress;
         }
 
-        public MAILCommandToExecute(string senderAdress, bool alertSpamer)
-        {
-            _senderAdress = senderAdress;
-            _alertSpamer = alertSpamer;
-        }
-
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             if (session.IsInitialized)
             {
-                if (_alertSpamer == true)
-                {
-                session.spamReact(_senderAdress);
-                }
-                else
-                {
                 session.AddSender(_senderAdress);
                 client.SendSuccess();
-                }
             }
             else
             {
                 client.SendError(ErrorCode.Unrecognized);
+                client.Close();
             }
         }
     }

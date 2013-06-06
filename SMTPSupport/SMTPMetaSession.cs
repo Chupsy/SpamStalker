@@ -12,6 +12,7 @@ namespace SMTPSupport
         readonly SMTPSession _session;
         readonly IMetaCommandAPI _metaAPI;
         string _userName;
+        string _typeOfAccount;
 
         internal SMTPMetaSession( SMTPSession session, IMetaCommandAPI metaAPI )
         {
@@ -19,6 +20,11 @@ namespace SMTPSupport
             _metaAPI = metaAPI;
         }
 
+        public string UserName
+        {
+            get { return _userName; }
+            set { _userName = value; }
+        }
         public SMTPSession Session { get { return _session; } }
 
         public bool IsInitialized { get { return _userName != null; } }
@@ -30,6 +36,19 @@ namespace SMTPSupport
         }
 
         public IMetaCommandAPI MetaAPI { get { return _metaAPI; } }
+
+        public string TypeOfAccount
+        {
+            get
+            {
+                return _typeOfAccount;
+            }
+            set
+            {
+                _typeOfAccount = value;
+            }
+        }
+
 
 
     }

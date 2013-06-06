@@ -5,11 +5,15 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Diagnostics;
+using System.Net.Mail;
 
 namespace SMTPSupport
 {
     public enum ErrorCode
     { 
+        ShutDown = 42,
+        InformationSend = 163,
         Ok = 250,
         Help = 214,
         Ready = 220,
@@ -20,7 +24,12 @@ namespace SMTPSupport
         ArgumentError = 501,
         NotImplemented = 502,
         BadSequence = 503,
-        AddressUnknown = 550
+        AddressUnknown = 550,
+        AccountExist = 726,
+        AddressUsed = 737,
+        Abort = 950,
+        NotAllowed = 640,
+        AddressDoesNotExist = 911
     }
 
     public class SMTPCallingClient
@@ -29,6 +38,7 @@ namespace SMTPSupport
         System.IO.StreamWriter _writer;
         string _line;
         bool _closed;
+        SMTPMetaCallingClient _meta;
         SMTPSession _session;
         Dictionary<ErrorCode, string> _errors;
         TcpClient _clientTcp;
@@ -49,7 +59,7 @@ namespace SMTPSupport
             CreateDictionnaryErrors();
             _closed = false;
             _clientTcp = client;
-            _parser = new SMTPParser();            
+            _parser = new SMTPParser();
         }
 
 
@@ -90,6 +100,13 @@ namespace SMTPSupport
                 AnalyzeData(_line);
 
             } while (_line != ".");
+
+            MailAddressCollection blacklistedRecipient = _session.MetaAPI.CheckSpammer(_session.mail.To, _session.mail.Sender.ToString());
+            if ( blacklistedRecipient != null)
+            {
+                _session.SpamReact(blacklistedRecipient);
+            }
+
             _session.SetReadyToSend();
             if (!_session.IsReady())
             {
@@ -144,11 +161,17 @@ namespace SMTPSupport
             return _closed;
         }
 
-        public void CreateMetaSession()
+        internal void EnableMetaClient()
         {
-            _session.EnableMetaSession();
+            Debug.Assert(_meta == null, "EnableMetaClient has already been called.");
+            _meta = new SMTPMetaCallingClient(this, _parser, _session, _reader, _writer);
+            _parser.EnableMetaCommands();
         }
 
+        internal void EnableAdminCommands()
+        {
+            _parser.EnableAdminCommands();
+        }
         internal string GetError(ErrorCode errorName)
         {
             string returnValue;
@@ -164,11 +187,22 @@ namespace SMTPSupport
                 return returnValue;
 
             }
-        } 
+        }
+
+        public bool HasMeta
+        {
+            get { return _meta != null; }
+        }
+
+        public SMTPMetaCallingClient Meta
+        {
+            get { return _meta; }
+        }
 
         private void CreateDictionnaryErrors()
         {
             _errors.Add(ErrorCode.Ok, "OK");
+            _errors.Add(ErrorCode.ShutDown, "Server shutting down");
             _errors.Add(ErrorCode.Help, "Help message");
             _errors.Add(ErrorCode.Ready, "<SpamStalker> Service ready");
             _errors.Add(ErrorCode.Closing, "<SpamStalker> Service closing transmission channel");
@@ -178,8 +212,16 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.ArgumentError, "Syntax error in parameters or arguments");
             _errors.Add(ErrorCode.NotImplemented, "Command not implemented");
             _errors.Add(ErrorCode.BadSequence, "Bad sequence of commands");
-            _errors.Add(ErrorCode.AddressUnknown, "Adress Unknow");
+            _errors.Add(ErrorCode.AddressUnknown, "No such user here");
+            _errors.Add(ErrorCode.AddressUsed, "Address already used");
+            _errors.Add(ErrorCode.AccountExist, "Account already exist");
+            _errors.Add(ErrorCode.AddressDoesNotExist, "Address does not exist or does not belong to your account");
+            _errors.Add(ErrorCode.InformationSend, "End of information transmission");
+            _errors.Add(ErrorCode.Abort, "Command aborted");
+            _errors.Add(ErrorCode.NotAllowed, "You are not allowed to modify or delete this user.");
         }
+
+
 
 
     }

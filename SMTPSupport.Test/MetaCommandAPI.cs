@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SMTPSupport;
 
-namespace FakeSmtp
+namespace SMTPSupport.Test
 {
     class MetaCommandAPI : IMetaCommandAPI
     {

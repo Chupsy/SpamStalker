@@ -41,27 +41,21 @@ namespace SMTPSupport
             return cmd;
         }
 
-
-        static Dictionary<string, SMTPCommand> CreateMetaCommands()
-        {
-            Dictionary<string, SMTPCommand> metaDic = new Dictionary<string, SMTPCommand>();
-            RegisterMetaCommand(metaDic, new MetaEHLOCommand());
-            RegisterMetaCommand(metaDic, new MetaCLOSECommand());
-            RegisterMetaCommand(metaDic, new MetaADDAddressCommand());
-            RegisterMetaCommand(metaDic, new MetaRMVAddressCommand());
-            return metaDic;
-        }   
-
-        static SMTPCommand RegisterMetaCommand(Dictionary<string, SMTPCommand> metaDic, SMTPCommand cmd)
-        {
-            metaDic.Add(cmd.Name, cmd);
-            return cmd;
-        }
-
         public void EnableMetaCommands()
         {
-            _commands = CreateMetaCommands();
+            RegisterCommand(_commands, new MetaCLOSECommand());
+            RegisterCommand(_commands, new MetaGETACommand());
+            RegisterCommand(_commands, new MetaADDAddressCommand());
+            RegisterCommand(_commands, new MetaRMVAddressCommand());
         }
+
+
+        public void EnableAdminCommands()
+        {
+            RegisterCommand(_commands, new MetaCREUserCommand());
+            RegisterCommand(_commands, new MetaDELUserCommand());
+        }
+
 
         static public IEnumerable<SMTPCommand> Commands 
         { 
@@ -114,6 +108,7 @@ namespace SMTPSupport
             cmdExecute.Command.Execute(session, client);
            
         }
+
 
     }
 }

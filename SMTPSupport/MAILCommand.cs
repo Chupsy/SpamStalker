@@ -17,7 +17,6 @@ namespace SMTPSupport
         {
             if (!firstLine.StartsWith("MAIL")) throw new ArgumentException("Must start with MAIL.");
             string senderAddress = null; 
-            bool alertSpamer = false;
 
             if(firstLine.StartsWith("MAIL FROM:<") && firstLine.EndsWith(">"))
             {
@@ -35,27 +34,16 @@ namespace SMTPSupport
 
             if (senderAddress != null && senderAddress != "")
             {
-                if(CheckMail(senderAddress))
-                {
-                    return new SMTPCommandParseResult(ErrorCode.Unrecognized);
-                }
+
+                return new SMTPCommandParseResult(new MAILCommandToExecute(senderAddress));
+
             }
             else
             {
                 return new SMTPCommandParseResult(ErrorCode.ArgumentError);
             }
             
-            return new SMTPCommandParseResult( new MAILCommandToExecute( senderAddress ) );
         }
 
-        private bool CheckMail(string senderAddress)
-        {
-            string[] adresses = System.IO.File.ReadAllLines(@"..\..\..\FakeSmtp\senderAdresses.txt");
-            foreach(string adress in adresses)
-            {
-                if (adress == senderAddress) return true;
-            }
-            return false;
-        }
     }
 }

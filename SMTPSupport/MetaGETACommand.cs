@@ -16,9 +16,8 @@ namespace SMTPSupport
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
             if( !firstLine.StartsWith( "!GETA" ) ) throw new ArgumentException( "Must start with !GETA." );
-            
 
-            return new SMTPCommandParseResult(new MetaGETACommandToExecute(  ));
+            return new SMTPCommandParseResult(new MetaGETACommandToExecute());
         }
     }
 

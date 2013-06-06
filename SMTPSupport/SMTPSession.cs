@@ -17,11 +17,18 @@ namespace SMTPSupport
         MailAddress _sender;
         bool _knownAdress;
         SMTPMetaSession _meta;
+        bool spamReaction = false;
+        MailAddressCollection _mailAdressBlacklist;
 
         public SMTPSession( IMetaCommandAPI metaAPI )
         {
             _metaAPI = metaAPI;
             _knownAdress = false;
+        }
+
+        public IMetaCommandAPI MetaAPI
+        {
+            get { return _metaAPI; }
         }
 
         public bool IsInitialized { get { return _domainName != null; } }
@@ -53,9 +60,10 @@ namespace SMTPSupport
             _sender = new MailAddress(mailAddress);
         }
 
-        public void spamReact(string mailAdress)
+        public void SpamReact(MailAddressCollection mailAdressBlacklist)
         {
-            
+            spamReaction = true;
+            _mailAdressBlacklist = mailAdressBlacklist;
         }
     
         public void Clear()
@@ -76,6 +84,13 @@ namespace SMTPSupport
                 mail.From = _sender;
                 mail.ReplyToList.Add(_sender);
                 _ready = true;
+                if (_mailAdressBlacklist != null)
+                {
+                    foreach (MailAddress address in _mailAdressBlacklist)
+                    {
+                        mail.To.Remove(address);
+                    }
+                }
             }
             else
             {

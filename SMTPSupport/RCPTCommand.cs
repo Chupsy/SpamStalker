@@ -31,36 +31,16 @@ namespace SMTPSupport
 
             if (extractedMail != "" && extractedMail != null)
             {
-                if (!CheckAdress(extractedMail))
-                {
-                    return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail, 550));
-                }
+
+                    return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));
             }
             else
             {
                 return new SMTPCommandParseResult(ErrorCode.ArgumentError);
             }
 
-            return new SMTPCommandParseResult(new RCPTCommandToExecute(extractedMail));
         }
 
-        /// <summary>
-        /// Verify if the extracted mail exists in the adresses in adress.txt
-        /// </summary>
-        /// <param name="extractedMail"> extracted mail u.u </param>
-        /// <returns></returns>
-        private bool CheckAdress(string extractedMail)
-        {
-            string[] addresses = System.IO.File.ReadAllLines(@"..\..\..\FakeSmtp\adresses.txt");
-            foreach (string address in addresses)
-            {
-                if (address == extractedMail)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
 }

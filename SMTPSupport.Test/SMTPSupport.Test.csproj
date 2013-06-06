@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetaCommandAPI.cs" />
     <Compile Include="SMTPClientTest.cs" />
     <Compile Include="SMTPSupportTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
