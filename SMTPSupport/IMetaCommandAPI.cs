@@ -99,9 +99,5 @@ namespace SMTPSupport
 
         ServerStatus Status { get; }
 
-
-
-
-
     }
 }

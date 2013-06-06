@@ -12,6 +12,7 @@ namespace FakeSmtp
     public class SMTPServer
     {
         bool _shutdown;
+        bool _pause = false;
 
         [STAThread] 
         static void Main(string[] args)
@@ -22,8 +23,6 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-
-
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -33,6 +32,10 @@ namespace FakeSmtp
             List<Thread> allThreads = new List<Thread>();
             do
             {
+                while (_pause == true)
+                {
+
+                }
                 TcpClient client = listener.AcceptTcpClient();
                 ProtocolHandler p = new ProtocolHandler( client );
                 Thread t = new Thread( p.Start );
@@ -48,5 +51,18 @@ namespace FakeSmtp
             foreach (Thread t in allThreads) t.Join();
 
         }
+
+        public bool ShutDown
+        {
+            get{ return _shutdown;}
+            set{ _shutdown = value;}
+        }
+
+        public bool Pause
+        {
+            get { return _pause; }
+            set { _pause = value; }
+        }
+
     }
 }

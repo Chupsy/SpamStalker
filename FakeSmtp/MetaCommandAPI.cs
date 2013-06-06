@@ -9,26 +9,41 @@ namespace FakeSmtp
 {
     class MetaCommandAPI : IMetaCommandAPI
     {
+        SMTPServer _server;
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
+            _server.ShutDown = true;
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            _server.Pause = true;
         }
 
         public void Resume()
         {
-            throw new NotImplementedException();
+            _server.Pause = false;
         }
 
 
         public ServerStatus Status
         {
-            get { throw new NotImplementedException(); }
+            get 
+            {
+                if (_server.Pause == true && _server.ShutDown == false)
+                {
+                    return ServerStatus.Paused;
+                }
+                else if (_server.ShutDown == true)
+                {
+                    return ServerStatus.ShuttingDown;
+                }
+                else
+                {
+                    return ServerStatus.Running;
+                }
+            }
         }
     }
 }
