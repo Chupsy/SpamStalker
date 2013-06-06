@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetaMODUserCommandToExecute.cs" />
+    <Compile Include="MetaMODUserCommand.cs" />
+    <Compile Include="MetaDELUserCommand.cs" />
+    <Compile Include="MetaDELUserCommandToExecute.cs" />
+    <Compile Include="MetaCREUserCommand.cs" />
+    <Compile Include="MetaCREUserCommandToExecute.cs" />
     <Compile Include="MetaGETACommand.cs" />
     <Compile Include="MetaGETACommandToExecute.cs" />
     <Compile Include="IMetaCommandAPI.cs" />

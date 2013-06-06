@@ -5,6 +5,7 @@ using System.Threading;
 using System.Net.Mail;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.IO;
 
 
 namespace FakeSmtp
@@ -26,7 +27,23 @@ namespace FakeSmtp
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
+
+            #region Admin System file creation
+
+            string path = Environment.CurrentDirectory.ToString() + "\\Users";
+            Directory.CreateDirectory(path);
+            path = path + "\\System";
+            Directory.CreateDirectory(path);
+            string fileSystem = path + "\\Informations.txt";
+            if (!File.Exists(fileSystem))
+            {
+                File.Create(fileSystem);
+                StreamWriter stream = new StreamWriter(@fileSystem);
+                stream.Write("System Password Admin");
+            }
             
+            #endregion
+
             TcpListener listener = new TcpListener(ipadress, receptionPort);
             listener.Start();
             List<Thread> allThreads = new List<Thread>();
@@ -52,6 +69,7 @@ namespace FakeSmtp
 
         }
 
+        #region MetaCommandAPI Functions
         public bool ShutDown
         {
             get{ return _shutdown;}
@@ -64,5 +82,94 @@ namespace FakeSmtp
             set { _pause = value; }
         }
 
+        public void CreateUser(string username, string password, string accountType)
+        {
+            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            Directory.CreateDirectory(path);
+            string fileUser = path + "\\Informations.txt";
+            if (!File.Exists(fileUser))
+            {
+                File.Create(fileUser);
+                StreamWriter stream = new StreamWriter(@fileUser);
+                string line = username + " " + password + " " + accountType;
+                stream.Write(line);
+            }
+        }
+
+        public void DeleteUser(string username)
+        {
+            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            Directory.Delete(path, true);
+        }
+
+        public bool CheckUser(string username)
+        {
+            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            return Directory.Exists(path);
+        }
+
+        public string Identify(string username, string password)
+        {
+            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            Dictionary<string, string> userInfos = GetIdentity(username);
+            if (File.Exists(fileUser) && userInfos != null)
+            {
+                if (userInfos["username"] == username && userInfos["password"] == password)
+                {
+                    return userInfos["type"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+
+        public void ModifyType(string username, string type)
+        {
+            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            Dictionary<string, string> userInfos = GetIdentity(username);
+            if (File.Exists(fileUser) && userInfos != null)
+            {
+                StreamWriter stream = new StreamWriter(@fileUser);
+
+                string line = userInfos["username"] + " " + userInfos["password"] + " " + type;
+                stream.Write(line);
+            }
+        }
+
+        public void ModifyPassword(string username, string password)
+        {
+            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            Dictionary<string, string> userInfos = GetIdentity(username);
+            if (File.Exists(fileUser) && userInfos != null)
+            {
+                StreamWriter stream = new StreamWriter(@fileUser);
+
+                string line = userInfos["username"] + " " + password +" " + userInfos["type"];
+                stream.Write(line);
+            }
+        }
+
+        private Dictionary<string, string> GetIdentity(string username)
+        {
+            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            Dictionary<string, string> identity = new Dictionary<string, string>();
+            if (File.Exists(fileUser))
+            {
+                StreamReader reader = new StreamReader(@fileUser);
+
+                string infos = reader.ReadLine();
+                identity.Add("username", infos.Trim().Substring(0, infos.IndexOf(" ")));
+                identity.Add("password", infos.Trim().Substring(identity["username"].Length).Trim().Substring(0, infos.IndexOf(" ")));
+                identity.Add("type", infos.Trim().Substring(infos.LastIndexOf(" ")));
+                return identity;
+            }
+            return null;
+        }
+
+        #endregion
     }
 }

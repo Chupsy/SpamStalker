@@ -9,13 +9,13 @@ namespace SMTPSupport
     internal class MetaCREUserCommand : SMTPCommand
     {
         public MetaCREUserCommand()
-            : base( "!CREA", "Creates a new account [Admin Command]" )
+            : base( "!CREU", "Creates a new user [Admin Command]" )
         {
         }
 
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
-            if( !firstLine.StartsWith( "!CREA" )) throw new ArgumentException( "Must start with !CREA." );
+            if( !firstLine.StartsWith( "!CREU" )) throw new ArgumentException( "Must start with !CREU." );
             
             string username = null;
             string password = null;

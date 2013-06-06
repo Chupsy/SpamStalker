@@ -31,6 +31,10 @@ namespace SMTPSupport
                 client.SendError(ErrorCode.Ok);
                 session.MetaSession.UserName = _username;
                 session.MetaSession.TypeOfAccount = typeOfAccount;
+                if (session.MetaSession.TypeOfAccount == "Admin")
+                {
+                    client.EnableAdminCommands();
+                }
             }
             else
             {

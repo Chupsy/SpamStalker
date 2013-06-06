@@ -27,7 +27,7 @@ namespace SMTPSupport
             }
             else
             {
-                session.MetaSession.MetaAPI.CreateAccount(_username, _password, _typeOfAccount);
+                session.MetaSession.MetaAPI.CreateUser(_username, _password, _typeOfAccount);
                 client.SendError(ErrorCode.Ok);
             }
         }

@@ -23,6 +23,11 @@ namespace SMTPSupport
         {
             if (session.MetaSession.MetaAPI.CheckUser(_username) == true)
             {
+                if (_username == "System")
+                {
+                    client.SendError(ErrorCode.NotAllowed);
+                    return;
+                }
                 if (client.Meta.ValidateModification(_username, _modify, _value) == true)
                 {
                     if (_modify.ToUpper() == "TYPE")

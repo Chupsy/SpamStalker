@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SMTPSupport;
+using System.Net.Mail;
 
 namespace FakeSmtp
 {
-    class MetaCommandAPI : IMetaCommandAPI
+    public class MetaCommandAPI : IMetaCommandAPI
     {
         SMTPServer _server;
 
@@ -25,6 +26,52 @@ namespace FakeSmtp
         {
             _server.Pause = false;
         }
+
+
+        public string Identify(string user, string password)
+        {
+            return _server.Identify(user, password);
+        }
+
+        public bool CheckUser(string username)
+        {
+            return _server.CheckUser(username);
+        }
+
+        public void CreateUser(string username, string password, string typeOfAccount)
+        {
+            _server.CreateUser(username, password, typeOfAccount);
+        }
+
+        public void DeleteUser(string username)
+        {
+            _server.DeleteUser(username);
+        }
+
+        public void ModifyType(string username, string value)
+        {
+            _server.ModifyType(username, value);
+        }
+
+        public void ModifyPassword(string username, string value)
+        {
+            _server.ModifyPassword(username, value);
+        }
+
+
+        public void AddAddress(string user, string newAddress, string relayAddress, string description) { }
+
+        public void RemoveAddress(string address, string username) { }
+
+        public List<string> GetAllInformations(string username) { return null; }
+
+        public bool CheckAddress(string address) { return false; }
+
+ 
+        public bool CheckAddressBelonging(string rmvAddress, string username) { return false; }
+
+        public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
+
 
 
         public ServerStatus Status
