@@ -19,6 +19,7 @@ namespace ClientWindow
         Session _session;
         string _selectedAdress;
         int _selectedindex;
+        int _selectedblackadrs;
 
 
        
@@ -75,6 +76,16 @@ namespace ClientWindow
             }
 
             listBox1.DataSource = _blackList;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _selectedblackadrs = (int)listBox1.SelectedIndex;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address, );
         }
     }
 }
