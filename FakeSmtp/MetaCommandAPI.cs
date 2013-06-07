@@ -72,11 +72,18 @@ namespace FakeSmtp
 
         public bool CheckAddress(string address) { return false; }
 
- 
-        public bool CheckAddressBelonging(string rmvAddress, string username) { return false; }
+        public bool CheckAddressBelonging(string belongAddress, string username) { return false; }
 
         public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
 
+
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return true; }
+
+        public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+
+        public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+
+        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod) { }
 
 
         public ServerStatus Status

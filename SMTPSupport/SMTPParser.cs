@@ -47,6 +47,9 @@ namespace SMTPSupport
             RegisterCommand(_commands, new MetaGETACommand());
             RegisterCommand(_commands, new MetaADDAddressCommand());
             RegisterCommand(_commands, new MetaRMVAddressCommand());
+            RegisterCommand(_commands, new MetaADDBlacklistCommand());
+            RegisterCommand(_commands, new MetaMODBlacklistCommand());
+            RegisterCommand(_commands, new MetaRMVBlacklistCommand());
         }
 
 
@@ -54,6 +57,7 @@ namespace SMTPSupport
         {
             RegisterCommand(_commands, new MetaCREUserCommand());
             RegisterCommand(_commands, new MetaDELUserCommand());
+            RegisterCommand(_commands, new MetaMODUserCommand());
         }
 
 

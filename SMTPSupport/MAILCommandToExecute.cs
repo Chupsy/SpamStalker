@@ -9,7 +9,6 @@ namespace SMTPSupport
     internal class MAILCommandToExecute : SMTPCommandToExecute
     {
         string _senderAdress;
-        bool _alertSpamer = false;
 
         public MAILCommandToExecute( string senderAdress )
         {

@@ -97,6 +97,15 @@ namespace SMTPSupport.Test
         }
 
 
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return true; }
+
+        public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+
+        public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+
+        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod) { }
+
+
         public ServerStatus Status
         {
             get { throw new NotImplementedException(); }

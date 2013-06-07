@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetaMODBlacklistCommand.cs" />
+    <Compile Include="MetaMODBlacklistCommandToExecute.cs" />
+    <Compile Include="MetaRMVBlacklistCommand.cs" />
+    <Compile Include="MetaRMVBlacklistCommandToExecute.cs" />
+    <Compile Include="MetaADDBlacklistCommand.cs" />
+    <Compile Include="MetaADDBlacklistCommandToExecute.cs" />
     <Compile Include="MetaMODUserCommandToExecute.cs" />
     <Compile Include="MetaMODUserCommand.cs" />
     <Compile Include="MetaDELUserCommand.cs" />
