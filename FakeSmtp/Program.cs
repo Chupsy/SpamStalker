@@ -83,7 +83,7 @@ namespace FakeSmtp
             set { _pause = value; }
         }
 
-        public void CreateUser(string username, string password, string accountType, string newAdress)
+        public void CreateUser(string username, string password, string newAdress, string accountType)
         {
             string description = "Main adress from server";
             string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
@@ -99,7 +99,7 @@ namespace FakeSmtp
             AddAddress(username, newAdress, newAdress , description); 
         }
 
-        public void RemoveAddress(string address, string username)
+        public bool RemoveAddress(string address, string username)
         {
             string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + address + ".txt";
             if (File.Exists(fileAdress))
@@ -107,7 +107,7 @@ namespace FakeSmtp
                 File.Delete(fileAdress);
                 return true;
             }
-            else return false;
+            return false;
         }
 
         public bool AddAddress(string username, string newAdress, string relayAdress, string description)

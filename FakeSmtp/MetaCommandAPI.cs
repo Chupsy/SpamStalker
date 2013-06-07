@@ -38,9 +38,9 @@ namespace FakeSmtp
             return _server.CheckUser(username);
         }
 
-        public void CreateUser(string username, string password, string typeOfAccount)
+        public void CreateUser(string username, string password, string mainAddress, string typeOfAccount)
         {
-            _server.CreateUser(username, password, typeOfAccount);
+            _server.CreateUser(username, password, mainAddress, typeOfAccount);
         }
 
         public void DeleteUser(string username)
