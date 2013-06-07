@@ -17,7 +17,6 @@ namespace SMTPSupport
         MailAddress _sender;
         bool _knownAdress;
         SMTPMetaSession _meta;
-        bool spamReaction = false;
         MailAddressCollection _mailAdressBlacklist;
 
         public SMTPSession( IMetaCommandAPI metaAPI )
@@ -62,7 +61,6 @@ namespace SMTPSupport
 
         public void SpamReact(MailAddressCollection mailAdressBlacklist)
         {
-            spamReaction = true;
             _mailAdressBlacklist = mailAdressBlacklist;
         }
     

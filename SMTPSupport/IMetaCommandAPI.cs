@@ -74,7 +74,7 @@ namespace SMTPSupport
         /// Créé le compte avec ce username, password et type de compte.
         /// Vérifier avec un debug.assert que le compte n'existe pas quand meme.
         /// </summary>
-        void CreateUser(string username, string password, string typeOfAccount);
+        void CreateUser(string username, string password, string mainAddress, string typeOfAccount);
 
         /// <summary>
         /// Supprime le compte avec ce username.
