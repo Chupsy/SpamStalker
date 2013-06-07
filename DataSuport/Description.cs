@@ -8,17 +8,17 @@ namespace DataSuport
 {
     public class Description
     {
-        string _description;
+        string _content;
 
-        Description(string description)
+        Description(string content)
         {
-            _description = description;
+            _content = content;
         }
 
-        public string Description
+        public string Content
         {
-            get { return _description; }
-            set { _description = value; }
+            get { return _content; }
+            set { _content = value; }
         }
 
     }

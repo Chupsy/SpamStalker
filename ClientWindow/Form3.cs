@@ -12,9 +12,13 @@ namespace ClientWindow
 {
     public partial class Form3 : Form
     {
-        Client client = new Client();
-        public Form3()
+        Client _client;
+        Session _session;
+
+        public Form3(Client client, Session session)
         {
+            _client = client;
+            _session = session;
             InitializeComponent();
         }
 
@@ -22,8 +26,9 @@ namespace ClientWindow
         {
             string adress = textBox1.Text;
             string description = textBox2.Text;
-            string message = "!ADDA "+ adress+ " " + description;
-            client.Connect(message);
+            string relayAddress = textBox3.Text;
+            AddAdrCommand command = new AddAdrCommand(_session, _client, adress, description, relayAddress);
+            command.Execute();
         }
     }
 }

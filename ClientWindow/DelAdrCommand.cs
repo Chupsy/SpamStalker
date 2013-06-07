@@ -24,7 +24,7 @@ namespace ClientWindow
             _message = "!RMVA " + _adress;
         }
 
-        void Execute()
+        public void Execute()
         {
             
             string data;

@@ -46,7 +46,7 @@ namespace ClientWindow
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form3 adWindow = new Form3();
+            Form3 adWindow = new Form3(_client, _session);
             adWindow.ShowDialog();
         }
 

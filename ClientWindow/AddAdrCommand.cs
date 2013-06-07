@@ -27,7 +27,7 @@ namespace ClientWindow
             _message = "!ADDA " + _adress + " " + _description;
         }
 
-        void Execute()
+        public void Execute()
         {
             
             string data;
