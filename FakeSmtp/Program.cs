@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.IO;
+using SMTPSupport;
 
 
 namespace FakeSmtp
@@ -14,7 +15,9 @@ namespace FakeSmtp
     {
         
         bool _shutdown;
-        bool _pause = false;
+        TcpListener _listener;
+        ServerStatus _status;
+        string _dataPath;
 
         [STAThread] 
         static void Main(string[] args)
@@ -25,15 +28,16 @@ namespace FakeSmtp
 
         public void RunServer()
         {
+            _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
 
             #region Admin System file creation
 
-            string path = Environment.CurrentDirectory.ToString() + "\\Users";
-            Directory.CreateDirectory(path);
-            path = path + "\\System";
+            
+            Directory.CreateDirectory(_dataPath);
+            string path = _dataPath + "\\System";
             Directory.CreateDirectory(path);
             string fileSystem = path + "\\Informations.txt";
             if (!File.Exists(fileSystem))
@@ -45,16 +49,21 @@ namespace FakeSmtp
             
             #endregion
 
-            TcpListener listener = new TcpListener(ipadress, receptionPort);
-            listener.Start();
+            _listener = new TcpListener(ipadress, receptionPort);
+            _listener.Start();
             List<Thread> allThreads = new List<Thread>();
             do
             {
-                while (_pause == true)
+                TcpClient client;
+                try
                 {
-
+                    client = _listener.AcceptTcpClient();
                 }
-                TcpClient client = listener.AcceptTcpClient();
+                catch (SocketException ex)
+                {
+                    if (ex.ErrorCode == 995 && _status == ServerStatus.ShuttingDown ) break;
+                    throw;
+                }
                 ProtocolHandler p = new ProtocolHandler( client );
                 Thread t = new Thread( p.Start );
                 allThreads.Add(t);
@@ -63,30 +72,35 @@ namespace FakeSmtp
                 {
                     if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
                 }
-            } 
-            while (!_shutdown);
-            listener.Stop();
+            }
+            while (_status != ServerStatus.ShuttingDown);
+            _listener.Stop();
             foreach (Thread t in allThreads) t.Join();
 
         }
 
         #region MetaCommandAPI Functions
-        public bool ShutDown
+        public void ShutDown()
         {
-            get{ return _shutdown;}
-            set{ _shutdown = value;}
+            if (_status != ServerStatus.ShuttingDown)
+            {
+                _listener.Stop();
+                _status = ServerStatus.ShuttingDown;
+            }
         }
 
-        public bool Pause
+        public void Pause()
         {
-            get { return _pause; }
-            set { _pause = value; }
+        }
+
+        public void Resume()
+        {
         }
 
         public void CreateUser(string username, string password, string newAdress, string accountType)
         {
             string description = "Main adress from server";
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            string path = _dataPath + "\\Users\\" + username;
             Directory.CreateDirectory(path);
             string fileUser = path + "\\Informations.txt";
             if (!File.Exists(fileUser))
@@ -101,7 +115,7 @@ namespace FakeSmtp
 
         public bool RemoveAddress(string address, string username)
         {
-            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + address + ".txt";
+            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + address + ".txt";
             if (File.Exists(fileAdress))
             {
                 File.Delete(fileAdress);
@@ -110,13 +124,19 @@ namespace FakeSmtp
             return false;
         }
 
+        public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
+        {
+            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + referenceAdress + ".txt";            
+            
+        }
+
         public bool AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + newAdress +".txt";
+            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + newAdress +".txt";
             if (!File.Exists(fileAdress))
             {
                 File.Create(fileAdress);
-                StreamWriter stream = new StreamWriter(fileAdress);
+                StreamWriter stream = new StreamWriter(@fileAdress);
                 stream.WriteLine(relayAdress);
                 stream.WriteLine(description);
                 return true;
@@ -126,19 +146,19 @@ namespace FakeSmtp
 
         public void DeleteUser(string username)
         {
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            string path = _dataPath + "\\Users\\" + username;
             Directory.Delete(path, true);
         }
 
         public bool CheckUser(string username)
         {
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
+            string path = _dataPath + "\\Users\\" + username;
             return Directory.Exists(path);
         }
 
         public string Identify(string username, string password)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser =_dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -156,7 +176,7 @@ namespace FakeSmtp
 
         public void ModifyType(string username, string type)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -169,7 +189,7 @@ namespace FakeSmtp
 
         public void ModifyPassword(string username, string password)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -182,7 +202,7 @@ namespace FakeSmtp
 
         private Dictionary<string, string> GetIdentity(string username)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> identity = new Dictionary<string, string>();
             if (File.Exists(fileUser))
             {
@@ -196,6 +216,8 @@ namespace FakeSmtp
             }
             return null;
         }
+
+        public ServerStatus Status { get { return _status; } }
 
         #endregion
     }

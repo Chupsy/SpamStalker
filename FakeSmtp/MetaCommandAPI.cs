@@ -79,7 +79,10 @@ namespace FakeSmtp
 
         public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return true; }
 
-        public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+        public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) 
+        {
+            _server.AddBlacklitAdress(username, referenceAddress, blacklistedAddress);
+        }
 
         public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
 
