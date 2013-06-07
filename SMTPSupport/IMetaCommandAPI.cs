@@ -61,7 +61,7 @@ namespace SMTPSupport
         /// <summary>
         /// Verification si l'adresse existe et si oui, si elle appartient bien a l'utilisateur. return true si c'est le cas, false sinon
         /// </summary>
-        bool CheckAddressBelonging(string rmvAddress, string username);
+        bool CheckAddressBelonging(string belongAddress, string username);
 
         /// <summary>
         /// Verification de l'existance du compte.
@@ -96,6 +96,14 @@ namespace SMTPSupport
         /// Vérifie si une des adresses a le sender dans sa blacklist. return une liste des adresse qui ont ce sender dans leur blacklist si oui, null sinon.
         /// </summary>
         MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender);
+
+        bool CheckSpammer(string username, string userAddress, string blacklistedAddress);
+
+        void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress);
+
+        void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress);
+
+        void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod);
 
         ServerStatus Status { get; }
 
