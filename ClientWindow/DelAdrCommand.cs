@@ -8,23 +8,20 @@ using DataSuport;
 
 namespace ClientWindow
 {
-    public class AddAdrCommand
+    public class DelAdrCommand
     {
         Session _session;
         Client _client;
         String _adress;
-        String _description;
-        String _relayAdress;
         string _message;
 
-        public AddAdrCommand(Session session, Client client, string adress, string description, string relayAdress)
+        public DelAdrCommand(Session session, Client client, string adress)
         {
             _session = session;
             _client = client;
             _adress = adress;
-            _description = description;
-            _relayAdress = relayAdress;
-            _message = "!ADDA " + _adress + " " + _description;
+
+            _message = "!RMVA " + _adress;
         }
 
         void Execute()

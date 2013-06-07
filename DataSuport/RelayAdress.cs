@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace DataSuport
 {
-    class RelayAdress
+    public class RelayAddress
     {
-        string _relayAdress;
+        string _relayAddressName;
 
-        RelayAdress(string relayAdress)
+        RelayAddress(string relayAddressName)
         {
-            _relayAdress = relayAdress;
+            _relayAddressName = relayAddressName;
         }
 
-        public string relayAdress
+        public string RelayAddressName
         {
-            get { return _relayAdress; }
-            set { _relayAdress = value; }
+            get { return _relayAddressName; }
+            set { _relayAddressName = value; }
         }
 
     }

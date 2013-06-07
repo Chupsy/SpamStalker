@@ -16,8 +16,16 @@ namespace ClientWindow
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form2());
-            Application.Run(new Form1());
+
+            Client client = new Client();
+            Session session = new Session();
+
+            Application.Run(new Form2(client,session));
+
+            if (session.IsInitialized == true)
+            {
+                Application.Run(new Form1(client, session));
+            }
         }
     }
 }

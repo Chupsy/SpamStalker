@@ -39,8 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adress.cs" />
+    <Compile Include="Address.cs" />
     <Compile Include="Blacklist.cs" />
+    <Compile Include="EmailAddress.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelayAdress.cs" />

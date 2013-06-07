@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using DataSuport;
 
 
 namespace ClientWindow
@@ -29,6 +33,14 @@ namespace ClientWindow
         {
             writer.WriteLine(message);
         }
+
+        public string Waitresponse()
+        {
+            string output;
+            output = reader.ReadLine();
+            return(output);
+        }
+
 
 
         public void Connect(string login, string pass)
@@ -67,10 +79,11 @@ namespace ClientWindow
             }
         }
 
-        public GetData()
+        public string GetData()
         {
-            writer.WriteLine("GETA");
-
+            string data;
+            writer.WriteLine("!GETA");
+            data = reader.ReadLine();
             return(data);
         }
 

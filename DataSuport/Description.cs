@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataSuport
 {
-    class Description
+    public class Description
     {
         string _description;
 
@@ -15,7 +15,7 @@ namespace DataSuport
             _description = description;
         }
 
-        public string description
+        public string Description
         {
             get { return _description; }
             set { _description = value; }

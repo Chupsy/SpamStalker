@@ -7,16 +7,16 @@ using System.Net.Mail;
 
 namespace DataSuport
 {
-    class Blacklist
+    public class Blacklist
     {
-        List<MailAddress> _list;
+        List<EmailAddress> _list;
 
-        public Blacklist(List<MailAddress> list)
+        public Blacklist(List<EmailAddress> list)
         {
             _list = list;
         }
 
-        public List<MailAddress> list
+        public List<EmailAddress> list
         {
             get { return _list; }
             set { _list = value; }

@@ -12,17 +12,24 @@ namespace ClientWindow
 {
     public partial class Form2 : Form
     {
-        Client client = new Client();
-        public Form2()
+        Client _client;
+        Session _session;
+        string data;
+       
+        public Form2(Client client, Session session)
         {
             InitializeComponent();
+            _client = client;
+            _session = session;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string logins = textBox1.Text +" "+ textBox2.Text;
-            string message = "!EHLO " + logins;
-            client.Connect(message);
+            _client.Connect(textBox1.Text, textBox2.Text);
+            data = _client.GetData();
+
+
+            _session.IsInitialized = true;
         }
     }
 }
