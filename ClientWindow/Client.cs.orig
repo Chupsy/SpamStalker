@@ -1,0 +1,136 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Windows.Forms;
+using System.Configuration;
+using System.IO;
+using DataSuport;
+
+
+namespace ClientWindow
+{
+    public class Client
+    {
+
+        System.IO.StreamReader reader;
+        System.IO.StreamWriter writer;
+        NetworkStream stream;
+        TcpClient client;
+
+        string serverIP = ConfigurationManager.AppSettings["ServerIP"];
+        int port = Convert.ToInt32(ConfigurationManager.AppSettings["Port"]);
+
+        public Client()
+        {
+        }
+
+        public void Send(string message)
+        {
+<<<<<<< HEAD
+            writer.WriteLine(message);
+        }
+
+        public string Waitresponse()
+        {
+            string output;
+            output = reader.ReadLine();
+            return(output);
+        }
+=======
+            string output = "";
+            System.IO.StreamReader reader;
+            System.IO.StreamWriter writer;
+
+            try
+            {
+                // Create a TcpClient.
+                // The client requires a TcpServer that is connected
+                // to the same address specified by the server and port
+                // combination.
+               
+                Int32 port = 25;
+                TcpClient client = new TcpClient(serverIP, port);
+
+                // Get a client stream for reading and writing.
+                // Stream stream = client.GetStream();
+                NetworkStream stream = client.GetStream();
+                //writer = new System.IO.StreamWriter(stream);
+                //reader = new System.IO.StreamReader(stream);
+
+                //output = "Sent: " + message;
+                //MessageBox.Show(output);
+                //output = reader.ReadLine();
+                //MessageBox.Show(output);
+                //writer.WriteLine(message);
+                //MessageBox.Show(output);
+                //output = reader.ReadLine();
+                //MessageBox.Show(output);
+
+
+                // Translate the passed message into ASCII and store it as a byte array.
+                Byte[] data = new Byte[256];
+                data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                
+>>>>>>> Develop
+
+
+<<<<<<< HEAD
+=======
+              
+>>>>>>> Develop
+
+        public void Connect(string login, string pass)
+        {
+            string output = "";
+
+            try
+            {
+               
+                client = new TcpClient(serverIP, port);
+                stream = client.GetStream();
+                reader = new System.IO.StreamReader(stream);
+                writer = new System.IO.StreamWriter(stream);
+                writer.AutoFlush = true;
+                output = reader.ReadLine();
+
+                if (output == "220 <SpamStalker> Service ready")
+                {
+                    writer.WriteLine("!EHLO " + login +" "+pass);
+                    output = reader.ReadLine();
+                    if (output != "250 OK")
+                    {
+                        MessageBox.Show("Sever Error");
+                    }
+                }               
+            }
+            catch (ArgumentNullException e)
+            {
+                output = "ArgumentNullException: " + e;
+                MessageBox.Show(output);
+            }
+            catch (SocketException e)
+            {
+                output = "SocketException: " + e.ToString();
+                MessageBox.Show(output);
+            }
+        }
+
+        public string GetData()
+        {
+            string data;
+            writer.WriteLine("!GETA");
+            data = reader.ReadLine();
+            return(data);
+        }
+
+        public void CloseStream()
+        {
+            stream.Close();
+            client.Close();
+        }
+    }
+}

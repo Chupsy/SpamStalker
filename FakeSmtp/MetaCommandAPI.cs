@@ -14,17 +14,17 @@ namespace FakeSmtp
 
         public void Shutdown()
         {
-            _server.ShutDown = true;
+            _server.ShutDown();
         }
 
         public void Pause()
         {
-            _server.Pause = true;
+            
         }
 
         public void Resume()
         {
-            _server.Pause = false;
+           
         }
 
 
@@ -81,7 +81,7 @@ namespace FakeSmtp
 
         public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) 
         {
-            _server.AddBlacklitAdress(username, referenceAddress, blacklistedAddress);
+            _server.AddBlacklistAddress(username, referenceAddress, blacklistedAddress);
         }
 
         public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
@@ -91,20 +91,8 @@ namespace FakeSmtp
 
         public ServerStatus Status
         {
-            get 
-            {
-                if (_server.Pause == true && _server.ShutDown == false)
-                {
-                    return ServerStatus.Paused;
-                }
-                else if (_server.ShutDown == true)
-                {
-                    return ServerStatus.ShuttingDown;
-                }
-                else
-                {
-                    return ServerStatus.Running;
-                }
+            get { 
+            return _server.
             }
         }
     }
