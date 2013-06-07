@@ -25,6 +25,11 @@ namespace FakeSmtp
 
         public void RunServer()
         {
+<<<<<<< Updated upstream
+=======
+
+            
+>>>>>>> Stashed changes
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -83,9 +88,8 @@ namespace FakeSmtp
             set { _pause = value; }
         }
 
-        public void CreateUser(string username, string password, string accountType, string newAdress)
+        public void CreateUser(string username, string password, string accountType)
         {
-            string description = "Main adress from server";
             string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
             Directory.CreateDirectory(path);
             string fileUser = path + "\\Informations.txt";
@@ -96,32 +100,6 @@ namespace FakeSmtp
                 string line = username + " " + password + " " + accountType;
                 stream.Write(line);
             }
-            AddAddress(username, newAdress, newAdress , description); 
-        }
-
-        public void RemoveAddress(string address, string username)
-        {
-            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + address + ".txt";
-            if (File.Exists(fileAdress))
-            {
-                File.Delete(fileAdress);
-                return true;
-            }
-            else return false;
-        }
-
-        public bool AddAddress(string username, string newAdress, string relayAdress, string description)
-        {
-            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + newAdress +".txt";
-            if (!File.Exists(fileAdress))
-            {
-                File.Create(fileAdress);
-                StreamWriter stream = new StreamWriter(fileAdress);
-                stream.WriteLine(relayAdress);
-                stream.WriteLine(description);
-                return true;
-            }
-            else return false;
         }
 
         public void DeleteUser(string username)
@@ -153,6 +131,7 @@ namespace FakeSmtp
             }
             return null;
         }
+
 
         public void ModifyType(string username, string type)
         {

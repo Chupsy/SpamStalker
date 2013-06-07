@@ -14,7 +14,11 @@ namespace FakeSmtp
 
         public void Shutdown()
         {
+<<<<<<< Updated upstream
             _server.ShutDown = true;
+=======
+            
+>>>>>>> Stashed changes
         }
 
         public void Pause()
@@ -58,15 +62,10 @@ namespace FakeSmtp
             _server.ModifyPassword(username, value);
         }
 
-        public bool AddAddress(string username, string newAddress, string relayAddress, string description) 
-        {
-            return _server.AddAddress(username, newAddress, relayAddress, description);      
-        }
 
-        public bool RemoveAddress(string address, string username) 
-        {
-            return _server.RemoveAddress(address, username);
-        }
+        public void AddAddress(string user, string newAddress, string relayAddress, string description) { }
+
+        public void RemoveAddress(string address, string username) { }
 
         public List<string> GetAllInformations(string username) { return null; }
 

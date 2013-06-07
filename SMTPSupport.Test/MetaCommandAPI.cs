@@ -13,7 +13,7 @@ namespace SMTPSupport.Test
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Pause()
