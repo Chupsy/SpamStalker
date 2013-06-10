@@ -16,6 +16,7 @@ namespace ClientWindow
         String _description;
         String _relayAdress;
         string _message;
+        User _user;
 
         public AddAdrCommand(Session session, Client client, string adress, string description, string relayAdress)
         {
@@ -25,6 +26,7 @@ namespace ClientWindow
             _description = description;
             _relayAdress = relayAdress;
             _message = "!ADDA " + _adress + " " + _description;
+
         }
 
         public void Execute()
@@ -37,7 +39,8 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                //_session.Data = data;
+                _user = User.ParseInfos(data);
+                _session.Data = _user.Data;
             }
             _client.CloseStream();
         }

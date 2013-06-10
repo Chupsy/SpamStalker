@@ -16,6 +16,7 @@ namespace ClientWindow
         string _message;
         string _blackAddress;
         bool _fuck;
+        User _user;
 
         public UnFuckCommand(Session session, Client client, string adress, string blackAddress)
         {
@@ -38,7 +39,8 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                //_session.Data = data;
+                _user = User.ParseInfos(data);
+                _session.Data = _user.Data;
             }
             _client.CloseStream();
         }

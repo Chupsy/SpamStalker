@@ -14,6 +14,7 @@ namespace ClientWindow
         Client _client;
         String _adress;
         string _message;
+        User _user;
 
         public DelAdrCommand(Session session, Client client, string adress)
         {
@@ -34,7 +35,8 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                //_session.Data = data;
+                _user = User.ParseInfos(data);
+                _session.Data = _user.Data;
             }
             _client.CloseStream();
         }

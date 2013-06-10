@@ -7,7 +7,7 @@ using DataSupport;
 using System.Configuration;
 using System.IO;
 
-namespace FakeSmtp
+namespace DataSupport
 {
     public class User
     {
@@ -217,7 +217,7 @@ namespace FakeSmtp
                     {
                         if (b.Address == addressToModify)
                         {
-                            b.Isficking = newStatus;
+                            b.IsFucking = newStatus;
                         }
                     }
                 }
@@ -375,7 +375,7 @@ namespace FakeSmtp
                             {
                                 foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                                 {
-                                    if (address.Isficking == true)
+                                    if (address.IsFucking == true)
                                     {
                                         dataFile += "fuck: ";
                                     }
