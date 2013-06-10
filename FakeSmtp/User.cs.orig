@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataSupport;
+<<<<<<< HEAD
 using System.Configuration;
 using System.IO;
+=======
+using System.IO;
+using System.Configuration;
+>>>>>>> fca035e4cba170e612bdfb60188adabbeba4e9cc
 
 namespace FakeSmtp
 {
@@ -54,9 +59,8 @@ namespace FakeSmtp
             string password;
             string accountType;
 
-
             string fileUser = path + "\\User\\" + username + ".txt";
-
+            
             if (File.Exists(fileUser))
             {
 
@@ -68,45 +72,12 @@ namespace FakeSmtp
                     if (userData[1] != null && userData[1].Trim().StartsWith("account"))
                     {
                         accountType = userData[0].Trim().Substring(userData[1].IndexOf(":"));
-                        return new User(username, password, accountType);
+                        return new User(username, password, accountType);                   
                     }
-
+                    
                 }
             }
             return null;
-        }
-
-        static bool CreateUser(string username, string password, string newAdress, string AccountType)
-        {
-            string _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
-            _dataPath = _dataPath + "\\User\\";
-            string _description = "Main adress";
-            string fileUser = _dataPath + username + ".txt";
-            string _passLine = "Password = " + password;
-            string _accountTypeLine = "Account = " + AccountType;
-
-            if (!Directory.Exists(_dataPath))
-            {
-                Directory.CreateDirectory(_dataPath);
-                File.Create(fileUser);
-            }
-            else if (!File.Exists(fileUser))
-            {
-                File.Create(fileUser);
-            }
-
-            StreamWriter stream = new StreamWriter(@fileUser);
-            stream.WriteLine(_passLine);
-            stream.WriteLine(_accountTypeLine);
-            stream.Close();
-
-            AddAdress(newAdress, _description, newAdress);
-            return true;
-        }
-
-        static void AddAdress(string adress, string description, string relayAdress)
-        {
-
         }
 
         public static User GetData(User user, string path)
@@ -179,6 +150,39 @@ namespace FakeSmtp
                 }
             }
             return user;
+        }
+
+        static bool CreateUser(string username, string password, string newAdress, string AccountType)
+        {
+            string _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            _dataPath = _dataPath + "\\User\\";
+            string _description = "Main adress";
+            string fileUser = _dataPath + username + ".txt";
+            string _passLine = "Password = " + password;
+            string _accountTypeLine = "Account = " + AccountType;
+
+            if (!Directory.Exists(_dataPath))
+            {
+                Directory.CreateDirectory(_dataPath);
+                File.Create(fileUser);
+            }
+            else if (!File.Exists(fileUser))
+            {
+                File.Create(fileUser);
+            }
+
+            StreamWriter stream = new StreamWriter(@fileUser);
+            stream.WriteLine(_passLine);
+            stream.WriteLine(_accountTypeLine);
+            stream.Close();
+
+            AddAdress(newAdress, _description, newAdress);
+            return true;
+        }
+
+        static void AddAdress(string adress, string description, string relayAdress)
+        {
+            
         }
     }
 }
