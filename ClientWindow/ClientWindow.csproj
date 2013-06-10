@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnFuckCommand.cs" />
+    <Compile Include="FuckCommand.cs" />
     <Compile Include="DelBlackAdrCommand.cs" />
     <Compile Include="DelAdrCommand.cs" />
     <Compile Include="Form1.cs">

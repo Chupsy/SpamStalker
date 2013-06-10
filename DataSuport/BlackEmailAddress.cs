@@ -9,12 +9,12 @@ namespace DataSupport
     public class BlackEmailAddress
     {
         string _address;
-        bool _isfucking;
+        bool _isFucking;
 
-        BlackEmailAddress(string address, bool isfucking)
+        BlackEmailAddress(string address, bool isFucking)
         {
             _address = address;
-            _isfucking = isfucking;
+            _isFucking = isFucking;
 
         }
 
@@ -24,10 +24,10 @@ namespace DataSupport
             set { _address = value; }
         }
 
-        public bool Isficking
+        public bool IsFucking
         {
-            get { return _isfucking; }
-            set { _isfucking = value; }
+            get { return _isFucking; }
+            set { _isFucking = value; }
         }
     }
 }
