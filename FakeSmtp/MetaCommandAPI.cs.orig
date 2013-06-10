@@ -14,21 +14,17 @@ namespace FakeSmtp
 
         public void Shutdown()
         {
-<<<<<<< Updated upstream
-            _server.ShutDown = true;
-=======
-            
->>>>>>> Stashed changes
+            _server.ShutDown();
         }
 
         public void Pause()
         {
-            _server.Pause = true;
+            
         }
 
         public void Resume()
         {
-            _server.Pause = false;
+           
         }
 
 
@@ -42,9 +38,9 @@ namespace FakeSmtp
             return _server.CheckUser(username);
         }
 
-        public void CreateUser(string username, string password, string typeOfAccount)
+        public void CreateUser(string username, string password, string mainAddress, string typeOfAccount)
         {
-            _server.CreateUser(username, password, typeOfAccount);
+            _server.CreateUser(username, password, mainAddress, typeOfAccount);
         }
 
         public void DeleteUser(string username)
@@ -62,39 +58,45 @@ namespace FakeSmtp
             _server.ModifyPassword(username, value);
         }
 
+        public bool AddAddress(string username, string newAddress, string relayAddress, string description) 
+        {
+            return _server.AddAddress(username, newAddress, relayAddress, description);      
+        }
 
-        public void AddAddress(string user, string newAddress, string relayAddress, string description) { }
-
-        public void RemoveAddress(string address, string username) { }
+        public bool RemoveAddress(string address, string username) 
+        {
+            return _server.RemoveAddress(address, username);
+        }
 
         public List<string> GetAllInformations(string username) { return null; }
 
         public bool CheckAddress(string address) { return false; }
 
- 
-        public bool CheckAddressBelonging(string rmvAddress, string username) { return false; }
+        public bool CheckAddressBelonging(string belongAddress, string username) { return false; }
 
         public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
 
 
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return true; }
+
+        public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) 
+        {
+            _server.AddBlacklistAddress(username, referenceAddress, blacklistedAddress);
+        }
+
+        public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+
+        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod) { }
+
 
         public ServerStatus Status
         {
-            get 
-            {
-                if (_server.Pause == true && _server.ShutDown == false)
-                {
-                    return ServerStatus.Paused;
-                }
-                else if (_server.ShutDown == true)
-                {
-                    return ServerStatus.ShuttingDown;
-                }
-                else
-                {
-                    return ServerStatus.Running;
-                }
+<<<<<<< HEAD
+=======
+            get {
+                return _server.Status;
             }
+>>>>>>> c22ee512e42250860d1c8d6b5b43736fd07f620b
         }
     }
 }
