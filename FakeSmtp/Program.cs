@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.IO;
 using SMTPSupport;
+using DataSupport;
 
 
 namespace FakeSmtp

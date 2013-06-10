@@ -16,6 +16,7 @@ using DataSupport;
             public void test()
             {
                 string s = User.GetAllInformations("vincent", "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test");
+                User u = User.ParseInfos(s);
                 User test = User.GetInfo("vincent", "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test");
                 Assert.That(test.Username, Is.EqualTo("vincent"));
                 test = User.GetData(test, "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test");

@@ -7,7 +7,7 @@ using DataSupport;
 using System.Configuration;
 using System.IO;
 
-namespace FakeSmtp
+namespace DataSupport
 {
     public class User
     {
