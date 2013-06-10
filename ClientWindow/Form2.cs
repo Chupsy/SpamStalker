@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataSupport;
 
 namespace ClientWindow
 {
@@ -15,6 +16,7 @@ namespace ClientWindow
         Client _client;
         Session _session;
         string data;
+        User _user;
        
         public Form2(Client client, Session session)
         {
@@ -27,9 +29,11 @@ namespace ClientWindow
         {
             _client.Connect(textBox1.Text, textBox2.Text);
             data = _client.GetData();
-
+            _user = User.ParseInfos(data);
+            _session.Data = _user.Data;
 
             _session.IsInitialized = true;
+            this.Close();
         }
     }
 }

@@ -74,11 +74,11 @@ namespace ClientWindow
             {
                 if (blackAddress.IsFucking == true)
                 {
-                    _fuckList[i] = 1;
+                    _fuckList.Add(1);
                 }
                 else
                 {
-                    _fuckList[i] = 0;
+                    _fuckList.Add(0);
                 }
                 i++;
             }
@@ -89,7 +89,14 @@ namespace ClientWindow
         private void LoadBlacklist()
         {
             _selectedAdress = (string)comboBox1.SelectedItem;
-            _selectedindex = (int)comboBox1.SelectedItem;
+            foreach (Address a in _session.Data)
+            {
+                if (a.UserAddress.Address == _selectedAdress)
+                {
+                    _selectedindex = _session.Data.IndexOf(a);
+                }
+            }
+            
 
             foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
             {

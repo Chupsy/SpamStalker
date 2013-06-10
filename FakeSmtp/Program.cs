@@ -37,9 +37,12 @@ namespace FakeSmtp
 
 
             Directory.CreateDirectory(dataPath);
-            string fileSystem = dataPath + "\\System.txt";
+            string fileSystem = dataPath + "//User//" + "system" + ".txt";
+            if (!File.Exists(fileSystem))
+            {
                 File.Create(fileSystem);
                 User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
+            }
 
             #endregion
 

@@ -51,7 +51,8 @@ namespace DataSupport
 
         public static User ParseInfos(string infos)
         {
-            string[] userData = infos.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            string[] userData = infos.Replace("/",Environment.NewLine).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string password = null;
             string accountType = null;
             string username = null;
@@ -101,7 +102,7 @@ namespace DataSupport
                                         }
                                         else if (userData[i].Trim().StartsWith("fuck"))
                                         {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), true));
                                         }
                                         i++;
                                     }
@@ -427,7 +428,8 @@ namespace DataSupport
         public static string GetAllInformations(string username, string dataPath)
         {
             string path = dataPath + "\\User\\" + username + ".txt";
-            return File.ReadAllText(path);
+
+            return File.ReadAllText(path).Replace(Environment.NewLine, "/"); ;
         }
 
         public static bool CheckAddress(string address, string path)
