@@ -76,37 +76,42 @@ namespace FakeSmtp
             return null;
         }
 
-        static bool CreateUser(string username, string password, string newAdress, string AccountType)
+        static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
-            string _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
-            _dataPath = _dataPath + "\\User\\";
+            string directoryPath = path + "\\User\\";
             string _description = "Main adress";
-            string fileUser = _dataPath + username + ".txt";
-            string _passLine = "Password = " + password;
-            string _accountTypeLine = "Account = " + AccountType;
+            string fileUser = directoryPath + username + ".txt";
+            User NewUser = new User(username, password, AccountType);
+            List<Address> data = new List<Address>();
+            NewUser.Data = new List<Address>();
+            AddAdress(NewUser, username, newAdress, _description, newAdress);
 
-            if (!Directory.Exists(_dataPath))
+            if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(_dataPath);
+                Directory.CreateDirectory(directoryPath);
                 File.Create(fileUser);
             }
             else if (!File.Exists(fileUser))
             {
                 File.Create(fileUser);
             }
+            User.Write(NewUser, path);
 
-            StreamWriter stream = new StreamWriter(@fileUser);
-            stream.WriteLine(_passLine);
-            stream.WriteLine(_accountTypeLine);
-            stream.Close();
-
-            AddAdress(newAdress, _description, newAdress);
-            return true;
+            if(GetInfo(username, path) != null)
+            {
+                return true;
+            }
+            else return false;
         }
 
-        static void AddAdress(string adress, string description, string relayAdress)
+        static User AddAdress(User User,string username, string address, string description, string relayAddress)
         {
 
+            EmailAddress userAddress = new EmailAddress(address);
+            Description userDescription = new Description(description);
+            RelayAddress userRelayAddress = new RelayAddress(relayAddress);
+            User.Data.Add(new Address(userAddress, null, userDescription, userRelayAddress));
+            return User;
         }
 
         public static User GetData(User user, string path)
