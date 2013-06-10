@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using SMTPSupport;
 using System.Net.Mail;
+using DataSupport;
 
 namespace FakeSmtp
 {
     public class MetaCommandAPI : IMetaCommandAPI
     {
         SMTPServer _server;
+        User user;
 
         public void Shutdown()
         {
@@ -28,9 +30,14 @@ namespace FakeSmtp
         }
 
 
-        public string Identify(string user, string password)
+        public string Identify(string username, string password)
         {
-            return _server.Identify(user, password);
+            string identify = _server.Identify(username, password);
+            if (identify != null)
+            {
+                user = _server.SetUser(username);
+            }
+            return identify;
         }
 
         public bool CheckUser(string username)

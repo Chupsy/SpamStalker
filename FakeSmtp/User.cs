@@ -94,7 +94,7 @@ namespace FakeSmtp
             {
                 File.Create(fileUser);
             }
-
+            
             StreamWriter stream = new StreamWriter(@fileUser);
             stream.WriteLine(_passLine);
             stream.WriteLine(_accountTypeLine);
@@ -121,7 +121,7 @@ namespace FakeSmtp
 
             if (File.Exists(fileUser))
             {
-
+                
                 string[] userData = File.ReadAllLines(fileUser);
                 for (int i = 3; i < userData.Length; i++)
                 {
@@ -181,6 +181,72 @@ namespace FakeSmtp
             }
             user.Data = data;
             return user;
+        }
+
+        public static User ModifyType(User user, string path, string type)
+         {
+             if (type == "admin" || type == "user")
+             {
+                 user.AccountType = type;
+             }
+             return user;
+         }
+
+        public static User ModifyPassword(User user, string path, string password)
+        {
+            user.Password = password;
+            return user;
+        }
+
+        public static void Write(User user, string path)
+        {
+            if (user.Username != null && user.Password != null && user.AccountType != null)
+            {
+                string dataPath = path + "\\User\\" + user.Username + ".txt";
+                if (File.Exists(dataPath))
+                {
+                    string dataFile = "password: " + user.Password + Environment.NewLine;
+                    dataFile += "account: " + user.AccountType + Environment.NewLine + Environment.NewLine;
+                    if (user.Data != null && user.Data.Count > 0)
+                    {
+                        foreach (Address a in user.Data)
+                        {
+                            dataFile += "address: " + a.UserAddress + Environment.NewLine;
+                            dataFile += "description: " + a.AddressDescription + Environment.NewLine;
+                            dataFile += "relay address: " + a.RelayAddress + Environment.NewLine;
+                            dataFile += "blacklist: " + Environment.NewLine;
+                            foreach (BlackEmailAddress address in a.AddressBlacklist.list)
+                            {
+                                if (address.Isficking == true)
+                                {
+                                    dataFile += "fuck: ";
+                                }
+                                else
+                                {
+                                    dataFile += "ignore: ";
+                                }
+                                if (address.Address != null)
+                                {
+                                    dataFile += address.Address;
+                                }
+                                dataFile += Environment.NewLine;
+                            }
+                            dataFile += Environment.NewLine;                           
+                        }
+                    }
+
+                    File.WriteAllText(dataPath, dataFile);
+                }
+            }
+
+        }
+
+        public static User SetUser(string username, string dataPath)
+        {
+            User u = GetInfo(username, dataPath);
+            u.Data = new List<Address>();
+            u = GetData(u, dataPath);
+            return u;
         }
     }
 }

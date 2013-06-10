@@ -19,7 +19,9 @@ using DataSupport;
                 Assert.That(test.Username, Is.EqualTo("vincent"));
                 test = User.GetData(test, "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test");
                 Assert.That(test.Username, Is.EqualTo("vincent"));
-
+                User.ModifyPassword(test, "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test", "connard");
+                User.ModifyType(test, "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test", "admin");
+                User.Write(test, "C:\\Users\\Admin\\Semestre 3\\spamkiller\\test");
             }
         }
     }
