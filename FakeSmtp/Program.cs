@@ -14,10 +14,9 @@ namespace FakeSmtp
     public class SMTPServer
     {
         
-        bool _shutdown;
         TcpListener _listener;
         ServerStatus _status;
-        string _dataPath;
+        string dataPath;
 
         [STAThread] 
         static void Main(string[] args)
@@ -28,7 +27,7 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-            _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            dataPath = ConfigurationManager.AppSettings["dataDirectory"];
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -36,8 +35,8 @@ namespace FakeSmtp
             #region Admin System file creation
 
             
-            Directory.CreateDirectory(_dataPath);
-            string fileSystem = _dataPath + "\\System.txt";
+            Directory.CreateDirectory(dataPath);
+            string fileSystem = dataPath + "\\System.txt";
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
@@ -65,7 +64,9 @@ namespace FakeSmtp
                 ProtocolHandler p = new ProtocolHandler( client );
                 Thread t = new Thread( p.Start );
                 allThreads.Add(t);
+                p.AddServer(this);
                 t.Start();
+               
                 for (int i = 0; i < allThreads.Count; ++i )
                 {
                     if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
@@ -98,7 +99,7 @@ namespace FakeSmtp
         public void CreateUser(string username, string password, string newAdress, string accountType)
         {
             string description = "Main adress from server";
-            string fileUser = _dataPath + "\\" + username + ".txt";
+            string fileUser = dataPath + "\\" + username + ".txt";
             if (!File.Exists(fileUser))
             {
                 File.Create(fileUser);
@@ -109,15 +110,9 @@ namespace FakeSmtp
             AddAddress(username, newAdress, newAdress , description); 
         }
 
-        public bool RemoveAddress(string address, string username)
+        public void RemoveAddress(string address, string username)
         {
-            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + address + ".txt";
-            if (File.Exists(fileAdress))
-            {
-                File.Delete(fileAdress);
-                return true;
-            }
-            return false;
+            User.Write(User.RemoveAdress(User.SetUser(username, dataPath), address), dataPath);
         }
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
@@ -126,95 +121,68 @@ namespace FakeSmtp
             
         }
 
-        public bool AddAddress(string username, string newAdress, string relayAdress, string description)
+        public void AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + newAdress +".txt";
-            if (!File.Exists(fileAdress))
-            {
-                File.Create(fileAdress);
-                StreamWriter stream = new StreamWriter(@fileAdress);
-                stream.WriteLine(relayAdress);
-                stream.WriteLine(description);
-                return true;
-            }
-            else return false;
+            User.Write(User.AddAdress(User.SetUser(username, dataPath), newAdress, description, relayAdress), dataPath);
         }
 
         public void DeleteUser(string username)
         {
-            string path = _dataPath + "\\Users\\" + username;
-            Directory.Delete(path, true);
+
+            string path = dataPath + "\\User\\" + username + ".txt";
+            File.Delete(path);
         }
 
         public bool CheckUser(string username)
         {
-            string path = _dataPath + "\\Users\\" + username;
-            return Directory.Exists(path);
+            string path = dataPath + "\\User\\" + username + ".txt";
+            return File.Exists(path);
         }
 
         public string Identify(string username, string password)
         {
-            string fileUser =_dataPath + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
+            User user = User.GetInfo(username, dataPath);
+            if (user.Username == username && user.Password == password)
             {
-                if (userInfos["username"] == username && userInfos["password"] == password)
-                {
-                    return userInfos["type"];
-                }
-                else
-                {
-                    return null;
-                }
+                return user.AccountType;
             }
             return null;
         }
 
         public void ModifyType(string username, string type)
         {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
-            {
-                StreamWriter stream = new StreamWriter(@fileUser);
-
-                string line = userInfos["username"] + " " + userInfos["password"] + " " + type;
-                stream.Write(line);
-            }
+            User.ModifyType(User.SetUser(username, dataPath), dataPath, type);
         }
 
+        public User SetUser(string username)
+        {
+            return User.SetUser(username, dataPath);
+        }
         public void ModifyPassword(string username, string password)
         {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
-            {
-                StreamWriter stream = new StreamWriter(@fileUser);
-
-                string line = userInfos["username"] + " " + password +" " + userInfos["type"];
-                stream.Write(line);
-            }
-        }
-
-        private Dictionary<string, string> GetIdentity(string username)
-        {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> identity = new Dictionary<string, string>();
-            if (File.Exists(fileUser))
-            {
-                StreamReader reader = new StreamReader(@fileUser);
-
-                string infos = reader.ReadLine();
-                identity.Add("username", infos.Trim().Substring(0, infos.IndexOf(" ")));
-                identity.Add("password", infos.Trim().Substring(identity["username"].Length).Trim().Substring(0, infos.IndexOf(" ")));
-                identity.Add("type", infos.Trim().Substring(infos.LastIndexOf(" ")));
-                return identity;
-            }
-            return null;
+            User.ModifyPassword(User.SetUser(username, dataPath), dataPath, password);
         }
 
         public ServerStatus Status { get { return _status; } }
 
+        public string GetAllInformations(string username)
+        {
+            return User.GetAllInformations(username, dataPath);
+        }
+
+                public bool CheckAddress(string address)
+        {
+            return User.CheckAddress(address, dataPath);
+        }
+
+                public bool CheckAddressBelonging(string username, string belongAddress)
+                {
+                    return User.CheckAddressBelonging(username, belongAddress, dataPath);
+                }
         #endregion
+
+
+
+
     }
 }

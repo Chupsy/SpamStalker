@@ -5,13 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using SMTPSupport;
 using System.Net.Mail;
+using DataSupport;
 
 namespace FakeSmtp
 {
     public class MetaCommandAPI : IMetaCommandAPI
     {
         SMTPServer _server;
+        User user;
 
+        public MetaCommandAPI(SMTPServer server)
+        {
+            _server = server;
+        }
         public void Shutdown()
         {
             _server.ShutDown();
@@ -28,9 +34,14 @@ namespace FakeSmtp
         }
 
 
-        public string Identify(string user, string password)
+        public string Identify(string username, string password)
         {
-            return _server.Identify(user, password);
+            string identify = _server.Identify(username, password);
+            if (identify != null)
+            {
+                user = _server.SetUser(username);
+            }
+            return identify;
         }
 
         public bool CheckUser(string username)
@@ -58,21 +69,24 @@ namespace FakeSmtp
             _server.ModifyPassword(username, value);
         }
 
-        public bool AddAddress(string username, string newAddress, string relayAddress, string description) 
+        public void AddAddress(string username, string newAddress, string relayAddress, string description) 
         {
-            return _server.AddAddress(username, newAddress, relayAddress, description);      
+            _server.AddAddress(username, newAddress, relayAddress, description);      
         }
 
-        public bool RemoveAddress(string address, string username) 
+        public void RemoveAddress(string address, string username) 
         {
-            return _server.RemoveAddress(address, username);
+             _server.RemoveAddress(address, username);
         }
 
-        public List<string> GetAllInformations(string username) { return null; }
+        public string GetAllInformations(string username) 
+        {
+            return _server.GetAllInformations(username); 
+        }
 
-        public bool CheckAddress(string address) { return false; }
+        public bool CheckAddress(string address) { return _server.CheckAddress(address); }
 
-        public bool CheckAddressBelonging(string belongAddress, string username) { return false; }
+        public bool CheckAddressBelonging(string belongAddress, string username) { return _server.CheckAddressBelonging(username, belongAddress); }
 
         public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
 
