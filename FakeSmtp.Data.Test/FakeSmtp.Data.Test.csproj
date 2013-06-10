@@ -51,6 +51,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataSuport\DataSupport.csproj">
+      <Project>{f24637b0-493e-4903-817b-2f3886333767}</Project>
+      <Name>DataSupport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FakeSmtp\FakeSmtp.csproj">
       <Project>{ad2559b8-adc4-4b86-8d66-9993841731fc}</Project>
       <Name>FakeSmtp</Name>

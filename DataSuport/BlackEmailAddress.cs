@@ -11,7 +11,7 @@ namespace DataSupport
         string _address;
         bool _isfucking;
 
-        BlackEmailAddress(string address, bool isfucking)
+        public BlackEmailAddress(string address, bool isfucking)
         {
             _address = address;
             _isfucking = isfucking;

@@ -13,7 +13,7 @@ namespace SMTPSupport
         string _blacklistMod;
 
         public MetaMODBlacklistCommand()
-            : base("!MODB", "Removes an adress from the blacklist")
+            : base("!MODB", "Modify Blacklist Type")
         {
         }
 

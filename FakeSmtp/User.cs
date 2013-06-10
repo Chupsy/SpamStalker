@@ -9,7 +9,7 @@ using System.Configuration;
 
 namespace FakeSmtp
 {
-    class User
+    public class User
     {
         string _username;
         string _password;
@@ -24,18 +24,37 @@ namespace FakeSmtp
             _accountType = accountType;
         }
 
+        public string Username
+        {
+            get { return _username; }
+            set { _username = value; }
+        }
+
+        public string Password
+        {
+            get { return _password; }
+            set { _password = value; }
+        }
+
+
+        public string AccountType
+        {
+            get { return _accountType; }
+            set { _accountType = value; }
+        }
+
         public List<Address> Data
         {
             get{ return _data;}
             set{_data = value;}
         }
 
-        static User GetInfo(string username)
+        public static User GetInfo(string username, string path)
         {
             string password;
             string accountType;
 
-            string fileUser = ConfigurationManager.AppSettings["dataDirectory"] + "\\User\\" + username + ".txt";
+            string fileUser = path + "\\User\\" + username + ".txt";
             
             if (File.Exists(fileUser))
             {
@@ -45,7 +64,7 @@ namespace FakeSmtp
                 {
                     password = userData[0].Trim().Substring(userData[0].IndexOf(":"));
 
-                    if (userData[1] != null && userData[0].Trim().StartsWith("account"))
+                    if (userData[1] != null && userData[1].Trim().StartsWith("account"))
                     {
                         accountType = userData[0].Trim().Substring(userData[1].IndexOf(":"));
                         return new User(username, password, accountType);                   
@@ -56,12 +75,14 @@ namespace FakeSmtp
             return null;
         }
 
-        static User GetData(User user)
+        public static User GetData(User user, string path)
         {
-            string fileUser = ConfigurationManager.AppSettings["dataDirectory"] + "\\User\\" + user._username + ".txt";
+            string fileUser = path + "\\User\\" + user._username + ".txt";
             EmailAddress mailUser;
             Description description;
             RelayAddress relayAddress;
+            List<BlackEmailAddress> blacklist;
+            List<Address> data = new List<Address>();
 
             if (File.Exists(fileUser))
             {
@@ -85,17 +106,41 @@ namespace FakeSmtp
 
                                 if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
                                 {
-                                    i++;
+                                    blacklist = new List<BlackEmailAddress>();
+
                                     while (userData[i] != "")
                                     {
-                                        if (userData[i].Trim().StartsWith("ignore") || userData[i].Trim().StartsWith("fuck"))
+                                        
+                                        if (userData[i].Trim().StartsWith("ignore"))
                                         {
-
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
                                         }
+                                        else if (userData[i].Trim().StartsWith("fuck"))
+                                        {
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
+                                        }
+                                        i++;
                                     }
+                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
+                                }
+                                else
+                                {
+                                    break;
                                 }
                             }
+                            else
+                            {
+                                break;
+                            }
                         }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
