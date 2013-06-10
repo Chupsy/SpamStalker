@@ -4,13 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataSupport;
-<<<<<<< HEAD
 using System.Configuration;
 using System.IO;
-=======
-using System.IO;
-using System.Configuration;
->>>>>>> fca035e4cba170e612bdfb60188adabbeba4e9cc
 
 namespace FakeSmtp
 {
@@ -59,97 +54,31 @@ namespace FakeSmtp
             string password;
             string accountType;
 
+
             string fileUser = path + "\\User\\" + username + ".txt";
-            
+
             if (File.Exists(fileUser))
             {
 
                 string[] userData = File.ReadAllLines(fileUser);
                 if (userData[0] != null && userData[0].Trim().StartsWith("password"))
                 {
-                    password = userData[0].Trim().Substring(userData[0].IndexOf(":"));
+                    password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
 
                     if (userData[1] != null && userData[1].Trim().StartsWith("account"))
                     {
-                        accountType = userData[0].Trim().Substring(userData[1].IndexOf(":"));
+<<<<<<< HEAD
+                        accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
                         return new User(username, password, accountType);                   
+=======
+                        accountType = userData[0].Trim().Substring(userData[1].IndexOf(":"));
+                        return new User(username, password, accountType);
+>>>>>>> 7cc41ae4c8f87b5030f2477da27b1391a6f8f8a0
                     }
-                    
+
                 }
             }
             return null;
-        }
-
-        public static User GetData(User user, string path)
-        {
-            string fileUser = path + "\\User\\" + user._username + ".txt";
-            EmailAddress mailUser;
-            Description description;
-            RelayAddress relayAddress;
-            List<BlackEmailAddress> blacklist;
-            List<Address> data = new List<Address>();
-
-            if (File.Exists(fileUser))
-            {
-
-                string[] userData = File.ReadAllLines(fileUser);
-                for (int i = 3; i < userData.Length; i++)
-                {
-                    if (userData[i] != null && userData[i].Trim().StartsWith("address"))
-                    {
-                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")));
-                        i++;
-                        if (userData[i] != null && userData[i].Trim().StartsWith("description"))
-                        {
-                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":")));
-                            i++;
-
-                            if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
-                            {
-                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")));
-                                i++;
-
-                                if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
-                                {
-                                    blacklist = new List<BlackEmailAddress>();
-
-                                    while (userData[i] != "")
-                                    {
-                                        
-                                        if (userData[i].Trim().StartsWith("ignore"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
-                                        }
-                                        else if (userData[i].Trim().StartsWith("fuck"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
-                                        }
-                                        i++;
-                                    }
-                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            return user;
         }
 
         static bool CreateUser(string username, string password, string newAdress, string AccountType)
@@ -182,7 +111,81 @@ namespace FakeSmtp
 
         static void AddAdress(string adress, string description, string relayAdress)
         {
+
+        }
+
+        public static User GetData(User user, string path)
+        {
+            string fileUser = path + "\\User\\" + user._username + ".txt";
+            EmailAddress mailUser;
+            Description description;
+            RelayAddress relayAddress;
+            List<BlackEmailAddress> blacklist;
+            List<Address> data = new List<Address>();
             
+
+            if (File.Exists(fileUser))
+            {
+
+                string[] userData = File.ReadAllLines(fileUser);
+                for (int i = 3; i < userData.Length; i++)
+                {
+                    if (userData[i] != null && userData[i].Trim().StartsWith("address"))
+                    {
+                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                        i++;
+                        if (userData[i] != null && userData[i].Trim().StartsWith("description"))
+                        {
+                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                            i++;
+
+                            if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
+                            {
+                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                                i++;
+
+                                if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
+                                {
+                                    blacklist = new List<BlackEmailAddress>();
+
+                                    while (i < userData.Length && userData[i] != "")
+                                    {
+                                        
+                                        if (userData[i].Trim().StartsWith("ignore"))
+                                        {
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
+                                        }
+                                        else if (userData[i].Trim().StartsWith("fuck"))
+                                        {
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
+                                        }
+                                        i++;
+                                    }
+                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            user.Data = data;
+            return user;
         }
     }
 }
