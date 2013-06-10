@@ -93,7 +93,7 @@ namespace SMTPSupport.Test
 
         public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender)
         {
-            throw new NotImplementedException();
+            return _server.CheckSpammer
         }
 
 
