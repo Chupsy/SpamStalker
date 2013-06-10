@@ -26,13 +26,13 @@ namespace SMTPSupport.Test
             throw new NotImplementedException();
         }
 
-        public void AddAddress(string user, string newAddress, string relayAddress, string description)
+        public bool AddAddress(string user, string newAddress, string relayAddress, string description)
         {
             throw new NotImplementedException();
         }
 
 
-        public void RemoveAddress(string address, string username)
+        public bool RemoveAddress(string address, string username)
         {
             throw new NotImplementedException();
         }
@@ -68,7 +68,7 @@ namespace SMTPSupport.Test
         }
 
 
-        public void CreateUser(string username, string password, string typeOfAccount)
+        public bool CreateUser(string username, string password, string typeOfAccount)
         {
             throw new NotImplementedException();
         }
