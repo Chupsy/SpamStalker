@@ -62,11 +62,11 @@ namespace FakeSmtp
                 string[] userData = File.ReadAllLines(fileUser);
                 if (userData[0] != null && userData[0].Trim().StartsWith("password"))
                 {
-                    password = userData[0].Trim().Substring(userData[0].IndexOf(":"));
+                    password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
 
                     if (userData[1] != null && userData[1].Trim().StartsWith("account"))
                     {
-                        accountType = userData[0].Trim().Substring(userData[1].IndexOf(":"));
+                        accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
                         return new User(username, password, accountType);                   
                     }
                     
@@ -83,6 +83,7 @@ namespace FakeSmtp
             RelayAddress relayAddress;
             List<BlackEmailAddress> blacklist;
             List<Address> data = new List<Address>();
+            
 
             if (File.Exists(fileUser))
             {
@@ -92,32 +93,32 @@ namespace FakeSmtp
                 {
                     if (userData[i] != null && userData[i].Trim().StartsWith("address"))
                     {
-                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")));
+                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
                         i++;
                         if (userData[i] != null && userData[i].Trim().StartsWith("description"))
                         {
-                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":")));
+                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
                             i++;
 
                             if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
                             {
-                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")));
+                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
                                 i++;
 
                                 if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
                                 {
                                     blacklist = new List<BlackEmailAddress>();
 
-                                    while (userData[i] != "")
+                                    while (i < userData.Length && userData[i] != "")
                                     {
                                         
                                         if (userData[i].Trim().StartsWith("ignore"))
                                         {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
                                         }
                                         else if (userData[i].Trim().StartsWith("fuck"))
                                         {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")), false));
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
                                         }
                                         i++;
                                     }
@@ -144,6 +145,7 @@ namespace FakeSmtp
                     }
                 }
             }
+            user.Data = data;
             return user;
         }
     }
