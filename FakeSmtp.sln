@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4CEF1B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWindow", "ClientWindow\ClientWindow.csproj", "{34E260C5-D2FD-4CEB-9D35-7E7F6DBF8620}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSuport", "DataSuport\DataSuport.csproj", "{F24637B0-493E-4903-817B-2F3886333767}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSupport", "DataSuport\DataSupport.csproj", "{F24637B0-493E-4903-817B-2F3886333767}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

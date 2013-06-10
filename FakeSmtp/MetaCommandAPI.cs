@@ -91,8 +91,8 @@ namespace FakeSmtp
 
         public ServerStatus Status
         {
-            get { 
-            return _server.
+            get {
+                return _server.Status;
             }
         }
     }

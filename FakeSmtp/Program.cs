@@ -37,9 +37,7 @@ namespace FakeSmtp
 
             
             Directory.CreateDirectory(_dataPath);
-            string path = _dataPath + "\\System";
-            Directory.CreateDirectory(path);
-            string fileSystem = path + "\\Informations.txt";
+            string fileSystem = _dataPath + "\\System.txt";
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
@@ -100,9 +98,7 @@ namespace FakeSmtp
         public void CreateUser(string username, string password, string newAdress, string accountType)
         {
             string description = "Main adress from server";
-            string path = _dataPath + "\\Users\\" + username;
-            Directory.CreateDirectory(path);
-            string fileUser = path + "\\Informations.txt";
+            string fileUser = _dataPath + "\\" + username + ".txt";
             if (!File.Exists(fileUser))
             {
                 File.Create(fileUser);

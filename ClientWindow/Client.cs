@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Configuration;
 using System.IO;
-using DataSuport;
+using DataSupport;
 
 
 namespace ClientWindow

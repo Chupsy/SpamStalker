@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataSuport;
+using DataSupport;
 
 namespace ClientWindow
 {
@@ -85,7 +85,8 @@ namespace ClientWindow
 
         private void button3_Click(object sender, EventArgs e)
         {
-            DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address, );
+            DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            _delBlackAdrCommand.Execute();
         }
     }
 }
