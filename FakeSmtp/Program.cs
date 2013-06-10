@@ -41,8 +41,7 @@ namespace FakeSmtp
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
-                StreamWriter stream = new StreamWriter(@fileSystem);
-                stream.Write("System Password Admin");
+                User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
             }
 
             #endregion
