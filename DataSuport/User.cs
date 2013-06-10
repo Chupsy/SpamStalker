@@ -186,12 +186,6 @@ namespace DataSupport
             else return false;
         }
 
-        public static bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
-        {
-
-            return true;
-        }
-
         public static void AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
         {
             User User = SetUser(username, datapath);
@@ -222,6 +216,26 @@ namespace DataSupport
                     }
                 }
             }
+        }
+        
+        public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
+        {
+            User User = SetUser(username, dataPath);
+            foreach (Address a in User.Data)
+            {
+                if (a.UserAddress.Address == blackListFrom)
+                {
+                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
+                    {
+                        if (b.Address == blacklistedAddress)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
         }
 
         public static void RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
