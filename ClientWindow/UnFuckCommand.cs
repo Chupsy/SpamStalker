@@ -8,25 +8,25 @@ using DataSupport;
 
 namespace ClientWindow
 {
-    public class AddAdrCommand
+    public class UnFuckCommand
     {
         Session _session;
         Client _client;
         String _adress;
-        String _description;
-        String _relayAdress;
         string _message;
+        string _blackAddress;
+        bool _fuck;
         User _user;
 
-        public AddAdrCommand(Session session, Client client, string adress, string description, string relayAdress)
+        public UnFuckCommand(Session session, Client client, string adress, string blackAddress)
         {
             _session = session;
             _client = client;
             _adress = adress;
-            _description = description;
-            _relayAdress = relayAdress;
-            _message = "!ADDA " + _adress + " " + _description;
+            _blackAddress = blackAddress;
+            _fuck = false;
 
+            _message = "!MODB " + _adress +" "+_blackAddress + " " + _fuck;
         }
 
         public void Execute()

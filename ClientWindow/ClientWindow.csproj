@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnFuckCommand.cs" />
+    <Compile Include="FuckCommand.cs" />
     <Compile Include="DelBlackAdrCommand.cs" />
     <Compile Include="DelAdrCommand.cs" />
     <Compile Include="Form1.cs">
@@ -92,6 +94,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -108,6 +111,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\medium_doigt_d_honneur.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\medium_doigt_d_honneur outon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\no doigt_d_honneur outon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\poubelle bouton.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\poubelle bouton1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\poubelle bouton2.jpg" />
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>

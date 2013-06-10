@@ -213,7 +213,7 @@ namespace DataSupport
                     {
                         if (b.Address == addressToModify)
                         {
-                            b.Isficking = newStatus;
+                            b.IsFucking = newStatus;
                         }
                     }
                 }
@@ -391,7 +391,7 @@ namespace DataSupport
                             {
                                 foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                                 {
-                                    if (address.Isficking == true)
+                                    if (address.IsFucking == true)
                                     {
                                         dataFile += "fuck: ";
                                     }

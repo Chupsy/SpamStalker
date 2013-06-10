@@ -13,16 +13,18 @@ namespace ClientWindow
 {
     public partial class Form1 : Form
     {
-        
+
         List<string> _blackList = new List<string>();
-        Client _client ;
+        List<int> _fuckList = new List<int>();
+        Client _client;
         Session _session;
         string _selectedAdress;
         int _selectedindex;
         int _selectedblackadrs;
+        int i;
 
 
-       
+
         public Form1(Client client, Session session)
         {
             InitializeComponent();
@@ -65,9 +67,28 @@ namespace ClientWindow
 
         }
 
+        private void LoadFuckIndicator()
+        {
+            i = 0;
+            foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
+            {
+                if (blackAddress.IsFucking == true)
+                {
+                    _fuckList[i] = 1;
+                }
+                else
+                {
+                    _fuckList[i] = 0;
+                }
+                i++;
+            }
+            listBox2.DataSource = _fuckList;
+        }
+
+
         private void LoadBlacklist()
         {
-            //_selectedAdress = (string)comboBox1.SelectedItem;
+            _selectedAdress = (string)comboBox1.SelectedItem;
             _selectedindex = (int)comboBox1.SelectedItem;
 
             foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
@@ -76,6 +97,7 @@ namespace ClientWindow
             }
 
             listBox1.DataSource = _blackList;
+            LoadFuckIndicator();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -87,6 +109,18 @@ namespace ClientWindow
         {
             DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
             _delBlackAdrCommand.Execute();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            FuckCommand _fuckCommand = new FuckCommand(_session, _client, _session.Data[_selectedindex].UserAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            _fuckCommand.Execute();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            UnFuckCommand _unFuckCommand = new UnFuckCommand(_session, _client, _session.Data[_selectedindex].UserAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            _unFuckCommand.Execute();
         }
     }
 }
