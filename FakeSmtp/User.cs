@@ -279,9 +279,9 @@ namespace FakeSmtp
                     {
                         foreach (Address a in user.Data)
                         {
-                            dataFile += "address: " + a.UserAddress + Environment.NewLine;
-                            dataFile += "description: " + a.AddressDescription + Environment.NewLine;
-                            dataFile += "relay address: " + a.RelayAddress + Environment.NewLine;
+                            dataFile += "address: " + a.UserAddress.Address + Environment.NewLine;
+                            dataFile += "description: " + a.AddressDescription.Content + Environment.NewLine;
+                            dataFile += "relay address: " + a.RelayAddress.RelayAddressName + Environment.NewLine;
                             dataFile += "blacklist: " + Environment.NewLine;
                             foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                             {
