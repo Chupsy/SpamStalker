@@ -10,7 +10,7 @@ namespace DataSupport
     {
         string _content;
 
-        Description(string content)
+        public Description(string content)
         {
             _content = content;
         }

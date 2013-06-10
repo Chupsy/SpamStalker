@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace DataSupport
 {
-    public class EmailAddress
+    public class BlackEmailAddress
     {
         string _address;
+        bool _isfucking;
 
-        public EmailAddress(string address)
+        public BlackEmailAddress(string address, bool isfucking)
         {
             _address = address;
+            _isfucking = isfucking;
+
         }
 
         public string Address
@@ -21,5 +24,10 @@ namespace DataSupport
             set { _address = value; }
         }
 
+        public bool Isficking
+        {
+            get { return _isfucking; }
+            set { _isfucking = value; }
+        }
     }
 }

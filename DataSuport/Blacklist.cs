@@ -9,14 +9,14 @@ namespace DataSupport
 {
     public class Blacklist
     {
-        List<EmailAddress> _list;
+        List<BlackEmailAddress> _list;
 
-        public Blacklist(List<EmailAddress> list)
+        public Blacklist(List<BlackEmailAddress> list)
         {
             _list = list;
         }
 
-        public List<EmailAddress> list
+        public List<BlackEmailAddress> list
         {
             get { return _list; }
             set { _list = value; }
