@@ -104,6 +104,8 @@ namespace FakeSmtp
             else return false;
         }
 
+        public static AddBlacklist(User User, string username, string adressToBlacklist,
+
         public static User AddAdress(User User, string address, string description, string relayAddress)
         {
 
