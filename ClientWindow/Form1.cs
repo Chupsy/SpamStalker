@@ -70,7 +70,7 @@ namespace ClientWindow
             //_selectedAdress = (string)comboBox1.SelectedItem;
             _selectedindex = (int)comboBox1.SelectedItem;
 
-            foreach (EmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
+            foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
             {
                 _blackList.Add(blackAddress.Address);
             }
