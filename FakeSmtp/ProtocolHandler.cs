@@ -17,6 +17,7 @@ namespace FakeSmtp
         private NetworkStream stream;
         private System.IO.StreamReader reader;
         private System.IO.StreamWriter writer;
+        SMTPServer _server;
         SmtpClient smtpDestination ;
         SMTPParser parser;
         MetaCommandAPI _metaAPI;
@@ -34,7 +35,7 @@ namespace FakeSmtp
         public void Start()
         {
             _client.ReceiveTimeout = 50000;
-            _metaAPI = new MetaCommandAPI();
+            _metaAPI = new MetaCommandAPI(_server);
             stream = _client.GetStream();
             reader = new System.IO.StreamReader(stream);
             writer = new System.IO.StreamWriter(stream);
@@ -98,6 +99,11 @@ namespace FakeSmtp
                 Console.WriteLine("Connection lost : {0}", ex);
                 _client.Close();
             }
+        }
+
+        public void AddServer(SMTPServer server)
+        {
+            _server = server;
         }
 
     }

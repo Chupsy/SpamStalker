@@ -53,7 +53,7 @@ namespace SMTPSupport
         /// Liste de toutes les informations a envoyer au client
         /// foreach derriere
         /// </summary>
-        List<string> GetAllInformations(string username);
+        string GetAllInformations(string username);
 
         /// <summary>
         /// Verification si l'adresse existe deja ou pas, return true si elle existe, false sinon.

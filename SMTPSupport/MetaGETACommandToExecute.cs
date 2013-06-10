@@ -8,7 +8,7 @@ namespace SMTPSupport
 {
     internal class MetaGETACommandToExecute : SMTPCommandToExecute
     {
-        List<string> _sendInformation;
+        string _sendInformation;
 
         public MetaGETACommandToExecute()
         {
@@ -17,10 +17,9 @@ namespace SMTPSupport
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
             _sendInformation = session.MetaSession.MetaAPI.GetAllInformations(session.MetaSession.UserName);
-            foreach (string information in _sendInformation)
-            {
-                client.WriteThis(information);
-            }
+
+                client.WriteThis(_sendInformation);
+
             client.SendError(ErrorCode.InformationSend);
         }
 

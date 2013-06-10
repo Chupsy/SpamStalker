@@ -15,7 +15,6 @@ namespace FakeSmtp
         string _password;
         string _accountType;
         List<Address> _data;
-        string dataPath;
 
         public User(string username, string password, string accountType)
         {
@@ -49,6 +48,89 @@ namespace FakeSmtp
             set{_data = value;}
         }
 
+        public static User ParseInfos(string infos)
+        {
+            string[] userData = infos.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            string password = null;
+            string accountType = null;
+            string username = null;
+            EmailAddress mailUser;
+            Description description;
+            RelayAddress relayAddress;
+            List<BlackEmailAddress> blacklist;
+            List<Address> data = new List<Address>();
+        
+                if (userData[0] != null && userData[0].Trim().StartsWith("password"))
+                {
+                    password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
+
+                    if (userData[1] != null && userData[1].Trim().StartsWith("account"))
+                    {
+                        accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
+                    }
+                }
+                User u = new User(username, password, accountType);
+
+         for (int i = 3; i < userData.Length; i++)
+                {
+                    if (userData[i] != null && userData[i].Trim().StartsWith("address"))
+                    {
+                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                        i++;
+                        if (userData[i] != null && userData[i].Trim().StartsWith("description"))
+                        {
+                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                            i++;
+
+                            if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
+                            {
+                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                                i++;
+
+                                if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
+                                {
+                                    blacklist = new List<BlackEmailAddress>();
+
+                                    while (i < userData.Length && userData[i] != "")
+                                    {
+                                        
+                                        if (userData[i].Trim().StartsWith("ignore"))
+                                        {
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
+                                        }
+                                        else if (userData[i].Trim().StartsWith("fuck"))
+                                        {
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
+                                        }
+                                        i++;
+                                    }
+                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            
+            u.Data = data;
+            return u;
+        }
+
         public static User GetInfo(string username, string path)
         {
             string password;
@@ -76,7 +158,7 @@ namespace FakeSmtp
             return null;
         }
 
-        static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
+        public static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
             string directoryPath = path + "\\User\\";
             string _description = "Main adress";
@@ -303,21 +385,24 @@ namespace FakeSmtp
                             dataFile += "description: " + a.AddressDescription.Content + Environment.NewLine;
                             dataFile += "relay address: " + a.RelayAddress.RelayAddressName + Environment.NewLine;
                             dataFile += "blacklist: " + Environment.NewLine;
-                            foreach (BlackEmailAddress address in a.AddressBlacklist.list)
+                            if (a.AddressBlacklist != null)
                             {
-                                if (address.Isficking == true)
+                                foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                                 {
-                                    dataFile += "fuck: ";
+                                    if (address.Isficking == true)
+                                    {
+                                        dataFile += "fuck: ";
+                                    }
+                                    else
+                                    {
+                                        dataFile += "ignore: ";
+                                    }
+                                    if (address.Address != null)
+                                    {
+                                        dataFile += address.Address;
+                                    }
+                                    dataFile += Environment.NewLine;
                                 }
-                                else
-                                {
-                                    dataFile += "ignore: ";
-                                }
-                                if (address.Address != null)
-                                {
-                                    dataFile += address.Address;
-                                }
-                                dataFile += Environment.NewLine;
                             }
                             dataFile += Environment.NewLine;                           
                         }
@@ -335,6 +420,43 @@ namespace FakeSmtp
             u.Data = new List<Address>();
             u = GetData(u, dataPath);
             return u;
+        }
+
+        public static string GetAllInformations(string username, string dataPath)
+        {
+            string path = dataPath + "\\User\\" + username + ".txt";
+            return File.ReadAllText(path);
+        }
+
+        public static bool CheckAddress(string address, string path)
+        {
+            string datapath = path + "\\User\\";
+            foreach (string s in Directory.GetFiles(datapath))
+            {
+                User u = User.SetUser(s.Trim().Substring(s.LastIndexOf("\\")), s);
+                foreach (Address a in u.Data)
+                {
+                    if (a.UserAddress.Address == address)
+                    {
+                        return true;
+                    }
+                }
+                
+            }
+            return false;
+        }
+
+        public static bool CheckAddressBelonging(string username, string belongAddress, string dataPath)
+        {
+            User u = User.SetUser(username, dataPath);
+            foreach (Address a in u.Data)
+            {
+                if (a.UserAddress.Address == belongAddress)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
