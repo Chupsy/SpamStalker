@@ -10,7 +10,7 @@ namespace DataSupport
     {
         string _address;
 
-        EmailAddress(string address)
+        public EmailAddress(string address)
         {
             _address = address;
         }

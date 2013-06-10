@@ -10,7 +10,7 @@ namespace DataSupport
     {
         string _relayAddressName;
 
-        RelayAddress(string relayAddressName)
+        public RelayAddress(string relayAddressName)
         {
             _relayAddressName = relayAddressName;
         }

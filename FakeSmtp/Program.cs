@@ -14,10 +14,9 @@ namespace FakeSmtp
     public class SMTPServer
     {
         
-        bool _shutdown;
         TcpListener _listener;
         ServerStatus _status;
-        string _dataPath;
+        string dataPath;
 
         [STAThread] 
         static void Main(string[] args)
@@ -28,7 +27,7 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-            _dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            dataPath = ConfigurationManager.AppSettings["dataDirectory"]+ "\\User";
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -36,8 +35,8 @@ namespace FakeSmtp
             #region Admin System file creation
 
             
-            Directory.CreateDirectory(_dataPath);
-            string fileSystem = _dataPath + "\\System.txt";
+            Directory.CreateDirectory(dataPath);
+            string fileSystem = dataPath + "\\System.txt";
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
@@ -98,7 +97,7 @@ namespace FakeSmtp
         public void CreateUser(string username, string password, string newAdress, string accountType)
         {
             string description = "Main adress from server";
-            string fileUser = _dataPath + "\\" + username + ".txt";
+            string fileUser = dataPath + "\\" + username + ".txt";
             if (!File.Exists(fileUser))
             {
                 File.Create(fileUser);
@@ -111,7 +110,7 @@ namespace FakeSmtp
 
         public bool RemoveAddress(string address, string username)
         {
-            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + address + ".txt";
+            string fileAdress = dataPath + "\\Users\\" + username + "\\" + address + ".txt";
             if (File.Exists(fileAdress))
             {
                 File.Delete(fileAdress);
@@ -128,7 +127,7 @@ namespace FakeSmtp
 
         public bool AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            string fileAdress = _dataPath + "\\Users\\" + username + "\\" + newAdress +".txt";
+            string fileAdress = dataPath + "\\Users\\" + username + "\\" + newAdress +".txt";
             if (!File.Exists(fileAdress))
             {
                 File.Create(fileAdress);
@@ -142,19 +141,19 @@ namespace FakeSmtp
 
         public void DeleteUser(string username)
         {
-            string path = _dataPath + "\\Users\\" + username;
+            string path = dataPath + "\\Users\\" + username;
             Directory.Delete(path, true);
         }
 
         public bool CheckUser(string username)
         {
-            string path = _dataPath + "\\Users\\" + username;
+            string path = dataPath + "\\Users\\" + username;
             return Directory.Exists(path);
         }
 
         public string Identify(string username, string password)
         {
-            string fileUser =_dataPath + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser =dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -172,7 +171,7 @@ namespace FakeSmtp
 
         public void ModifyType(string username, string type)
         {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -185,7 +184,7 @@ namespace FakeSmtp
 
         public void ModifyPassword(string username, string password)
         {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> userInfos = GetIdentity(username);
             if (File.Exists(fileUser) && userInfos != null)
             {
@@ -198,7 +197,7 @@ namespace FakeSmtp
 
         private Dictionary<string, string> GetIdentity(string username)
         {
-            string fileUser = _dataPath + "\\Users\\" + username + "\\Informations.txt";
+            string fileUser = dataPath + "\\Users\\" + username + "\\Informations.txt";
             Dictionary<string, string> identity = new Dictionary<string, string>();
             if (File.Exists(fileUser))
             {
