@@ -84,7 +84,7 @@ namespace FakeSmtp
             User NewUser = new User(username, password, AccountType);
             List<Address> data = new List<Address>();
             NewUser.Data = new List<Address>();
-            AddAdress(NewUser, username, newAdress, _description, newAdress);
+            AddAdress(NewUser, newAdress, _description, newAdress);
 
             if (!Directory.Exists(directoryPath))
             {
@@ -104,13 +104,26 @@ namespace FakeSmtp
             else return false;
         }
 
-        static User AddAdress(User User,string username, string address, string description, string relayAddress)
+        public static User AddAdress(User User, string address, string description, string relayAddress)
         {
 
             EmailAddress userAddress = new EmailAddress(address);
             Description userDescription = new Description(description);
             RelayAddress userRelayAddress = new RelayAddress(relayAddress);
             User.Data.Add(new Address(userAddress, null, userDescription, userRelayAddress));
+            return User;
+        }
+
+        public static User RemoveAdress(User User, string address)
+        {
+            foreach (Address a in User.Data)
+            {
+                if (a.UserAddress.Address == address)
+                {
+                    User.Data.Remove(a);
+                    break;
+                }
+            }
             return User;
         }
 

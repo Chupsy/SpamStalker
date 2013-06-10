@@ -36,13 +36,13 @@ namespace SMTPSupport
         /// Ajout d'une adresse pour un utilisateur dans son fichier
         /// return true if added with success else return false
         /// </summary>
-        bool AddAddress(string user, string newAddress, string relayAddress, string description);
+        void AddAddress(string user, string newAddress, string relayAddress, string description);
 
         /// <summary>
         /// Suppression d'une adresse pour un utilisateur dans son fichier
         /// return true if remove with success else return false
         /// </summary>
-        bool RemoveAddress( string address, string username);
+        void RemoveAddress( string address, string username);
 
         /// <summary>
         /// Identification de l'utilisateur, return son typeOfAccount si il est bien identifié, null sinon.

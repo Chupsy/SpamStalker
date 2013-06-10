@@ -65,14 +65,14 @@ namespace FakeSmtp
             _server.ModifyPassword(username, value);
         }
 
-        public bool AddAddress(string username, string newAddress, string relayAddress, string description) 
+        public void AddAddress(string username, string newAddress, string relayAddress, string description) 
         {
-            return _server.AddAddress(username, newAddress, relayAddress, description);      
+            _server.AddAddress(username, newAddress, relayAddress, description);      
         }
 
-        public bool RemoveAddress(string address, string username) 
+        public void RemoveAddress(string address, string username) 
         {
-            return _server.RemoveAddress(address, username);
+             _server.RemoveAddress(address, username);
         }
 
         public List<string> GetAllInformations(string username) { return null; }

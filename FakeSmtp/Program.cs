@@ -108,15 +108,9 @@ namespace FakeSmtp
             AddAddress(username, newAdress, newAdress , description); 
         }
 
-        public bool RemoveAddress(string address, string username)
+        public void RemoveAddress(string address, string username)
         {
-            string fileAdress = dataPath + "\\Users\\" + username + "\\" + address + ".txt";
-            if (File.Exists(fileAdress))
-            {
-                File.Delete(fileAdress);
-                return true;
-            }
-            return false;
+            User.Write(User.RemoveAdress(User.SetUser(username, dataPath), address), dataPath);
         }
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
@@ -125,18 +119,9 @@ namespace FakeSmtp
             
         }
 
-        public bool AddAddress(string username, string newAdress, string relayAdress, string description)
+        public void AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            string fileAdress = dataPath + "\\Users\\" + username + "\\" + newAdress +".txt";
-            if (!File.Exists(fileAdress))
-            {
-                File.Create(fileAdress);
-                StreamWriter stream = new StreamWriter(@fileAdress);
-                stream.WriteLine(relayAdress);
-                stream.WriteLine(description);
-                return true;
-            }
-            else return false;
+            User.Write(User.AddAdress(User.SetUser(username, dataPath), newAdress, description, relayAdress), dataPath);
         }
 
         public void DeleteUser(string username)
