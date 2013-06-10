@@ -186,6 +186,62 @@ namespace FakeSmtp
             else return false;
         }
 
+        public static bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
+        {
+
+            return true;
+        }
+
+        public static void AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
+        {
+            User User = SetUser(username, datapath);
+            foreach (Address a in User.Data)
+            {
+
+                if (a.UserAddress.Address == blacklistFrom)
+                {
+                    a.AddressBlacklist.list.Add(new BlackEmailAddress(addressToBlacklist, false));
+                    break;
+                }
+            }
+        }
+
+        public static void ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
+        {
+            User User = SetUser(username, datapath);
+            foreach (Address a in User.Data)
+            {
+                if (a.UserAddress.Address == blacklistFrom)
+                {
+                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
+                    {
+                        if (b.Address == addressToModify)
+                        {
+                            b.Isficking = newStatus;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
+        {
+            User User = SetUser(username, datapath);
+            foreach (Address a in User.Data)
+            {
+                if (a.UserAddress.Address == blackListFrom)
+                {
+                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
+                    {
+                        if (b.Address == addressToRemove)
+                        {
+                            a.AddressBlacklist.list.Remove(b);
+                        }
+                    }
+                }
+            }
+        }
+
         public static User AddAdress(User User, string address, string description, string relayAddress)
         {
 
