@@ -7,18 +7,19 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.IO;
 using SMTPSupport;
+using DataSupport;
 
 
 namespace FakeSmtp
 {
     public class SMTPServer
     {
-        
+
         TcpListener _listener;
         ServerStatus _status;
         string dataPath;
 
-        [STAThread] 
+        [STAThread]
         static void Main(string[] args)
         {
             SMTPServer server = new SMTPServer();
@@ -34,7 +35,7 @@ namespace FakeSmtp
 
             #region Admin System file creation
 
-            
+
             Directory.CreateDirectory(dataPath);
             string fileSystem = dataPath + "\\System.txt";
             if (!File.Exists(fileSystem))
@@ -43,7 +44,7 @@ namespace FakeSmtp
                 StreamWriter stream = new StreamWriter(@fileSystem);
                 stream.Write("System Password Admin");
             }
-            
+
             #endregion
 
             _listener = new TcpListener(ipadress, receptionPort);
@@ -58,18 +59,18 @@ namespace FakeSmtp
                 }
                 catch (SocketException ex)
                 {
-                    if (ex.ErrorCode == 995 && _status == ServerStatus.ShuttingDown ) break;
+                    if (ex.ErrorCode == 995 && _status == ServerStatus.ShuttingDown) break;
                     throw;
                 }
-                ProtocolHandler p = new ProtocolHandler( client );
-                Thread t = new Thread( p.Start );
+                ProtocolHandler p = new ProtocolHandler(client);
+                Thread t = new Thread(p.Start);
                 allThreads.Add(t);
                 p.AddServer(this);
                 t.Start();
-               
-                for (int i = 0; i < allThreads.Count; ++i )
+
+                for (int i = 0; i < allThreads.Count; ++i)
                 {
-                    if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
+                    if (!allThreads[i].IsAlive) allThreads.RemoveAt(i--);
                 }
             }
             while (_status != ServerStatus.ShuttingDown);
@@ -98,16 +99,7 @@ namespace FakeSmtp
 
         public void CreateUser(string username, string password, string newAdress, string accountType)
         {
-            string description = "Main adress from server";
-            string fileUser = dataPath + "\\" + username + ".txt";
-            if (!File.Exists(fileUser))
-            {
-                File.Create(fileUser);
-                StreamWriter stream = new StreamWriter(@fileUser);
-                string line = username + " " + password + " " + accountType;
-                stream.Write(line);
-            }
-            AddAddress(username, newAdress, newAdress , description); 
+            User.CreateUser(username, password, newAdress, accountType, dataPath);
         }
 
         public void RemoveAddress(string address, string username)
@@ -117,8 +109,7 @@ namespace FakeSmtp
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
         {
-            string fileAdress = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\" + referenceAdress + ".txt";            
-            
+            User.Write(User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath), dataPath);
         }
 
         public void AddAddress(string username, string newAdress, string relayAdress, string description)
@@ -170,19 +161,28 @@ namespace FakeSmtp
             return User.GetAllInformations(username, dataPath);
         }
 
-                public bool CheckAddress(string address)
+        public bool CheckAddress(string address)
         {
             return User.CheckAddress(address, dataPath);
         }
 
-                public bool CheckAddressBelonging(string username, string belongAddress)
-                {
-                    return User.CheckAddressBelonging(username, belongAddress, dataPath);
-                }
+        public bool CheckAddressBelonging(string username, string belongAddress)
+        {
+            return User.CheckAddressBelonging(username, belongAddress, dataPath);
+        }
+
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
+        {
+            return User.CheckSpammer(username, userAddress, blacklistedAddress, dataPath);
+        }
+
+        public MailAddressCollection CheckAllSpammer(MailAddressCollection recipientAddress, string sender)
+        {
+            MailAddressCollection blacklister = new MailAddressCollection();
+            blacklister = User.CheckSpammer(recipientAddress, sender, dataPath);
+            return blacklister;
+        }
         #endregion
-
-
-
 
     }
 }

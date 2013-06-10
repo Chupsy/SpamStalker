@@ -97,7 +97,7 @@ namespace SMTPSupport
         /// <summary>
         /// Vérifie si une des adresses a le sender dans sa blacklist. return une liste des adresse qui ont ce sender dans leur blacklist si oui, null sinon.
         /// </summary>
-        MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender);
+        MailAddressCollection CheckAllSpammer(MailAddressCollection recipientCollection, string sender);
 
         bool CheckSpammer(string username, string userAddress, string blacklistedAddress);
 

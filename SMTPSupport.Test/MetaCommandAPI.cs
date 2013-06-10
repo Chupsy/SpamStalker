@@ -91,9 +91,10 @@ namespace SMTPSupport.Test
         }
 
 
-        public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender)
+        public MailAddressCollection CheckAllSpammer(MailAddressCollection recipientCollection, string sender)
         {
             throw new NotImplementedException();
+            
         }
 
 

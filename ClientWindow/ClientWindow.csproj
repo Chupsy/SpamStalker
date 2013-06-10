@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\poubelle bouton2.jpg" />
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataSuport\DataSupport.csproj">
