@@ -104,6 +104,12 @@ namespace FakeSmtp
             else return false;
         }
 
+        public static bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
+        {
+
+            return true;
+        }
+
         public static void AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
         {
             User User = SetUser(username, datapath);
