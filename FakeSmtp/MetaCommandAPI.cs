@@ -14,6 +14,10 @@ namespace FakeSmtp
         SMTPServer _server;
         User user;
 
+        public MetaCommandAPI(SMTPServer server)
+        {
+            _server = server;
+        }
         public void Shutdown()
         {
             _server.ShutDown();
@@ -75,11 +79,14 @@ namespace FakeSmtp
              _server.RemoveAddress(address, username);
         }
 
-        public List<string> GetAllInformations(string username) { return null; }
+        public string GetAllInformations(string username) 
+        {
+            return _server.GetAllInformations(username); 
+        }
 
-        public bool CheckAddress(string address) { return false; }
+        public bool CheckAddress(string address) { return _server.CheckAddress(address); }
 
-        public bool CheckAddressBelonging(string belongAddress, string username) { return false; }
+        public bool CheckAddressBelonging(string belongAddress, string username) { return _server.CheckAddressBelonging(username, belongAddress); }
 
         public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
 

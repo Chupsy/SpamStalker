@@ -27,7 +27,7 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-            dataPath = ConfigurationManager.AppSettings["dataDirectory"]+ "\\User";
+            dataPath = ConfigurationManager.AppSettings["dataDirectory"];
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -64,7 +64,9 @@ namespace FakeSmtp
                 ProtocolHandler p = new ProtocolHandler( client );
                 Thread t = new Thread( p.Start );
                 allThreads.Add(t);
+                p.AddServer(this);
                 t.Start();
+               
                 for (int i = 0; i < allThreads.Count; ++i )
                 {
                     if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
@@ -126,13 +128,14 @@ namespace FakeSmtp
 
         public void DeleteUser(string username)
         {
-            string path = dataPath + "\\Users\\" + username + ".txt";
+
+            string path = dataPath + "\\User\\" + username + ".txt";
             File.Delete(path);
         }
 
         public bool CheckUser(string username)
         {
-            string path = dataPath + "\\Users\\" + username + ".txt";
+            string path = dataPath + "\\User\\" + username + ".txt";
             return File.Exists(path);
         }
 
@@ -162,6 +165,24 @@ namespace FakeSmtp
 
         public ServerStatus Status { get { return _status; } }
 
+        public string GetAllInformations(string username)
+        {
+            return User.GetAllInformations(username, dataPath);
+        }
+
+                public bool CheckAddress(string address)
+        {
+            return User.CheckAddress(address, dataPath);
+        }
+
+                public bool CheckAddressBelonging(string username, string belongAddress)
+                {
+                    return User.CheckAddressBelonging(username, belongAddress, dataPath);
+                }
         #endregion
+
+
+
+
     }
 }
