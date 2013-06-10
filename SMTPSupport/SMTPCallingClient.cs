@@ -103,7 +103,7 @@ namespace SMTPSupport
 
             } while (_line != ".");
 
-            MailAddressCollection blacklistedRecipient = _session.MetaAPI.CheckSpammer(_session.mail.To, _session.mail.Sender.ToString());
+            MailAddressCollection blacklistedRecipient = _session.MetaAPI.CheckAllSpammer(_session.mail.To, _session.mail.Sender.ToString());
             if ( blacklistedRecipient != null)
             {
                 _session.SpamReact(blacklistedRecipient);

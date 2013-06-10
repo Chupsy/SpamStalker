@@ -88,10 +88,10 @@ namespace FakeSmtp
 
         public bool CheckAddressBelonging(string belongAddress, string username) { return _server.CheckAddressBelonging(username, belongAddress); }
 
-        public MailAddressCollection CheckSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
+        public MailAddressCollection CheckAllSpammer(MailAddressCollection recipientCollection, string sender) { return null; }
 
 
-        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return true; }
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress) { return _server.CheckSpammer(username, userAddress, blacklistedAddress); }
 
         public void AddBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) 
         {

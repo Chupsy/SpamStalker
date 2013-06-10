@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataSupport;
 using System.Configuration;
 using System.IO;
+using System.Net.Mail;
 
 namespace DataSupport
 {
@@ -186,10 +187,10 @@ namespace DataSupport
             else return false;
         }
 
-        public static void AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
+        public static User AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
         {
-            User User = SetUser(username, datapath);
-            foreach (Address a in User.Data)
+            User user = SetUser(username, datapath);
+            foreach (Address a in user.Data)
             {
 
                 if (a.UserAddress.Address == blacklistFrom)
@@ -198,6 +199,7 @@ namespace DataSupport
                     break;
                 }
             }
+            return user;
         }
 
         public static void ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
@@ -457,6 +459,32 @@ namespace DataSupport
                 }
             }
             return false;
+        }
+
+        public static System.Net.Mail.MailAddressCollection CheckSpammer(System.Net.Mail.MailAddressCollection recipientAddress, string sender, string dataPath)
+        {
+            MailAddressCollection collectionSpammed = new MailAddressCollection();
+            string path = dataPath + "//User//";
+            foreach (MailAddress a in recipientAddress)
+            {
+                string userPath = path + a.Address + ".txt";
+                if (File.Exists(userPath))
+                {
+                    foreach (Address b in SetUser(a.Address, userPath).Data)
+                    {
+                        foreach (BlackEmailAddress c in b.AddressBlacklist.list)
+                        {
+                            if (c.Address == sender)
+                            {
+                                collectionSpammed.Add(c.Address);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            return collectionSpammed;
         }
     }
 }
