@@ -165,21 +165,23 @@ namespace DataSupport
             string directoryPath = path + "\\User\\";
             string _description = "Main adress";
             string fileUser = directoryPath + username + ".txt";
-            User NewUser = new User(username, password, AccountType);
+            User newUser = new User(username, password, AccountType);
             List<Address> data = new List<Address>();
-            NewUser.Data = new List<Address>();
-            AddAdress(NewUser, newAdress, _description, newAdress);
+            newUser.Data = new List<Address>();
+            AddAdress(newUser, newAdress, _description, newAdress);
 
             if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);
-                File.Create(fileUser);
+                newUser.Write( path );
             }
             else if (!File.Exists(fileUser))
             {
-                File.Create(fileUser);
+                 newUser.Write( directoryPath);
             }
-            User.Write(NewUser, path);
+            else
+            {
+                newUser.Write( directoryPath);
+            }
             
             if(GetInfo(username, path) != null)
             {
@@ -371,56 +373,48 @@ namespace DataSupport
             return user;
         }
 
-        public static void Write(User user, string path)
+        public void Write( string usersDiretory )
         {
-            if (user.Username != null && user.Password != null && user.AccountType != null)
+            Directory.CreateDirectory( usersDiretory );
+            string dataPath = Path.Combine( usersDiretory, Username + ".txt" );
+            using( StreamWriter stream = File.CreateText(dataPath) )
             {
-                string dataPath = path + "\\User\\" + user.Username + ".txt";
-                if (File.Exists(dataPath))
+                Write( stream );
+            }
+        }
+
+        void Write(TextWriter stream)
+        {
+            stream.WriteLine("password: " + Password);
+            stream.WriteLine("account: {0}",  AccountType );
+            if (Data != null && Data.Count > 0)
+            {
+                foreach (Address a in Data)
                 {
-                    string dataFile = "password: " + user.Password + Environment.NewLine;
-                    dataFile += "account: " + user.AccountType + Environment.NewLine + Environment.NewLine;
-                    if (user.Data != null && user.Data.Count > 0)
+                    stream.WriteLine( "address: {0}", a.UserAddress.Address );
+                    stream.WriteLine( "description: {0}", a.AddressDescription.Content );
+                    stream.WriteLine( "relay address: {0}", a.RelayAddress.RelayAddressName);
+                    stream.WriteLine( "blacklist: "};
+                    if (a.AddressBlacklist != null)
                     {
-                        foreach (Address a in user.Data)
+                        foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                         {
-                            dataFile += "address: " + a.UserAddress.Address + Environment.NewLine;
-                            dataFile += "description: " + a.AddressDescription.Content + Environment.NewLine;
-                            dataFile += "relay address: " + a.RelayAddress.RelayAddressName + Environment.NewLine;
-                            dataFile += "blacklist: " + Environment.NewLine;
-                            if (a.AddressBlacklist != null)
-                            {
-                                foreach (BlackEmailAddress address in a.AddressBlacklist.list)
-                                {
-                                    if (address.IsFucking == true)
-                                    {
-                                        dataFile += "fuck: ";
-                                    }
-                                    else
-                                    {
-                                        dataFile += "ignore: ";
-                                    }
-                                    if (address.Address != null)
-                                    {
-                                        dataFile += address.Address;
-                                    }
-                                    dataFile += Environment.NewLine;
-                                }
-                            }
-                            dataFile += Environment.NewLine;                           
+                            stream.WriteLine( "{0} {1}", 
+                                                address.IsFucking ? "fuck: " : "ignore: ", 
+                                                address.Address );
                         }
                     }
-
-                    File.WriteAllText(dataPath, dataFile);
                 }
             }
-
-        }
+        
 
         public static User SetUser(string username, string dataPath)
         {
             User u = GetInfo(username, dataPath);
-            u.Data = new List<Address>();
+            if (u.Data == null)
+            {
+                u.Data = new List<Address>();
+            }
             u = GetData(u, dataPath);
             return u;
         }
@@ -437,7 +431,9 @@ namespace DataSupport
             string datapath = path + "\\User\\";
             foreach (string s in Directory.GetFiles(datapath))
             {
-                User u = User.SetUser(s.Trim().Substring(s.LastIndexOf("\\")), s);
+                string username = s.Trim().Substring((s.LastIndexOf("\\") + 1)).Trim();
+                username = username.Substring(0, username.IndexOf("."));
+                User u = User.SetUser(username, path);
                 foreach (Address a in u.Data)
                 {
                     if (a.UserAddress.Address == address)

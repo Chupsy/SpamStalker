@@ -37,6 +37,7 @@ namespace SMTPSupport
 
         static SMTPCommand RegisterCommand( Dictionary<string, SMTPCommand> dic, SMTPCommand cmd )
         {
+            if(!dic.ContainsKey(cmd.Name))
             dic.Add( cmd.Name, cmd );
             return cmd;
         }
@@ -94,10 +95,15 @@ namespace SMTPSupport
             if( commandLine == null ) throw new ArgumentNullException( "commandLine" );
 
             SMTPCommand cmd = FindCommand( commandLine );
-            if( cmd == null )
+            if( cmd == null && session.HasMetaSession == false)
             {
                 client.SendError(ErrorCode.Unrecognized);
                 if( !session.IsInitialized ) client.Close();
+                return;
+            }
+            else if (cmd == null)
+            {
+                client.SendError(ErrorCode.Unrecognized);
                 return;
             }
 

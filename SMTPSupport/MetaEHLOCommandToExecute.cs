@@ -10,6 +10,7 @@ namespace SMTPSupport
     {
         string _username;
         string _password;
+        ErrorCode _errorCode;
 
         public MetaEHLOCommandToExecute( string username, string password )
         {
@@ -17,8 +18,19 @@ namespace SMTPSupport
             _password = password;
         }
 
+        public MetaEHLOCommandToExecute(ErrorCode errorCode)
+        {
+            _errorCode = errorCode;
+        }
+
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
+            if (_errorCode == ErrorCode.Unrecognized)
+            {
+                client.SendError(ErrorCode.Unrecognized);
+                client.Close();
+                return;
+            }
             if (session.HasMetaSession == false && client.HasMeta == false)
             {
                 session.EnableMetaSession();
@@ -31,7 +43,7 @@ namespace SMTPSupport
                 client.SendError(ErrorCode.Ok);
                 session.MetaSession.UserName = _username;
                 session.MetaSession.TypeOfAccount = typeOfAccount;
-                if (session.MetaSession.TypeOfAccount == "Admin")
+                if (session.MetaSession.TypeOfAccount == "admin")
                 {
                     client.EnableAdminCommands();
                 }

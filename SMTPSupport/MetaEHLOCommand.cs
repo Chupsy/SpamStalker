@@ -30,11 +30,11 @@ namespace SMTPSupport
                 }
                 else
                 {
-                    return new SMTPCommandParseResult(ErrorCode.Unrecognized);
+                    return new SMTPCommandParseResult(new MetaEHLOCommandToExecute(ErrorCode.Unrecognized));
                 }
             }
 
-            return new SMTPCommandParseResult(ErrorCode.Unrecognized);
+            return new SMTPCommandParseResult(new MetaEHLOCommandToExecute(ErrorCode.Unrecognized));
         }
     }
 

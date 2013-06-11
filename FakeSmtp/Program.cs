@@ -58,7 +58,7 @@ namespace FakeSmtp
                 }
                 catch (SocketException ex)
                 {
-                    if (ex.ErrorCode == 995 && _status == ServerStatus.ShuttingDown) break;
+                    if (ex.ErrorCode == 10004 && _status == ServerStatus.ShuttingDown) break;
                     throw;
                 }
                 ProtocolHandler p = new ProtocolHandler(client);

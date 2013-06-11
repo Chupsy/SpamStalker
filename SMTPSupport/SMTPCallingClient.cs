@@ -11,7 +11,7 @@ using System.Net.Mail;
 namespace SMTPSupport
 {
     public enum ErrorCode
-    { 
+    {
         ShutDown = 42,
         InformationSend = 163,
         Ok = 250,
@@ -31,7 +31,8 @@ namespace SMTPSupport
         NotAllowed = 640,
         AddressDoesNotExist = 911,
         AddressAlreadyBlacklisted = 880,
-        AddressNotBlacklisted = 881
+        AddressNotBlacklisted = 881,
+        GetDescription = 720
     }
 
     public class SMTPCallingClient
@@ -222,7 +223,8 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.Abort, "Command aborted");
             _errors.Add(ErrorCode.NotAllowed, "You are not allowed to modify or delete this user.");
             _errors.Add(ErrorCode.AddressAlreadyBlacklisted, "This address is already blacklisted by the user's address");
-            _errors.Add(ErrorCode.AddressNotBlacklisted, "This address is not blacklisted by the user's address");                
+            _errors.Add(ErrorCode.AddressNotBlacklisted, "This address is not blacklisted by the user's address");
+            _errors.Add(ErrorCode.GetDescription, " Start description now");                               
         }
 
 
