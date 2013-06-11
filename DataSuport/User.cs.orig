@@ -44,7 +44,6 @@ namespace DataSupport
             set { _password = value; }
         }
 
-
         public string AccountType
         {
             get { return _accountType; }
@@ -144,9 +143,56 @@ namespace DataSupport
             return true;
         }
 
+        public void ModifyType(string type)
+        {
+            if (type == "admin" || type == "user")
+            {
+                AccountType = type;
+            }
+        }
+
+        public void ModifyPassword(string password)
+        {
+            Password = password;
+        }
+
+        public void AddAdress(string address, string description, string relayAddress)
+        {
+            Address a = new Address(this, address, description, relayAddress);
+        }
 
 
+        public bool CheckSpammer(string blackListFrom, string blacklistedAddress)
+        {
+            foreach (Address a in Addresses)
+            {
+                if (a.SubscriptionAddress == blackListFrom)
+                {
+                    foreach (BlackEmailAddress b in a.Blacklist)
+                    {
+                        if (b.Address == blacklistedAddress)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
+        }
 
+        public void AddBlacklistAddress(string blacklistFrom, string addressToBlacklist)
+        {
+            foreach (Address a in Addresses)
+            {
+
+                if (a.SubscriptionAddress == blacklistFrom)
+                {
+                    a.Blacklist.Add(new BlackEmailAddress(addressToBlacklist, false));
+                    break;
+                }
+            }
+        }
 
         public static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
@@ -187,20 +233,7 @@ namespace DataSupport
             else return true;
         }
 
-        public static User AddBlacklist(string username, string blacklistFrom, string addressToBlacklist, string datapath)
-        {
-            User user = Read(username, datapath);
-            foreach (Address a in user.Addresses)
-            {
 
-                if (a.SubscriptionAddress.Address == blacklistFrom)
-                {
-                    a.AddressBlacklist.list.Add(new BlackEmailAddress(addressToBlacklist, false));
-                    break;
-                }
-            }
-            return user;
-        }
 
         public static User ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
         {
@@ -221,73 +254,35 @@ namespace DataSupport
             return u;
         }
 
-        public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
-        {
-            User User = Read(username, dataPath);
-            foreach (Address a in User.Addresses)
-            {
-                if (a.SubscriptionAddress.Address == blackListFrom)
-                {
-                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
-                    {
-                        if (b.Address == blacklistedAddress)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-            return false;
-        }
-
         public static User RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
+
+        public void RemoveAdress(string address)
         {
-            User u = Read(username, datapath);
-            Address a = u.FindAddress(blackListFrom);
-            if( a != null ) a.Blacklist.Remove(addressToRemove);
+           Address a = FindAddress(address);
 
+        }
 
-
-            foreach (Address a in u.Addresses)
+<<<<<<< HEAD
+      
+        public static User ModifyType(User user, string path, string type)
+        {
+            if (type == "admin" || type == "user")
             {
-                if (a.SubscriptionAddress.Address == blackListFrom)
-                {
-                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
-                    {
-                        if (b.Address == addressToRemove)
-                        {
-                            a.AddressBlacklist.list.Remove(b);
-                        }
-                    }
-                }
+                user.AccountType = type;
             }
-            return u;
+            return user;
         }
 
-        public static User AddAdress(User User, string address, string description, string relayAddress)
+        public static User ModifyPassword(User user, string path, string password)
         {
-
-            EmailAddress userAddress = new EmailAddress(address);
-            Description userDescription = new Description(description);
-            RelayAddress userRelayAddress = new RelayAddress(relayAddress);
-            User.Addresses.Add(new Address(userAddress, null, userDescription, userRelayAddress));
-            return User;
+            user.Password = password;
+            return user;
         }
 
-        public static User RemoveAdress(User User, string address)
-        {
-            foreach (Address a in User.Addresses)
-            {
-                if (a.SubscriptionAddress.Address == address)
-                {
-                    User.Addresses.Remove(a);
-                    break;
-                }
-            }
-            return User;
-        }
 
+
+
+=======
         public static User GetData(User user, string path)
         {
             string fileUser = Path.Combine(path, user._username + ".txt");
@@ -361,36 +356,7 @@ namespace DataSupport
             user.Addresses = data;
             return user;
         }
-
-        public void ModifyType(string type)
-        {
-            if (type == "admin" || type == "user")
-            {
-                AccountType = type;
-            }
-        }
-
-        public void ModifyPassword(string password)
-        {
-            Password = password;
-        }
-
-<<<<<<< HEAD
-        public static User Read(string username, string dataPath)
-        {
-            User u = GetInfo(username, dataPath);
-            if (u.Addresses == null)
-            {
-                u.Addresses = new List<Address>();
-            }
-            u = GetData(u, dataPath);
-            return u;
-        }
-=======
-
-
-
->>>>>>> f1d1f0040f4d7269ff0cec81d8b531a9b7eceaa9
+>>>>>>> 3a420829b1b3b3d8ebc6b713cd782ad4a0c9fac7
 
         public static string GetAllInformations(string username, string dataPath)
         {
