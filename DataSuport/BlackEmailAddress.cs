@@ -36,11 +36,22 @@ namespace DataSupport
 
         public static BlackEmailAddress Read(string line)
         {
+            BlackEmailAddress a;
             string parse;
-            User.ParseLine(line , "fuck", out parse);
-            if (parse == null && User.ParseLine(line, "ignore", out parse) == false) return null;
+            if(User.ParseLine(line , "fuck", out parse))
+            {
+                a = new BlackEmailAddress(parse);
+                a._isFucking = true;
+            }
+            else if (parse == null && User.ParseLine(line, "ignore", out parse))
+            {
+                a = new BlackEmailAddress(parse);
+                a._isFucking = false;
+            }
+            else
+            { return null; }
 
-            return new BlackEmailAddress(parse);
+            return a;
         }
     }
 }

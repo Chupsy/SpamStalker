@@ -5,35 +5,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataSupport;
+using System.Windows.Forms;
 
 namespace ClientWindow
 {
     public class DelBlackAdrCommand
     {
-        User _session;
+        User _user;
         Client _client;
+        Session _session;
         string _adress;
         string _message;
+        string _referenceAddress;
 
-        public DelBlackAdrCommand(User session, Client client, string adress)
+        public DelBlackAdrCommand(User user, Client client, string adress, string referenceAddress, Session session)
         {
+            _referenceAddress = referenceAddress;
             _session = session;
+            _user = user;
             _client = client;
             _adress = adress;
 
-            _message = "!RMVB " + _adress;
+            _message = "!RMVB " + _referenceAddress + " " + _adress;
         }
 
-        public void Execute()
+        public bool Execute()
         {
-            _client.Connect(_session.Username, _session.Password);
+            bool worked = false;
+            _client.Connect(_user.Username, _user.Password);
             _client.Send(_message);
             string response = _client.Waitresponse();
             if (response == "250 OK")
             {
-                _session = _client.GetData();
+                _session.User = _client.GetData();
+                worked = true;
+            }
+            else
+            {
+                MessageBox.Show(response);
             }
             _client.CloseStream();
+            return worked;
         }
 
 

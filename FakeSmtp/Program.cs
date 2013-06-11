@@ -57,14 +57,9 @@ namespace FakeSmtp
             #endregion
 
             #region User Load
-            
 
-            foreach (string u in Directory.GetFiles(dataPath))
-            {
-                User user = User.Read(u).User;
-                user.Username = u.Trim().Substring(u.Trim().LastIndexOf("\\")+1, u.Trim().Substring(u.Trim().LastIndexOf("\\")+1).Length -4);
-                _users.Add(user);
-            }
+
+            ResetUsers();
 
             #endregion
 
@@ -191,6 +186,16 @@ namespace FakeSmtp
             return User.Read(username, dataPath).User;
         }
 
+        public void ResetUsers()
+        {
+            _users.Clear();
+            foreach (string u in Directory.GetFiles(dataPath))
+            {
+                User user = User.Read(u).User;
+                user.Username = u.Trim().Substring(u.Trim().LastIndexOf("\\") + 1, u.Trim().Substring(u.Trim().LastIndexOf("\\") + 1).Length - 4);
+                _users.Add(user);
+            }
+        }
         
         public void Write(User u)
         {

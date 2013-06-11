@@ -12,7 +12,6 @@ namespace FakeSmtp
     public class MetaCommandAPI : IMetaCommandAPI
     {
         SMTPServer _server;
-        User user;
 
         public MetaCommandAPI(SMTPServer server)
         {
@@ -32,6 +31,8 @@ namespace FakeSmtp
         {
            
         }
+
+        public void ResetUsers() { _server.ResetUsers(); }
 
         public User FindUser(string username)
         {

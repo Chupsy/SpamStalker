@@ -32,6 +32,7 @@ namespace SMTPSupport
             {
                 session.MetaSession.MetaAPI.WriteUser(User.CreateUser(_username, _password, _mainAddress, _typeOfAccount));
                 client.SendError(ErrorCode.Ok);
+                session.MetaAPI.ResetUsers();
             }
         }
 

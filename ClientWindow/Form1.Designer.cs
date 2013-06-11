@@ -32,12 +32,13 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.AddBlackAddress = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.DeleteAddress = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -69,15 +70,15 @@
             this.listBox1.TabIndex = 2;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
-            // button2
+            // AddBlackAddress
             // 
-            this.button2.Location = new System.Drawing.Point(204, 445);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(41, 20);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "+";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.AddBlackAddress.Location = new System.Drawing.Point(204, 445);
+            this.AddBlackAddress.Name = "AddBlackAddress";
+            this.AddBlackAddress.Size = new System.Drawing.Size(41, 20);
+            this.AddBlackAddress.TabIndex = 3;
+            this.AddBlackAddress.Text = "+";
+            this.AddBlackAddress.UseVisualStyleBackColor = true;
+            this.AddBlackAddress.Click += new System.EventHandler(this.AddBlackAddress_Click);
             // 
             // button3
             // 
@@ -126,23 +127,34 @@
             this.textBox1.Size = new System.Drawing.Size(176, 20);
             this.textBox1.TabIndex = 9;
             // 
+            // DeleteAddress
+            // 
+            this.DeleteAddress.Location = new System.Drawing.Point(379, 23);
+            this.DeleteAddress.Name = "DeleteAddress";
+            this.DeleteAddress.Size = new System.Drawing.Size(29, 23);
+            this.DeleteAddress.TabIndex = 10;
+            this.DeleteAddress.Text = "-";
+            this.DeleteAddress.UseVisualStyleBackColor = true;
+            this.DeleteAddress.Click += new System.EventHandler(this.DeleteAddress_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(497, 474);
+            this.ClientSize = new System.Drawing.Size(487, 475);
+            this.Controls.Add(this.DeleteAddress);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.AddBlackAddress);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "FakeSMTP";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -154,12 +166,13 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button AddBlackAddress;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button DeleteAddress;
     }
 }
 

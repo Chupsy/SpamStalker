@@ -31,6 +31,7 @@ namespace SMTPSupport
                 session.MetaSession.User.AddBlacklistAddress( _referenceAddress, _blacklistedAddress);
                 session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
                 client.SendError(ErrorCode.Ok);
+                session.MetaAPI.ResetUsers();
                 return;
             }
             client.SendError(ErrorCode.AddressDoesNotExist);

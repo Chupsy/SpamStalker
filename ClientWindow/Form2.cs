@@ -16,7 +16,6 @@ namespace ClientWindow
         Client _client;
         Session _session;
         User _user;
-        string data;
        
        
         public Form2(Client client, Session session)
@@ -33,9 +32,12 @@ namespace ClientWindow
                 _user = _client.GetData();
                 _user.IsInitialized = true;
                 _session.IsInitialized = true;
-                _session.user = _user;
+                _user.Username = textBox1.Text;
+                _session.User = _user;
+
                 this.Close();
             }
+            else { MessageBox.Show("Error in username or password"); }
         }
     }
 }

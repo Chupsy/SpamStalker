@@ -32,7 +32,8 @@ namespace SMTPSupport
         AddressDoesNotExist = 911,
         AddressAlreadyBlacklisted = 880,
         AddressNotBlacklisted = 881,
-        GetDescription = 720
+        GetDescription = 720,
+        NeedOneAddress = 832
     }
 
     public class SMTPCallingClient
@@ -224,7 +225,8 @@ namespace SMTPSupport
             _errors.Add(ErrorCode.NotAllowed, "You are not allowed to modify or delete this user.");
             _errors.Add(ErrorCode.AddressAlreadyBlacklisted, "This address is already blacklisted by the user's address");
             _errors.Add(ErrorCode.AddressNotBlacklisted, "This address is not blacklisted by the user's address");
-            _errors.Add(ErrorCode.GetDescription, " Start description now");                               
+            _errors.Add(ErrorCode.GetDescription, " Start description now");
+            _errors.Add(ErrorCode.NeedOneAddress, " You need to have at least one address");                                                           
         }
 
 

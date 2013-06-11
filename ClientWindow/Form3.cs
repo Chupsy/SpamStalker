@@ -14,12 +14,16 @@ namespace ClientWindow
     public partial class Form3 : Form
     {
         Client _client;
-        User _session;
+        Session _session;
+        User _user;
+        bool _worked;
 
-        public Form3(Client client, User session)
+        public Form3(Client client, Session session, User user)
         {
+            _user = user;
             _client = client;
             _session = session;
+            _worked = false;
             InitializeComponent();
         }
 
@@ -28,8 +32,14 @@ namespace ClientWindow
             string adress = textBox1.Text;
             string description = textBox2.Text;
             string relayAddress = textBox3.Text;
-            AddAdrCommand command = new AddAdrCommand(_session, _client, adress, description, relayAddress);
-            command.Execute();
+            AddAdrCommand command = new AddAdrCommand(_user, _session, _client, adress, description, relayAddress);
+           _worked = command.Execute();
+            this.Close();
+        }
+
+        public bool HasWorked()
+        {
+            return _worked;
         }
     }
 }

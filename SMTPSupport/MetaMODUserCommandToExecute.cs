@@ -42,6 +42,7 @@ namespace SMTPSupport
                         u.ModifyType(_value);
                         session.MetaAPI.WriteUser(u);
                         client.SendError(ErrorCode.Ok);
+                        session.MetaAPI.ResetUsers();
                         return;
                     }
                     else if (_modify.ToUpper() == "PASSWORD")
@@ -49,6 +50,7 @@ namespace SMTPSupport
                         u.ModifyPassword(_value);
                         session.MetaAPI.WriteUser(u);
                         client.SendError(ErrorCode.Ok);
+                        session.MetaAPI.ResetUsers();
                         return;
                     }
                     else

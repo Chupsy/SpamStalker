@@ -5,39 +5,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataSupport;
+using System.Windows.Forms;
 
 namespace ClientWindow
 {
     public class FuckCommand
     {
-        User _session;
+        User _user;
         Client _client;
+        Session _session;
         string _adress;
         string _message;
         string _blackAddress;
-        bool _fuck;
+        string _fuck;
 
-        public FuckCommand(User session, Client client, string adress, string blackAddress)
+        public FuckCommand(User user, Client client, string adress, string blackAddress, Session session)
         {
             _session = session;
+            _user = user;
             _client = client;
             _adress = adress;
             _blackAddress = blackAddress;
-            _fuck = true;
+            _fuck = "fuck";
 
-            _message = "!MODB " + _adress +" "+_blackAddress + " " + _fuck;
+            _message = "!MODB " + _adress + " " + _blackAddress + " " + _fuck;
         }
 
-        public void Execute()
+        public bool Execute()
         {
-            _client.Connect(_session.Username, _session.Password);
+            bool worked = false;
+            _client.Connect(_user.Username, _user.Password);
             _client.Send(_message);
             string response = _client.Waitresponse();
             if (response == "250 OK")
             {
-                _session = _client.GetData();
+                _session.User = _client.GetData();
+
+                worked = true;
+            }
+            else
+            {
+                MessageBox.Show(response);
             }
             _client.CloseStream();
+            return worked;
         }
 
 

@@ -28,6 +28,7 @@ namespace SMTPSupport
                 {
                     session.MetaSession.MetaAPI.DeleteUser(_username);
                     client.SendError(ErrorCode.Ok);
+                    session.MetaAPI.ResetUsers();
                     return;
                 }
                 else

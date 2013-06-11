@@ -8,7 +8,6 @@ namespace SMTPSupport
 {
     internal class MetaGETACommandToExecute : SMTPCommandToExecute
     {
-        string _sendInformation;
 
         public MetaGETACommandToExecute()
         {

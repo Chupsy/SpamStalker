@@ -13,7 +13,6 @@ namespace ClientWindow
         User _user;
 
 
-
         public User User
         {
             get { return _user; }

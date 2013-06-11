@@ -31,6 +31,7 @@ namespace SMTPSupport
                     session.MetaSession.MetaAPI.WriteUser(a.User);
                     session.MetaSession.User = a.User;
                     client.SendError(ErrorCode.Ok);
+                    session.MetaAPI.ResetUsers();
                     return;
                 }
                 client.SendError(ErrorCode.AddressNotBlacklisted);

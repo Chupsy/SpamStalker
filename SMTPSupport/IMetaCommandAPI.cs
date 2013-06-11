@@ -40,6 +40,7 @@ namespace SMTPSupport
 
         void WriteUser( User u );
 
+        void ResetUsers();
 
         /// <summary>
         /// Supprime le compte avec ce username.

@@ -20,9 +20,17 @@ namespace SMTPSupport
             Address a = session.MetaSession.MetaAPI.FindUserAddress(_rmvAddress);
             if (a != null && a.User.Username == session.MetaSession.User.Username && a.User.Password == session.MetaSession.User.Password)
             {
-                session.MetaSession.User.RemoveAddress(a);
-                session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
-                client.SendError(ErrorCode.Ok);
+                if (session.MetaSession.User.Addresses.Count > 1)
+                {
+                    session.MetaSession.User.RemoveAddress(a);
+                    session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
+                    session.MetaAPI.ResetUsers();
+                    client.SendError(ErrorCode.Ok);
+                }
+                else
+                {
+                    client.SendError(ErrorCode.NeedOneAddress);
+                }
             }
             else
             {

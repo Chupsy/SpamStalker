@@ -24,8 +24,8 @@ namespace SMTPSupport
             {
                 if (firstLine.Substring(5).Trim().Contains(" "))
                 {
-                    _blacklistedAddress = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().LastIndexOf(" "));
-                    _referenceAddress = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().LastIndexOf(" ") + 1);
+                    _referenceAddress  = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().LastIndexOf(" "));
+                     _blacklistedAddress = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().LastIndexOf(" ") + 1);
                     return new SMTPCommandParseResult(new MetaADDBlacklistCommandToExecute(_blacklistedAddress, _referenceAddress));
                 }
                 return new SMTPCommandParseResult(ErrorCode.BadSequence);

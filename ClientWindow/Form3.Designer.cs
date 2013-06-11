@@ -108,7 +108,7 @@
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Name = "Form3";
-            this.Text = "Form3";
+            this.Text = "Add Address";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -30,6 +30,7 @@ namespace SMTPSupport
             client.SendError(ErrorCode.Ok);
             session.MetaSession.User.AddAddress( _newAddress, _relayAddress, _description);
             session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
+            session.MetaAPI.ResetUsers();
         }
 
     }
