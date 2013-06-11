@@ -203,5 +203,13 @@ namespace FakeSmtp
         {
             User.RemoveBlacklistedAdress(username, referenceAddress, blacklistedAddress, dataPath).Write(dataPath);
         }
+
+
+
+
+        public User FindUser(string username)
+        {
+            return User.Read(username, dataPath).User;
+        }
     }
 }

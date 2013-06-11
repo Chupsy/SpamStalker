@@ -61,5 +61,10 @@ namespace DataSupport
             _blacklist.Write(stream);
             stream.WriteLine();
         }
+
+        public string Read(TextReader reader)
+        {
+            
+        }
     }
 }

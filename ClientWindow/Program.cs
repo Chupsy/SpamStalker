@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataSupport;
 
 namespace ClientWindow
 {
@@ -18,7 +19,7 @@ namespace ClientWindow
             Application.SetCompatibleTextRenderingDefault(false);
 
             Client client = new Client();
-            Session session = new Session();
+            User session = new Session();
 
             Application.Run(new Form2(client,session));
 

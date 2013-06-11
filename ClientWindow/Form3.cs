@@ -7,15 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataSupport;
 
 namespace ClientWindow
 {
     public partial class Form3 : Form
     {
         Client _client;
-        Session _session;
+        User _session;
 
-        public Form3(Client client, Session session)
+        public Form3(Client client, User session)
         {
             _client = client;
             _session = session;

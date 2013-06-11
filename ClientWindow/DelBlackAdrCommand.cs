@@ -10,13 +10,12 @@ namespace ClientWindow
 {
     public class DelBlackAdrCommand
     {
-        Session _session;
+        User _session;
         Client _client;
-        String _adress;
+        string _adress;
         string _message;
-        User _user;
 
-        public DelBlackAdrCommand(Session session, Client client, string adress)
+        public DelBlackAdrCommand(User session, Client client, string adress)
         {
             _session = session;
             _client = client;
@@ -35,8 +34,8 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                _user = User.ParseInfos(data);
-                _session.Data = _user.Addresses;
+                _session = User.ParseInfos(data);
+               
             }
             _client.CloseStream();
         }
