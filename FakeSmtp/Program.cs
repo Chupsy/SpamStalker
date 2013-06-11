@@ -100,7 +100,7 @@ namespace FakeSmtp
 
         public void RemoveAddress(string address, string username)
         {
-            User.Write(User.RemoveAdress(User.SetUser(username, dataPath), address), dataPath);
+            User.Write(User.RemoveAdress(User.Read(username, dataPath), address), dataPath);
         }
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
@@ -110,7 +110,7 @@ namespace FakeSmtp
 
         public void AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            User.Write(User.AddAdress(User.SetUser(username, dataPath), newAdress, description, relayAdress), dataPath);
+            User.Write(User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress), dataPath);
         }
 
         public void DeleteUser(string username)
@@ -138,16 +138,16 @@ namespace FakeSmtp
 
         public void ModifyType(string username, string type)
         {
-            User.ModifyType(User.SetUser(username, dataPath), dataPath, type);
+            User.ModifyType(User.Read(username, dataPath), dataPath, type);
         }
 
         public User SetUser(string username)
         {
-            return User.SetUser(username, dataPath);
+            return User.Read(username, dataPath);
         }
         public void ModifyPassword(string username, string password)
         {
-            User.ModifyPassword(User.SetUser(username, dataPath), dataPath, password);
+            User.ModifyPassword(User.Read(username, dataPath), dataPath, password);
         }
 
         public ServerStatus Status { get { return _status; } }

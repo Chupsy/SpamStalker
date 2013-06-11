@@ -187,9 +187,18 @@ namespace DataSupport
             else return false;
         }
 
+        public static bool UserIsValid(string username, string password, string accounType, string directorypath)
+        {
+            User user = Read(username, directorypath);
+            if (string.IsNullOrEmpty(username) || 
+                string.IsNullOrEmpty(password) || 
+                string.IsNullOrEmpty(accounType)) return false;
+            else return true;
+        }
+
         public static User AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
         {
-            User user = SetUser(username, datapath);
+            User user = Read(username, datapath);
             foreach (Address a in user.Data)
             {
 
@@ -204,7 +213,7 @@ namespace DataSupport
 
         public static void ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
         {
-            User User = SetUser(username, datapath);
+            User User = Read(username, datapath);
             foreach (Address a in User.Data)
             {
                 if (a.UserAddress.Address == blacklistFrom)
@@ -222,7 +231,7 @@ namespace DataSupport
         
         public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
         {
-            User User = SetUser(username, dataPath);
+            User User = Read(username, dataPath);
             foreach (Address a in User.Data)
             {
                 if (a.UserAddress.Address == blackListFrom)
@@ -242,7 +251,7 @@ namespace DataSupport
 
         public static void RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
         {
-            User User = SetUser(username, datapath);
+            User User = Read(username, datapath);
             foreach (Address a in User.Data)
             {
                 if (a.UserAddress.Address == blackListFrom)
@@ -416,7 +425,7 @@ namespace DataSupport
 
         }
 
-        public static User SetUser(string username, string dataPath)
+        public static User Read(string username, string dataPath)
         {
             User u = GetInfo(username, dataPath);
             u.Data = new List<Address>();
@@ -435,7 +444,7 @@ namespace DataSupport
             string datapath = path + "\\User\\";
             foreach (string s in Directory.GetFiles(datapath))
             {
-                User u = User.SetUser(s.Trim().Substring(s.LastIndexOf("\\")), s);
+                User u = User.Read(s.Trim().Substring(s.LastIndexOf("\\")), s);
                 foreach (Address a in u.Data)
                 {
                     if (a.UserAddress.Address == address)
@@ -450,7 +459,7 @@ namespace DataSupport
 
         public static bool CheckAddressBelonging(string username, string belongAddress, string dataPath)
         {
-            User u = User.SetUser(username, dataPath);
+            User u = User.Read(username, dataPath);
             foreach (Address a in u.Data)
             {
                 if (a.UserAddress.Address == belongAddress)
@@ -470,7 +479,7 @@ namespace DataSupport
                 string userPath = path + a.Address + ".txt";
                 if (File.Exists(userPath))
                 {
-                    foreach (Address b in SetUser(a.Address, userPath).Data)
+                    foreach (Address b in Read(a.Address, userPath).Data)
                     {
                         foreach (BlackEmailAddress c in b.AddressBlacklist.list)
                         {
