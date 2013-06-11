@@ -14,11 +14,11 @@ namespace ClientWindow
     public partial class Form2 : Form
     {
         Client _client;
-        Session _session;
+        User _session;
         string data;
-        User _user;
        
-        public Form2(Client client, Session session)
+       
+        public Form2(Client client, User session)
         {
             InitializeComponent();
             _client = client;
@@ -29,8 +29,7 @@ namespace ClientWindow
         {
             _client.Connect(textBox1.Text, textBox2.Text);
             data = _client.GetData();
-            _user = User.ParseInfos(data);
-            _session.Data = _user.Addresses;
+            _session = User.ParseInfos(data);
 
             _session.IsInitialized = true;
             this.Close();

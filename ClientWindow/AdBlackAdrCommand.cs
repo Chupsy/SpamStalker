@@ -8,20 +8,22 @@ using DataSupport;
 
 namespace ClientWindow
 {
-    public class DelAdrCommand
+    public class AdBlackAdrCommand
     {
         User _session;
         Client _client;
-        string _adress;
+        string _address;
         string _message;
+        string _blackAddress;
 
-        public DelAdrCommand(User session, Client client, string adress)
+        public AdBlackAdrCommand(User session, Client client, string address, string blackAddress)
         {
             _session = session;
             _client = client;
-            _adress = adress;
+            _address = address;
+            _blackAddress = blackAddress;
 
-            _message = "!RMVA " + _adress;
+            _message = "!ADDB " + _address +" " +_blackAddress;
         }
 
         public void Execute()
@@ -35,8 +37,13 @@ namespace ClientWindow
             {
                 data = _client.GetData();
                 _session = User.ParseInfos(data);
+               
             }
             _client.CloseStream();
         }
+
+
     }
+
+
 }

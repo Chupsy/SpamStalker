@@ -17,15 +17,15 @@ namespace ClientWindow
         List<string> _blackList = new List<string>();
         List<int> _fuckList = new List<int>();
         Client _client;
-        Session _session;
+        User _session;
         string _selectedAdress;
         int _selectedindex;
         int _selectedblackadrs;
-        int i;
+        
 
 
 
-        public Form1(Client client, Session session)
+        public Form1(Client client, User session)
         {
             InitializeComponent();
             _client = client;
@@ -60,17 +60,16 @@ namespace ClientWindow
 
         private void LoadAddresses()
         {
-            foreach (Address adress in _session.Data)
+            foreach (Address adress in _session.Addresses)
             {
-                comboBox1.Items.Add(adress.SubscriptionAddress.Address);
+                comboBox1.Items.Add(adress.SubscriptionAddress);
             }
 
         }
 
         private void LoadFuckIndicator()
         {
-            i = 0;
-            foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
+            foreach (BlackEmailAddress blackAddress in _session.Addresses[_selectedindex].Blacklist)
             {
                 if (blackAddress.IsFucking == true)
                 {
@@ -80,7 +79,6 @@ namespace ClientWindow
                 {
                     _fuckList.Add(0);
                 }
-                i++;
             }
             listBox2.DataSource = _fuckList;
         }
@@ -89,16 +87,16 @@ namespace ClientWindow
         private void LoadBlacklist()
         {
             _selectedAdress = (string)comboBox1.SelectedItem;
-            foreach (Address a in _session.Data)
+            foreach (Address a in _session.Addresses)
             {
-                if (a.SubscriptionAddress.Address == _selectedAdress)
+                if (a.SubscriptionAddress == _selectedAdress)
                 {
-                    _selectedindex = _session.Data.IndexOf(a);
+                    _selectedindex = _session.Addresses.IndexOf(a);
                 }
             }
-            
 
-            foreach (BlackEmailAddress blackAddress in _session.Data[_selectedindex].AddressBlacklist.list)
+
+            foreach (BlackEmailAddress blackAddress in _session.Addresses[_selectedindex].Blacklist)
             {
                 _blackList.Add(blackAddress.Address);
             }
@@ -109,25 +107,34 @@ namespace ClientWindow
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _selectedblackadrs = (int)listBox1.SelectedIndex;
+            _selectedblackadrs = listBox1.SelectedIndex;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            DelBlackAdrCommand _delBlackAdrCommand = new DelBlackAdrCommand(_session, _client, _session.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address);
             _delBlackAdrCommand.Execute();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            FuckCommand _fuckCommand = new FuckCommand(_session, _client, _session.Data[_selectedindex].SubscriptionAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            FuckCommand _fuckCommand = new FuckCommand(_session, _client, _session.Addresses[_selectedindex].SubscriptionAddress, _session.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address);
             _fuckCommand.Execute();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            UnFuckCommand _unFuckCommand = new UnFuckCommand(_session, _client, _session.Data[_selectedindex].SubscriptionAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            UnFuckCommand _unFuckCommand = new UnFuckCommand(_session, _client, _session.Addresses[_selectedindex].SubscriptionAddress, _session.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address);
             _unFuckCommand.Execute();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != null)
+            {
+                AdBlackAdrCommand _adBlackAdrCommand = new AdBlackAdrCommand(_session, _client, _session.Addresses[_selectedindex].SubscriptionAddress, textBox1.Text);
+                _adBlackAdrCommand.Execute();
+            }
         }
     }
 }

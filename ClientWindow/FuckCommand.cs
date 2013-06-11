@@ -10,15 +10,14 @@ namespace ClientWindow
 {
     public class FuckCommand
     {
-        Session _session;
+        User _session;
         Client _client;
-        String _adress;
+        string _adress;
         string _message;
         string _blackAddress;
         bool _fuck;
-        User _user;
 
-        public FuckCommand(Session session, Client client, string adress, string blackAddress)
+        public FuckCommand(User session, Client client, string adress, string blackAddress)
         {
             _session = session;
             _client = client;
@@ -39,8 +38,7 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                _user = User.ParseInfos(data);
-                _session.Data = _user.Addresses;
+                _session = User.ParseInfos(data);
             }
             _client.CloseStream();
         }

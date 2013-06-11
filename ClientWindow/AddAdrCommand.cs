@@ -10,15 +10,14 @@ namespace ClientWindow
 {
     public class AddAdrCommand
     {
-        Session _session;
+        User _session;
         Client _client;
-        String _adress;
-        String _description;
-        String _relayAdress;
+        string _adress;
+        string _description;
+        string _relayAdress;
         string _message;
-        User _user;
 
-        public AddAdrCommand(Session session, Client client, string adress, string description, string relayAdress)
+        public AddAdrCommand(User session, Client client, string adress, string description, string relayAdress)
         {
             _session = session;
             _client = client;
@@ -39,8 +38,7 @@ namespace ClientWindow
             if (response == "250 OK")
             {
                 data = _client.GetData();
-                _user = User.ParseInfos(data);
-                _session.Data = _user.Addresses;
+                _session = User.ParseInfos(data);
             }
             _client.CloseStream();
         }

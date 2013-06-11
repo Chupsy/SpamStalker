@@ -16,6 +16,7 @@ namespace DataSupport
         string _password;
         string _accountType;
         readonly List<Address> _addresses;
+        bool _isInitialized;
 
         public User(string username, string password, string accountType)
         {
@@ -23,6 +24,12 @@ namespace DataSupport
             _password = password;
             _accountType = accountType;
             _addresses = new List<Address>();
+        }
+
+        public bool IsInitialized
+        {
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
         }
 
         public string Username
