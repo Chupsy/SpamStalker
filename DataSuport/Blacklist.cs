@@ -43,5 +43,18 @@ namespace DataSupport
         {
             foreach (BlackEmailAddress a in this) a.Write(stream);
         }
+
+        public bool Read(TextReader reader)
+        {
+            BlackEmailAddress a;
+            string line = reader.ReadLine();
+            while (!User.ParseEmptyLine(line))
+            {
+                a = BlackEmailAddress.Read(line);
+                if (a == null) return false;
+                this.Add(a);
+                line = reader.ReadLine();
+            }
+        }
     }
 }

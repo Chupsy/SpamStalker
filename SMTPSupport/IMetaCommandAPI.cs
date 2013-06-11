@@ -56,6 +56,11 @@ namespace SMTPSupport
         /// </summary>
         User FindUser(string username);
 
+        Address FindUserAddress(string subscriptionAddress);
+
+        void WriteUser( User u );
+
+
         /// <summary>
         /// Verification si l'adresse existe deja ou pas, return true si elle existe, false sinon.
         /// </summary>
