@@ -26,16 +26,12 @@ namespace ClientWindow
 
         public void Execute()
         {
-            
-            string data;
             _client.Connect(_session.Username, _session.Password);
             _client.Send(_message);
             string response = _client.Waitresponse();
             if (response == "250 OK")
             {
-                data = _client.GetData();
-                _session = User.ParseInfos(data);
-               
+                _session = _client.GetData();
             }
             _client.CloseStream();
         }

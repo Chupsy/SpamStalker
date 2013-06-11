@@ -77,12 +77,11 @@ namespace ClientWindow
             }
         }
 
-        public string GetData()
+        public User GetData()
         {
-            string data;
             writer.WriteLine("!GETA");
-            data = reader.ReadLine();
-            return(data);
+            User user = User.Read(reader).User;
+            return(user);
         }
 
         public void CloseStream()
