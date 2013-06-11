@@ -18,6 +18,7 @@ namespace FakeSmtp
         TcpListener _listener;
         ServerStatus _status;
         string dataPath;
+        readonly List<User> _users;
 
         [STAThread]
         static void Main(string[] args)
@@ -45,6 +46,10 @@ namespace FakeSmtp
                 User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
             }
 
+            #endregion
+
+            #region User Load
+            Directory.GetFiles(
             #endregion
 
             _listener = new TcpListener(ipadress, receptionPort);

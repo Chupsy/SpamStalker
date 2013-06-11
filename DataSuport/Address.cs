@@ -64,7 +64,18 @@ namespace DataSupport
 
         public string Read(TextReader reader)
         {
+            string line;
             
+            line = reader.ReadLine();
+            if(User.ParseLine(line, "description", out _addressDescription) == false) return "Expected 'description : xxxxx'";
+            line = reader.ReadLine();
+            if (User.ParseLine(line, "relay address", out _relayAddress) == false) return "Expected 'relay address : xxxxx'";
+            line = reader.ReadLine();
+            if (line.Trim().StartsWith("blacklist :") == false) return "Expected 'blacklist :'";
+
+            if (_blacklist.Read(reader) == false) return "Expected 'fuck : xxxx' or 'ignore : xxxxx'";
+
+            return null;
         }
     }
 }

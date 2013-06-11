@@ -48,13 +48,14 @@ namespace DataSupport
         {
             BlackEmailAddress a;
             string line = reader.ReadLine();
-            while (!User.ParseEmptyLine(line))
+            while (!User.ParseEmptyLine(line) || line == null)
             {
                 a = BlackEmailAddress.Read(line);
                 if (a == null) return false;
                 this.Add(a);
                 line = reader.ReadLine();
             }
+            return true;
         }
     }
 }

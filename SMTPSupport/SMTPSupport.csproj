@@ -90,6 +90,12 @@
     <Compile Include="SMTPParser.cs" />
     <Compile Include="SMTPSession.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataSuport\DataSupport.csproj">
+      <Project>{f24637b0-493e-4903-817b-2f3886333767}</Project>
+      <Name>DataSupport</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
