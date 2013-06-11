@@ -28,9 +28,7 @@ namespace ClientWindow
         private void button1_Click(object sender, EventArgs e)
         {
             _client.Connect(textBox1.Text, textBox2.Text);
-            data = _client.GetData();
-            _session = User.ParseInfos(data);
-
+            _session = _client.GetData();
             _session.IsInitialized = true;
             this.Close();
         }
