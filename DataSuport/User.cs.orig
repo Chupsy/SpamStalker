@@ -15,13 +15,21 @@ namespace DataSupport
         string _username;
         string _password;
         string _accountType;
-        List<Address> _data;
+        readonly List<Address> _addresses;
+        bool _isInitialized;
 
         public User(string username, string password, string accountType)
         {
             _username = username;
             _password = password;
             _accountType = accountType;
+            _addresses = new List<Address>();
+        }
+
+        public bool IsInitialized
+        {
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
         }
 
         public string Username
@@ -43,122 +51,102 @@ namespace DataSupport
             set { _accountType = value; }
         }
 
-        public List<Address> Data
+        public List<Address> Addresses
         {
-            get { return _data; }
-            set { _data = value; }
+            get { return _addresses; }
         }
 
-        public static User ParseInfos(string infos)
+        public Address FindAddress(string subscriptionAddress)
         {
-
-            string[] userData = infos.Replace("/", Environment.NewLine).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            string password = null;
-            string accountType = null;
-            string username = null;
-            EmailAddress mailUser;
-            Description description;
-            RelayAddress relayAddress;
-            List<BlackEmailAddress> blacklist;
-            List<Address> data = new List<Address>();
-
-            if (userData[0] != null && userData[0].Trim().StartsWith("password"))
-            {
-                password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
-
-                if (userData[1] != null && userData[1].Trim().StartsWith("account"))
-                {
-                    accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
-                }
-            }
-            User u = new User(username, password, accountType);
-
-            for (int i = 3; i < userData.Length; i++)
-            {
-                if (userData[i] != null && userData[i].Trim().StartsWith("address"))
-                {
-                    mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                    i++;
-                    if (userData[i] != null && userData[i].Trim().StartsWith("description"))
-                    {
-                        description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                        i++;
-
-                        if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
-                        {
-                            relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                            i++;
-
-                            if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
-                            {
-                                blacklist = new List<BlackEmailAddress>();
-
-                                while (i < userData.Length && userData[i] != "")
-                                {
-
-                                    if (userData[i].Trim().StartsWith("ignore"))
-                                    {
-                                        blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
-                                    }
-                                    else if (userData[i].Trim().StartsWith("fuck"))
-                                    {
-                                        blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), true));
-                                    }
-                                    i++;
-                                }
-                                data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            u.Data = data;
-            return u;
-        }
-
-        public static User GetInfo(string username, string path)
-        {
-            string password;
-            string accountType;
-
-
-            string fileUser = Path.Combine(path, username + ".txt");
-
-            if (File.Exists(fileUser))
-            {
-
-                string[] userData = File.ReadAllLines(fileUser);
-                if (userData[0] != null && userData[0].Trim().StartsWith("password"))
-                {
-                    password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
-
-                    if (userData[1] != null && userData[1].Trim().StartsWith("account"))
-                    {
-                        accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
-                        return new User(username, password, accountType);
-                    }
-
-                }
-            }
+            foreach (var a in _addresses)
+                if (a.SubscriptionAddress == subscriptionAddress) return a;
             return null;
         }
+
+        public void Write(string usersDiretory)
+        {
+            Directory.CreateDirectory(usersDiretory);
+            string dataPath = Path.Combine(usersDiretory, Username + ".txt");
+            using (StreamWriter stream = File.CreateText(dataPath))
+            {
+                Write(stream);
+            }
+        }
+
+        public void Write(TextWriter stream, bool writeUserName = false)
+        {
+            if (writeUserName) stream.WriteLine("name: {0} ", Username);
+            stream.WriteLine("password: {0} ", Password);
+            stream.WriteLine("account: {0}", AccountType);
+            stream.WriteLine();
+            foreach (Address a in Addresses) a.Write(stream);
+        }
+
+        public static UserReadInfo Read(string username, string dataPath)
+        {
+            string userPath = Path.Combine(dataPath, username + ".txt");
+            using (StreamReader stream = new StreamReader(userPath))
+            {
+                return Read(stream);
+            }
+        }
+
+        public static UserReadInfo Read(TextReader reader)
+        {
+            string line = reader.ReadLine();
+            string userName;
+            string password;
+            string account;
+            if (ParseLine( line, "userName", out userName)) line = reader.ReadLine();
+            if (ParseLine( line, "password", out password)) line = reader.ReadLine();
+            else
+            {
+                return new UserReadInfo("Expected: 'password: xxxxx'");
+            }
+            if (ParseLine( line, "account", out account) 
+                && (account == "user" || account == "admin") ) line = reader.ReadLine();
+            else
+            {
+                return new UserReadInfo("Expected: 'account: user' or 'account: admin' ");
+            }
+            User u = new User(userName, password, account);
+            if (ParseEmptyLine(line)) line = reader.ReadLine();
+            else
+            {
+                return new UserReadInfo("Expected a blanck line.'");
+            }
+
+            string subscriptionAddress;
+            while (ParseLine(line, "address", out subscriptionAddress))
+            {
+                Address a = new Address( u, subscriptionAddress);
+                string errorMessage = a.Read(reader);
+                if( errorMessage != null ) return new UserReadInfo(errorMessage);
+                u.Addresses.Add(a);
+            }
+            return new UserReadInfo(u); 
+        }
+
+        internal static bool ParseEmptyLine(string line)
+        {
+            if (line == null) return false;
+            return line.Trim().Length == 0;
+        }
+
+        internal static bool ParseLine(string line, string propertName, out string value )
+        {
+            value = null;
+            if (line == null) return false;
+            string[] split = line.Split(':');
+            if (split.Length != 2) return false;
+            if (split[0].Trim() != propertName) return false;
+            value = split[1].Trim();
+            return true;
+        }
+
+
+
+
 
         public static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
@@ -167,7 +155,7 @@ namespace DataSupport
             string fileUser = Path.Combine(directoryPath, username + ".txt");
             User newUser = new User(username, password, AccountType);
             List<Address> data = new List<Address>();
-            newUser.Data = new List<Address>();
+            newUser.Addresses = new List<Address>();
             AddAdress(newUser, newAdress, _description, newAdress);
 
             if (!Directory.Exists(directoryPath))
@@ -190,7 +178,6 @@ namespace DataSupport
             else return false;
         }
 
-<<<<<<< HEAD
         public static bool UserIsValid(string username, string password, string accounType, string directorypath)
         {
             User user = Read(username, directorypath);
@@ -200,16 +187,13 @@ namespace DataSupport
             else return true;
         }
 
-        public static User AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
-=======
         public static User AddBlacklist(string username, string blacklistFrom, string addressToBlacklist, string datapath)
->>>>>>> 57a0559e296e385247fc0a581c804147d1a805e4
         {
             User user = Read(username, datapath);
-            foreach (Address a in user.Data)
+            foreach (Address a in user.Addresses)
             {
 
-                if (a.UserAddress.Address == blacklistFrom)
+                if (a.SubscriptionAddress.Address == blacklistFrom)
                 {
                     a.AddressBlacklist.list.Add(new BlackEmailAddress(addressToBlacklist, false));
                     break;
@@ -218,12 +202,12 @@ namespace DataSupport
             return user;
         }
 
-        public static void ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
+        public static User ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
         {
-            User User = Read(username, datapath);
-            foreach (Address a in User.Data)
+            User u = Read(username, datapath);
+            foreach (Address a in u.Addresses)
             {
-                if (a.UserAddress.Address == blacklistFrom)
+                if (a.SubscriptionAddress.Address == blacklistFrom)
                 {
                     foreach (BlackEmailAddress b in a.AddressBlacklist.list)
                     {
@@ -234,14 +218,15 @@ namespace DataSupport
                     }
                 }
             }
+            return u;
         }
 
         public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
         {
             User User = Read(username, dataPath);
-            foreach (Address a in User.Data)
+            foreach (Address a in User.Addresses)
             {
-                if (a.UserAddress.Address == blackListFrom)
+                if (a.SubscriptionAddress.Address == blackListFrom)
                 {
                     foreach (BlackEmailAddress b in a.AddressBlacklist.list)
                     {
@@ -256,12 +241,17 @@ namespace DataSupport
             return false;
         }
 
-        public static void RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
+        public static User RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
         {
-            User User = Read(username, datapath);
-            foreach (Address a in User.Data)
+            User u = Read(username, datapath);
+            Address a = u.FindAddress(blackListFrom);
+            if( a != null ) a.Blacklist.Remove(addressToRemove);
+
+
+
+            foreach (Address a in u.Addresses)
             {
-                if (a.UserAddress.Address == blackListFrom)
+                if (a.SubscriptionAddress.Address == blackListFrom)
                 {
                     foreach (BlackEmailAddress b in a.AddressBlacklist.list)
                     {
@@ -272,6 +262,7 @@ namespace DataSupport
                     }
                 }
             }
+            return u;
         }
 
         public static User AddAdress(User User, string address, string description, string relayAddress)
@@ -280,17 +271,17 @@ namespace DataSupport
             EmailAddress userAddress = new EmailAddress(address);
             Description userDescription = new Description(description);
             RelayAddress userRelayAddress = new RelayAddress(relayAddress);
-            User.Data.Add(new Address(userAddress, null, userDescription, userRelayAddress));
+            User.Addresses.Add(new Address(userAddress, null, userDescription, userRelayAddress));
             return User;
         }
 
         public static User RemoveAdress(User User, string address)
         {
-            foreach (Address a in User.Data)
+            foreach (Address a in User.Addresses)
             {
-                if (a.UserAddress.Address == address)
+                if (a.SubscriptionAddress.Address == address)
                 {
-                    User.Data.Remove(a);
+                    User.Addresses.Remove(a);
                     break;
                 }
             }
@@ -367,77 +358,39 @@ namespace DataSupport
                     }
                 }
             }
-            user.Data = data;
+            user.Addresses = data;
             return user;
         }
 
-        public static User ModifyType(User user, string path, string type)
+        public void ModifyType(string type)
         {
             if (type == "admin" || type == "user")
             {
-                user.AccountType = type;
-            }
-            return user;
-        }
-
-        public static User ModifyPassword(User user, string path, string password)
-        {
-            user.Password = password;
-            return user;
-        }
-
-        public void Write(string usersDiretory)
-        {
-            Directory.CreateDirectory(usersDiretory);
-            string dataPath = Path.Combine(usersDiretory, Username + ".txt");
-            using (StreamWriter stream = File.CreateText(dataPath))
-            {
-                Write(stream);
+                AccountType = type;
             }
         }
 
-        void Write(TextWriter stream)
+        public void ModifyPassword(string password)
         {
-            stream.WriteLine("password: {0} ", Password);
-            stream.WriteLine("account: {0}", AccountType);
-            stream.WriteLine();
-            if (Data != null && Data.Count > 0)
-            {
-                foreach (Address a in Data)
-                {
-                    stream.WriteLine("address: {0}", a.UserAddress.Address);
-                    stream.WriteLine("description: {0}", a.AddressDescription.Content);
-                    stream.WriteLine("relay address: {0}", a.RelayAddress.RelayAddressName);
-                    stream.WriteLine("blacklist: ");
-                    if (a.AddressBlacklist != null)
-                    {
-                        foreach (BlackEmailAddress address in a.AddressBlacklist.list)
-                        {
-                            stream.WriteLine("{0} {1}",
-                                                address.IsFucking ? "fuck: " : "ignore: ",
-                                                address.Address);
-                        }
-                    }
-                    stream.WriteLine();
-
-                }
-            }
+            Password = password;
         }
 
 <<<<<<< HEAD
-=======
-
->>>>>>> 57a0559e296e385247fc0a581c804147d1a805e4
         public static User Read(string username, string dataPath)
         {
             User u = GetInfo(username, dataPath);
-            if (u.Data == null)
+            if (u.Addresses == null)
             {
-                u.Data = new List<Address>();
+                u.Addresses = new List<Address>();
             }
             u = GetData(u, dataPath);
             return u;
         }
+=======
+
+
+
+>>>>>>> f1d1f0040f4d7269ff0cec81d8b531a9b7eceaa9
 
         public static string GetAllInformations(string username, string dataPath)
         {
@@ -450,16 +403,12 @@ namespace DataSupport
         {
             foreach (string s in Directory.GetFiles(datapath))
             {
-<<<<<<< HEAD
-                User u = User.Read(s.Trim().Substring(s.LastIndexOf("\\")), s);
-=======
                 string username = s.Trim().Substring((s.LastIndexOf("\\") + 1)).Trim();
                 username = username.Substring(0, username.IndexOf("."));
                 User u = User.Read(username, datapath);
->>>>>>> 57a0559e296e385247fc0a581c804147d1a805e4
-                foreach (Address a in u.Data)
+                foreach (Address a in u.Addresses)
                 {
-                    if (a.UserAddress.Address == address)
+                    if (a.SubscriptionAddress.Address == address)
                     {
                         return true;
                     }
@@ -472,9 +421,9 @@ namespace DataSupport
         public static bool CheckAddressBelonging(string username, string belongAddress, string dataPath)
         {
             User u = User.Read(username, dataPath);
-            foreach (Address a in u.Data)
+            foreach (Address a in u.Addresses)
             {
-                if (a.UserAddress.Address == belongAddress)
+                if (a.SubscriptionAddress.Address == belongAddress)
                 {
                     return true;
                 }
@@ -490,7 +439,7 @@ namespace DataSupport
                 string userPath = dataPath + a.Address + ".txt";
                 if (File.Exists(userPath))
                 {
-                    foreach (Address b in Read(a.Address, userPath).Data)
+                    foreach (Address b in Read(a.Address, userPath).Addresses)
                     {
                         foreach (BlackEmailAddress c in b.AddressBlacklist.list)
                         {

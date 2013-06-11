@@ -44,7 +44,6 @@ namespace DataSupport
             set { _password = value; }
         }
 
-
         public string AccountType
         {
             get { return _accountType; }
@@ -144,6 +143,24 @@ namespace DataSupport
             return true;
         }
 
+        public void ModifyType(string type)
+        {
+            if (type == "admin" || type == "user")
+            {
+                AccountType = type;
+            }
+        }
+
+        public void ModifyPassword(string password)
+        {
+            Password = password;
+        }
+
+        public void AddAdress(string address, string description, string relayAddress)
+        {
+            Address a = new Address(this, address, description, relayAddress);
+        }
+
 
         public bool CheckSpammer(string blackListFrom, string blacklistedAddress)
         {
@@ -238,72 +255,14 @@ namespace DataSupport
         }
 
         public static User RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
+
+        public void RemoveAdress(string address)
         {
-            User u = Read(username, datapath);
-            Address a = u.FindAddress(blackListFrom);
-            if( a != null ) a.Blacklist.Remove(addressToRemove);
+           Address a = FindAddress(address);
 
-
-
-            foreach (Address a in u.Addresses)
-            {
-                if (a.SubscriptionAddress.Address == blackListFrom)
-                {
-                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
-                    {
-                        if (b.Address == addressToRemove)
-                        {
-                            a.AddressBlacklist.list.Remove(b);
-                        }
-                    }
-                }
-            }
-            return u;
-        }
-
-        public static User AddAdress(User User, string address, string description, string relayAddress)
-        {
-
-            EmailAddress userAddress = new EmailAddress(address);
-            Description userDescription = new Description(description);
-            RelayAddress userRelayAddress = new RelayAddress(relayAddress);
-            User.Addresses.Add(new Address(userAddress, null, userDescription, userRelayAddress));
-            return User;
-        }
-
-        public static User RemoveAdress(User User, string address)
-        {
-            foreach (Address a in User.Addresses)
-            {
-                if (a.SubscriptionAddress.Address == address)
-                {
-                    User.Addresses.Remove(a);
-                    break;
-                }
-            }
-            return User;
         }
 
       
-        public static User ModifyType(User user, string path, string type)
-        {
-            if (type == "admin" || type == "user")
-            {
-                user.AccountType = type;
-            }
-            return user;
-        }
-
-        public static User ModifyPassword(User user, string path, string password)
-        {
-            user.Password = password;
-            return user;
-        }
-
-
-
-
-
         public static string GetAllInformations(string username, string dataPath)
         {
             string path = Path.Combine(dataPath, username + ".txt");
