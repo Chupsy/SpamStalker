@@ -24,9 +24,9 @@ namespace SMTPSupport
 
             if (firstLine.Substring(5).Trim() != null && firstLine.Substring(5).Trim() != "")
             {
-                if (firstLine.Substring(5).Trim().Contains(" "))
+                if (firstLine.Substring(5).Trim().Contains(" ") && firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().IndexOf(" ")).Trim().Contains(" "))
                 {
-                    username = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().IndexOf(" "));
+                    username = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().IndexOf(" ")).Trim();
 
                     password = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().IndexOf(" ")).Trim();
                     password = password.Substring(0, password.IndexOf(" ")).Trim();
@@ -34,7 +34,7 @@ namespace SMTPSupport
                     mainAddress = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().LastIndexOf(" ")).Trim();
                     mainAddress = mainAddress.Substring(mainAddress.LastIndexOf(" ") + 1).Trim();
 
-                    typeOfAccount = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().LastIndexOf(" ") + 1);
+                    typeOfAccount = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().LastIndexOf(" ") + 1).Trim();
 
                     return new SMTPCommandParseResult(new MetaCREUserCommandToExecute(username, password, mainAddress, typeOfAccount));
 

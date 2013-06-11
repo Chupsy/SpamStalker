@@ -21,7 +21,7 @@ namespace SMTPSupport
             if (session.IsInitialized)
             {
 
-                if (session.MetaAPI.CheckAddress(_mailAdress) == true)
+                if (session.MetaAPI.FindUserAddress(_mailAdress) != null)
                 {
                     session.AddRecipient(_mailAdress);
                     session.KnownAdress = true;

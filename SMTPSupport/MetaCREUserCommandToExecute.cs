@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -23,13 +24,13 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
-            if (session.MetaSession.MetaAPI.CheckUser(_username) == true)
+            if (session.MetaSession.MetaAPI.CheckUserExist(_username))
             {
                 client.SendError(ErrorCode.AccountExist);
             }
             else
             {
-                session.MetaSession.MetaAPI.CreateUser(_username, _password, _mainAddress, _typeOfAccount);
+                session.MetaSession.MetaAPI.WriteUser(User.CreateUser(_username, _password, _mainAddress, _typeOfAccount));
                 client.SendError(ErrorCode.Ok);
             }
         }

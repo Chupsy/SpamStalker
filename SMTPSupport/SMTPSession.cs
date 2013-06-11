@@ -57,6 +57,7 @@ namespace SMTPSupport
         public void AddSender(string mailAddress)
         {
             _sender = new MailAddress(mailAddress);
+            mail.Sender = _sender;
         }
 
         public void SpamReact(MailAddressCollection mailAdressBlacklist)

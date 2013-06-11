@@ -41,7 +41,7 @@ namespace ClientWindow
 
 
 
-        public void Connect(string login, string pass)
+        public bool Connect(string login, string pass)
         {
             string output = "";
 
@@ -62,18 +62,23 @@ namespace ClientWindow
                     if (output != "250 OK")
                     {
                         MessageBox.Show("Sever Error");
+                        return false;
                     }
-                }               
+                    return true;
+                }
+                return false;     
             }
             catch (ArgumentNullException e)
             {
                 output = "ArgumentNullException: " + e;
                 MessageBox.Show(output);
+                return false;
             }
             catch (SocketException e)
             {
                 output = "SocketException: " + e.ToString();
                 MessageBox.Show(output);
+                return false;
             }
         }
 

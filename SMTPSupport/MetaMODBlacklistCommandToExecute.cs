@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataSupport;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,14 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.MetaSession.MetaAPI.CheckAddressBelonging(_referenceAddress, session.MetaSession.UserName) == true && (_blacklistMod == "fuck" || _blacklistMod == "ignore"))
+            Address a = session.MetaSession.MetaAPI.FindUserAddress(_referenceAddress);
+            if (a.User.Username == session.MetaSession.User.Username && a.User.Password == session.MetaSession.User.Password && (_blacklistMod == "fuck" || _blacklistMod == "ignore"))
             {
-                if(session.MetaSession.MetaAPI.CheckSpammer(session.MetaSession.UserName, _referenceAddress, _blacklistedAddress))
+                if(session.MetaSession.User.CheckSpammer( _referenceAddress, _blacklistedAddress))
                 {
-                    session.MetaSession.MetaAPI.ModBlacklistAddress(session.MetaSession.UserName, _referenceAddress, _blacklistedAddress, _blacklistMod);
+                    session.MetaSession.User.ModBlacklistAddress(a , _blacklistedAddress, _blacklistMod);
+                    session.MetaSession.MetaAPI.WriteUser(a.User);
+                    session.MetaSession.User = a.User;
                     client.SendError(ErrorCode.Ok);
                     return;
                 }

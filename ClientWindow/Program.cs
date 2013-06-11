@@ -19,14 +19,13 @@ namespace ClientWindow
             Application.SetCompatibleTextRenderingDefault(false);
 
             Client client = new Client();
-            User session = new User(null,null,null);
-
-            Application.Run(new Form2(client,session));
-
-            if (session.IsInitialized == true)
+            User session = new User(null, null, null);
+            do
             {
+                Application.Run(new Form2(client, session));
+            } while (session == null || session.IsInitialized == false);
+
                 Application.Run(new Form1(client, session));
-            }
         }
     }
 }

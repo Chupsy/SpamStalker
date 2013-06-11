@@ -16,9 +16,7 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            _sendInformation = session.MetaSession.MetaAPI.FindUser(session.MetaSession.UserName);
-
-                client.WriteThis(_sendInformation);
+            client.Meta.SendInformations(session.MetaSession.User);
 
             client.SendError(ErrorCode.InformationSend);
         }

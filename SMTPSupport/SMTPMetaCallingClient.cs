@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -64,6 +65,11 @@ namespace SMTPSupport
             {
                 return false;
             }
+        }
+
+        public void SendInformations(User user)
+        {
+            user.Write(_writer);
         }
     }
 }

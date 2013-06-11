@@ -23,14 +23,17 @@ namespace ClientWindow
             InitializeComponent();
             _client = client;
             _session = session;
+            _session.Username = "tutu";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _client.Connect(textBox1.Text, textBox2.Text);
-            _session = _client.GetData();
-            _session.IsInitialized = true;
-            this.Close();
+            if (_client.Connect(textBox1.Text, textBox2.Text))
+            {
+                _session = _client.GetData();
+                _session.IsInitialized = true;
+                this.Close();
+            }
         }
     }
 }

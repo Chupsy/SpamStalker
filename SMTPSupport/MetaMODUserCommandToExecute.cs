@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataSupport;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,15 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
-            if (session.MetaSession.MetaAPI.CheckUser(_username) == true)
+            if(!session.MetaSession.MetaAPI.CheckUserExist(_username)) 
             {
-                if (_username == "System")
+                client.SendError(ErrorCode.Abort);
+                return;
+            }
+                User u = session.MetaSession.MetaAPI.FindUser(_username);
+            if (u != null)
+            {
+                if (_username == "system")
                 {
                     client.SendError(ErrorCode.NotAllowed);
                     return;
@@ -32,13 +39,15 @@ namespace SMTPSupport
                 {
                     if (_modify.ToUpper() == "TYPE")
                     {
-                        session.MetaSession.MetaAPI.ModifyType(_username, _value);
+                        u.ModifyType(_value);
+                        session.MetaAPI.WriteUser(u);
                         client.SendError(ErrorCode.Ok);
                         return;
                     }
                     else if (_modify.ToUpper() == "PASSWORD")
                     {
-                        session.MetaSession.MetaAPI.ModifyPassword(_username, _value);
+                        u.ModifyPassword(_value);
+                        session.MetaAPI.WriteUser(u);
                         client.SendError(ErrorCode.Ok);
                         return;
                     }

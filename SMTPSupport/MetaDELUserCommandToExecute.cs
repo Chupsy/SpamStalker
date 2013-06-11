@@ -17,7 +17,7 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client)
         {
-            if (session.MetaSession.MetaAPI.CheckUser(_username) == true)
+            if (session.MetaSession.MetaAPI.CheckUserExist(_username) == true)
             {
                 if (_username.ToUpper() == "SYSTEM")
                 {

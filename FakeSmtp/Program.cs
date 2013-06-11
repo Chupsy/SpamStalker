@@ -38,7 +38,7 @@ namespace FakeSmtp
             _users = new List<User>();
 
             dataPath = ConfigurationManager.AppSettings["dataDirectory"];
-            dataPath = Path.Combine( dataPath, "User\\");
+            dataPath = Path.Combine(dataPath, "User\\");
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -50,18 +50,20 @@ namespace FakeSmtp
             string fileSystem = dataPath + "system" + ".txt";
             if (!File.Exists(fileSystem))
             {
-                File.Create(fileSystem);
-                User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
+                User.CreateUser("system", "password", "coucou@hotmail.com", "admin").Write(dataPath);
+
             }
 
             #endregion
 
             #region User Load
-            List<string> usernames = GetUserName(Directory.GetFiles(dataPath));
             
-            foreach (string u in usernames)
+
+            foreach (string u in Directory.GetFiles(dataPath))
             {
-                _users.Add(User.Read(u, dataPath).User);
+                User user = User.Read(u).User;
+                user.Username = u.Trim().Substring(u.Trim().LastIndexOf("\\")+1, u.Trim().Substring(u.Trim().LastIndexOf("\\")+1).Length -4);
+                _users.Add(user);
             }
 
             #endregion
@@ -118,25 +120,7 @@ namespace FakeSmtp
         {
         }
 
-        public void CreateUser(string username, string password, string newAdress, string accountType)
-        {
-            User.CreateUser(username, password, newAdress, accountType, dataPath);
-        }
 
-        public void RemoveAddress(string address, string username)
-        {
-            User.RemoveAdress(User.Read(username, dataPath), address).Write( dataPath);
-        }
-
-        public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
-        {
-            User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath).Write( dataPath);
-        }
-
-        public void AddAddress(string username, string newAdress, string relayAdress, string description)
-        {
-            User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress).Write( dataPath);
-        }
 
         public void DeleteUser(string username)
         {
@@ -147,86 +131,42 @@ namespace FakeSmtp
 
         public bool CheckUser(string username)
         {
-            string path = Path.Combine(dataPath,username + ".txt");
+            string path = Path.Combine(dataPath, username + ".txt");
             return File.Exists(path);
-        }
-
-        public string Identify(string username, string password)
-        {
-            User user = User.GetInfo(username, dataPath);
-            if (user.Username == username && user.Password == password)
-            {
-                return user.AccountType;
-            }
-            return null;
-        }
-
-        public void ModifyType(string username, string type)
-        {
-            User.ModifyType(User.Read(username, dataPath), dataPath, type);
-        }
-
-        public User SetUser(string username)
-        {
-            return User.Read(username, dataPath);
-        }
-        public void ModifyPassword(string username, string password)
-        {
-            User.ModifyPassword(User.Read(username, dataPath), dataPath, password);
         }
 
         public ServerStatus Status { get { return _status; } }
 
-        public string GetAllInformations(string username)
-        {
-            return User.GetAllInformations(username, dataPath);
-        }
 
-        public bool CheckAddress(string address)
-        {
-            return User.CheckAddress(address, dataPath);
-        }
-
-        public bool CheckAddressBelonging(string username, string belongAddress)
-        {
-            return User.CheckAddressBelonging(username, belongAddress, dataPath);
-        }
-
-        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
-        {
-            return User.CheckSpammer(username, userAddress, blacklistedAddress, dataPath);
-        }
 
         public MailAddressCollection CheckAllSpammer(MailAddressCollection recipientAddress, string sender)
         {
             MailAddressCollection blacklister = new MailAddressCollection();
-            blacklister = User.CheckSpammer(recipientAddress, sender, dataPath);
+            foreach (User u in _users)
+            {
+                foreach (Address a in u.Addresses)
+                {
+                    foreach(MailAddress m in recipientAddress)
+                    {
+                        if(m.Address == a.SubscriptionAddress)
+                        {
+                            foreach (BlackEmailAddress b in a.Blacklist)
+                            {
+                                if (b.Address == sender)
+                                {
+                                    blacklister.Add(m);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
             return blacklister;
         }
         #endregion
 
 
-        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod)
-        {
-            bool modifBlackList;
-            if(blacklistMod == "fuck")
-            {
-                modifBlackList = true;
-            }
-            else
-            {
-                modifBlackList = false;
-            }
-            User.ModifBlacklistedAddress(username, referenceAddress, blacklistedAddress, dataPath, modifBlackList).Write(dataPath);
-        }
-
-        public void RemoveBlacklistAddress(string username, string referenceAddress, string blacklistedAddress)
-        {
-            User.RemoveBlacklistedAdress(username, referenceAddress, blacklistedAddress, dataPath).Write(dataPath);
-        }
-
-
-        
         public Address FindUserAddress(string subscriptionAddress)
         {
             foreach (User u in _users)
@@ -239,6 +179,11 @@ namespace FakeSmtp
             return null;
         }
 
+        public bool CheckUserExist(string username)
+        {
+            string userPath = Path.Combine(dataPath, username + ".txt");
+            return File.Exists(userPath);
+        }
 
 
         public User FindUser(string username)
@@ -246,19 +191,7 @@ namespace FakeSmtp
             return User.Read(username, dataPath).User;
         }
 
-        private List<string> GetUserName(string[] usernames)
-        {
-            List<string> users = new List<string>();
-            string u;
-            foreach (string s in usernames)
-            {
-                u = s.Trim().Substring(s.Trim().LastIndexOf('/'));
-                u = u.Trim().Substring(0, u.Trim().LastIndexOf('.'));
-                users.Add(u);
-            }
-            return users;
-        }
-
+        
         public void Write(User u)
         {
             u.Write(dataPath);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataSupport;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,11 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.MetaSession.MetaAPI.CheckAddressBelonging(_rmvAddress, session.MetaSession.UserName) == true)
+            Address a = session.MetaSession.MetaAPI.FindUserAddress(_rmvAddress);
+            if (a != null && a.User.Username == session.MetaSession.User.Username && a.User.Password == session.MetaSession.User.Password)
             {
-                session.MetaSession.MetaAPI.RemoveAddress(_rmvAddress, session.MetaSession.UserName);
+                session.MetaSession.User.RemoveAddress(a);
+                session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
                 client.SendError(ErrorCode.Ok);
             }
             else

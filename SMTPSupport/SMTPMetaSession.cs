@@ -27,6 +27,7 @@ namespace SMTPSupport
             get { return _currentUser; }
             set { _currentUser = value; }
         }
+
         public string UserName
         {
             get { return _userName; }

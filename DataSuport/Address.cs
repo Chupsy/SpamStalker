@@ -71,7 +71,7 @@ namespace DataSupport
             line = reader.ReadLine();
             if (User.ParseLine(line, "relay address", out _relayAddress) == false) return "Expected 'relay address : xxxxx'";
             line = reader.ReadLine();
-            if (line.Trim().StartsWith("blacklist :") == false) return "Expected 'blacklist :'";
+            if (line.Trim().StartsWith("blacklist") == false) return "Expected 'blacklist :'";
 
             if (_blacklist.Read(reader) == false) return "Expected 'fuck : xxxx' or 'ignore : xxxxx'";
 
