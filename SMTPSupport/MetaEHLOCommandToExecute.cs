@@ -43,9 +43,11 @@ namespace SMTPSupport
                 client.SendError(ErrorCode.Ok);
                 session.MetaSession.UserName = _username;
                 session.MetaSession.TypeOfAccount = typeOfAccount;
+                session.Initialize("FakeSMTP");
                 if (session.MetaSession.TypeOfAccount == "admin")
                 {
                     client.EnableAdminCommands();
+                    
                 }
             }
             else

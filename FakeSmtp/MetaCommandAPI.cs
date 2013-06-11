@@ -79,7 +79,7 @@ namespace FakeSmtp
              _server.RemoveAddress(address, username);
         }
 
-        public string GetAllInformations(string username) 
+        public string FindUser(string username) 
         {
             return _server.GetAllInformations(username); 
         }
@@ -98,9 +98,9 @@ namespace FakeSmtp
             _server.AddBlacklistAddress(username, referenceAddress, blacklistedAddress);
         }
 
-        public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { }
+        public void RmvBlacklistAddress(string username, string referenceAddress, string blacklistedAddress) { _server.RemoveBlacklistAddress(username, referenceAddress, blacklistedAddress); }
 
-        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod) { }
+        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod) { _server.ModBlacklistAddress(username, referenceAddress, blacklistedAddress, blacklistMod); }
 
 
         public ServerStatus Status

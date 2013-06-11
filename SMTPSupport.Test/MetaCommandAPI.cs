@@ -44,7 +44,7 @@ namespace SMTPSupport.Test
         }
 
 
-        public string GetAllInformations(string username)
+        public string FindUser(string username)
         {
             throw new NotImplementedException();
         }

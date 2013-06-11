@@ -4,48 +4,62 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
+using System.IO;
 
 namespace DataSupport
 {
     public class Address
     {
-        EmailAddress _userAddress;
-        Blacklist _addressBlacklist;
-        Description _addressDescription;
-        RelayAddress _relayAddress;
+        readonly User _user;
+        readonly string _subscriptionAddress;
+        readonly Blacklist _blacklist;
+        string _addressDescription;
+        string _relayAddress;
 
-        public Address(EmailAddress userAddress, Blacklist addressBlacklist, Description addressDescription, RelayAddress relayAddress)
+        public Address( User u, string subscriptionAddress, string addressDescription = null, string relayAddress = null )
         {
-            _userAddress = userAddress;
-            _addressBlacklist = addressBlacklist;
+            _user = u;
+            _subscriptionAddress = subscriptionAddress;
+            _blacklist = new Blacklist();
             _addressDescription = addressDescription;
             _relayAddress = relayAddress; 
         }
 
-        public EmailAddress UserAddress
+        public User User
         {
-            get { return _userAddress; }
-            set { _userAddress = value; }
+            get { return _user; }
         }
 
-        public Blacklist AddressBlacklist
+        public string SubscriptionAddress
         {
-            get { return _addressBlacklist; }
-            set { _addressBlacklist = value; }
+            get { return _subscriptionAddress; }
         }
 
-        public Description AddressDescription
+        public Blacklist Blacklist
+        {
+            get { return _blacklist; }
+        }
+
+        public string AddressDescription
         {
             get { return _addressDescription; }
             set { _addressDescription = value; }
         }
 
-        public RelayAddress RelayAddress
+        public string RelayAddress
         {
             get { return _relayAddress; }
             set { _relayAddress = value; }
         }
 
-
+        public void Write( TextWriter stream)
+        {
+            stream.WriteLine("address: {0}", _subscriptionAddress );
+            stream.WriteLine("description: {0}", _addressDescription);
+            stream.WriteLine("relay address: {0}", _relayAddress);
+            stream.WriteLine("blacklist: ");
+            _blacklist.Write(stream);
+            stream.WriteLine();
+        }
     }
 }

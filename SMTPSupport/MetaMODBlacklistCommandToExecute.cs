@@ -21,7 +21,7 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.MetaSession.MetaAPI.CheckAddressBelonging(_referenceAddress, session.MetaSession.UserName) == true)
+            if (session.MetaSession.MetaAPI.CheckAddressBelonging(_referenceAddress, session.MetaSession.UserName) == true && (_blacklistMod == "fuck" || _blacklistMod == "ignore"))
             {
                 if(session.MetaSession.MetaAPI.CheckSpammer(session.MetaSession.UserName, _referenceAddress, _blacklistedAddress))
                 {

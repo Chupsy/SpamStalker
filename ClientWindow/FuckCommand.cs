@@ -40,7 +40,7 @@ namespace ClientWindow
             {
                 data = _client.GetData();
                 _user = User.ParseInfos(data);
-                _session.Data = _user.Data;
+                _session.Data = _user.Addresses;
             }
             _client.CloseStream();
         }

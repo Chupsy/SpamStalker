@@ -62,7 +62,7 @@ namespace ClientWindow
         {
             foreach (Address adress in _session.Data)
             {
-                comboBox1.Items.Add(adress.UserAddress.Address);
+                comboBox1.Items.Add(adress.SubscriptionAddress.Address);
             }
 
         }
@@ -91,7 +91,7 @@ namespace ClientWindow
             _selectedAdress = (string)comboBox1.SelectedItem;
             foreach (Address a in _session.Data)
             {
-                if (a.UserAddress.Address == _selectedAdress)
+                if (a.SubscriptionAddress.Address == _selectedAdress)
                 {
                     _selectedindex = _session.Data.IndexOf(a);
                 }
@@ -120,13 +120,13 @@ namespace ClientWindow
 
         private void button5_Click(object sender, EventArgs e)
         {
-            FuckCommand _fuckCommand = new FuckCommand(_session, _client, _session.Data[_selectedindex].UserAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            FuckCommand _fuckCommand = new FuckCommand(_session, _client, _session.Data[_selectedindex].SubscriptionAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
             _fuckCommand.Execute();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            UnFuckCommand _unFuckCommand = new UnFuckCommand(_session, _client, _session.Data[_selectedindex].UserAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
+            UnFuckCommand _unFuckCommand = new UnFuckCommand(_session, _client, _session.Data[_selectedindex].SubscriptionAddress.Address, _session.Data[_selectedindex].AddressBlacklist.list[_selectedblackadrs].Address);
             _unFuckCommand.Execute();
         }
     }

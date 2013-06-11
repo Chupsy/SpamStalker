@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -47,13 +48,13 @@ namespace SMTPSupport
         /// <summary>
         /// Identification de l'utilisateur, return son typeOfAccount si il est bien identifié, null sinon.
         /// </summary>
-        string Identify(string user, string password);
+        User Identify(string user, string password);
 
         /// <summary>
         /// Liste de toutes les informations a envoyer au client
         /// foreach derriere
         /// </summary>
-        string GetAllInformations(string username);
+        User FindUser(string username);
 
         /// <summary>
         /// Verification si l'adresse existe deja ou pas, return true si elle existe, false sinon.

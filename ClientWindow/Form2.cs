@@ -30,7 +30,7 @@ namespace ClientWindow
             _client.Connect(textBox1.Text, textBox2.Text);
             data = _client.GetData();
             _user = User.ParseInfos(data);
-            _session.Data = _user.Data;
+            _session.Data = _user.Addresses;
 
             _session.IsInitialized = true;
             this.Close();

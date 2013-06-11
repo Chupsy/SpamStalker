@@ -184,5 +184,24 @@ namespace FakeSmtp
         }
         #endregion
 
+
+        public void ModBlacklistAddress(string username, string referenceAddress, string blacklistedAddress, string blacklistMod)
+        {
+            bool modifBlackList;
+            if(blacklistMod == "fuck")
+            {
+                modifBlackList = true;
+            }
+            else
+            {
+                modifBlackList = false;
+            }
+            User.ModifBlacklistedAddress(username, referenceAddress, blacklistedAddress, dataPath, modifBlackList).Write(dataPath);
+        }
+
+        public void RemoveBlacklistAddress(string username, string referenceAddress, string blacklistedAddress)
+        {
+            User.RemoveBlacklistedAdress(username, referenceAddress, blacklistedAddress, dataPath).Write(dataPath);
+        }
     }
 }
