@@ -29,6 +29,7 @@ namespace FakeSmtp
         public void RunServer()
         {
             dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            dataPath = Path.Combine( dataPath, "User\\");
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -37,7 +38,7 @@ namespace FakeSmtp
 
 
             Directory.CreateDirectory(dataPath);
-            string fileSystem = dataPath + "//User//" + "system" + ".txt";
+            string fileSystem = dataPath + "system" + ".txt";
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
@@ -103,29 +104,29 @@ namespace FakeSmtp
 
         public void RemoveAddress(string address, string username)
         {
-            User.Write(User.RemoveAdress(User.SetUser(username, dataPath), address), dataPath);
+            User.RemoveAdress(User.Read(username, dataPath), address).Write( dataPath);
         }
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
         {
-            User.Write(User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath), dataPath);
+            User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath).Write( dataPath);
         }
 
         public void AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            User.Write(User.AddAdress(User.SetUser(username, dataPath), newAdress, description, relayAdress), dataPath);
+            User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress).Write( dataPath);
         }
 
         public void DeleteUser(string username)
         {
 
-            string path = dataPath + "\\User\\" + username + ".txt";
+            string path = Path.Combine(dataPath, username + ".txt");
             File.Delete(path);
         }
 
         public bool CheckUser(string username)
         {
-            string path = dataPath + "\\User\\" + username + ".txt";
+            string path = Path.Combine(dataPath,username + ".txt");
             return File.Exists(path);
         }
 
@@ -141,16 +142,16 @@ namespace FakeSmtp
 
         public void ModifyType(string username, string type)
         {
-            User.ModifyType(User.SetUser(username, dataPath), dataPath, type);
+            User.ModifyType(User.Read(username, dataPath), dataPath, type);
         }
 
         public User SetUser(string username)
         {
-            return User.SetUser(username, dataPath);
+            return User.Read(username, dataPath);
         }
         public void ModifyPassword(string username, string password)
         {
-            User.ModifyPassword(User.SetUser(username, dataPath), dataPath, password);
+            User.ModifyPassword(User.Read(username, dataPath), dataPath, password);
         }
 
         public ServerStatus Status { get { return _status; } }

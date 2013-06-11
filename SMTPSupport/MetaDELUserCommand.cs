@@ -21,7 +21,6 @@ namespace SMTPSupport
 
             if (firstLine.Substring(5).Trim() != null && firstLine.Substring(5).Trim() != "")
             {
-                if (firstLine.Substring(5).Trim().Contains(" "))
                     username = firstLine.Substring(5).Trim();
                     return new SMTPCommandParseResult(new MetaDELUserCommandToExecute( username));
             }
