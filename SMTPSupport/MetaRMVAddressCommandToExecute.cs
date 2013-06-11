@@ -19,6 +19,7 @@ namespace SMTPSupport
             if (session.MetaSession.MetaAPI.CheckAddressBelonging(_rmvAddress, session.MetaSession.UserName) == true)
             {
                 session.MetaSession.MetaAPI.RemoveAddress(_rmvAddress, session.MetaSession.UserName);
+                client.SendError(ErrorCode.Ok);
             }
             else
             {

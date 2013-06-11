@@ -28,12 +28,6 @@ namespace SMTPSupport
         }
 
 
-
-        public void ActivateMetaCommands()
-        {
-            _parser.EnableMetaCommands();
-        }
-
         public string ReadLine()
         {
             return _reader.ReadLine();

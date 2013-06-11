@@ -19,7 +19,7 @@ namespace SMTPSupport
         {
             if (session.MetaSession.MetaAPI.CheckUser(_username) == true)
             {
-                if (_username == "System")
+                if (_username.ToUpper() == "SYSTEM")
                 {
                     client.SendError(ErrorCode.NotAllowed);
                     return;

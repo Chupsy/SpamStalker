@@ -10,13 +10,13 @@ namespace SMTPSupport
     {
         string _rmvAddress;
         public MetaRMVAddressCommand()
-            : base("!REMA", "Shut down transmission server")
+            : base("!RMVA", "Shut down transmission server")
         {
         }
 
         internal override SMTPCommandParseResult Parse( string firstLine )
         {
-            if (!firstLine.StartsWith("!REMA")) throw new ArgumentException("Must start with !REMA.");
+            if (!firstLine.StartsWith("!RMVA")) throw new ArgumentException("Must start with !RMVA.");
 
 
             if (firstLine.Substring(5).Trim().Length > 0)

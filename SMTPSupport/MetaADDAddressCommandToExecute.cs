@@ -25,7 +25,7 @@ namespace SMTPSupport
                 client.SendError(ErrorCode.AddressUsed);
                 return;
             }
-            client.SendError(ErrorCode.Ok);
+            client.SendError(ErrorCode.GetDescription);
             _description = client.Meta.ReadLine();
             client.SendError(ErrorCode.Ok);
             session.MetaSession.MetaAPI.AddAddress(session.MetaSession.UserName, _newAddress, _relayAddress, _description);

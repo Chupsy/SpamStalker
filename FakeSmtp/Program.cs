@@ -29,6 +29,7 @@ namespace FakeSmtp
         public void RunServer()
         {
             dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            dataPath = Path.Combine( dataPath, "User\\");
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
@@ -37,9 +38,12 @@ namespace FakeSmtp
 
 
             Directory.CreateDirectory(dataPath);
-            string fileSystem = dataPath + "\\System.txt";
+            string fileSystem = dataPath + "system" + ".txt";
+            if (!File.Exists(fileSystem))
+            {
                 File.Create(fileSystem);
                 User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
+            }
 
             #endregion
 
@@ -55,7 +59,7 @@ namespace FakeSmtp
                 }
                 catch (SocketException ex)
                 {
-                    if (ex.ErrorCode == 995 && _status == ServerStatus.ShuttingDown) break;
+                    if (ex.ErrorCode == 10004 && _status == ServerStatus.ShuttingDown) break;
                     throw;
                 }
                 ProtocolHandler p = new ProtocolHandler(client);
@@ -100,29 +104,29 @@ namespace FakeSmtp
 
         public void RemoveAddress(string address, string username)
         {
-            User.Write(User.RemoveAdress(User.Read(username, dataPath), address), dataPath);
+            User.RemoveAdress(User.Read(username, dataPath), address).Write( dataPath);
         }
 
         public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
         {
-            User.Write(User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath), dataPath);
+            User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath).Write( dataPath);
         }
 
         public void AddAddress(string username, string newAdress, string relayAdress, string description)
         {
-            User.Write(User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress), dataPath);
+            User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress).Write( dataPath);
         }
 
         public void DeleteUser(string username)
         {
 
-            string path = dataPath + "\\User\\" + username + ".txt";
+            string path = Path.Combine(dataPath, username + ".txt");
             File.Delete(path);
         }
 
         public bool CheckUser(string username)
         {
-            string path = dataPath + "\\User\\" + username + ".txt";
+            string path = Path.Combine(dataPath,username + ".txt");
             return File.Exists(path);
         }
 

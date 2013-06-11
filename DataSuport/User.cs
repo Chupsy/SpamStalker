@@ -45,13 +45,14 @@ namespace DataSupport
 
         public List<Address> Data
         {
-            get{ return _data;}
-            set{_data = value;}
+            get { return _data; }
+            set { _data = value; }
         }
 
         public static User ParseInfos(string infos)
         {
-            string[] userData = infos.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            string[] userData = infos.Replace("/", Environment.NewLine).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string password = null;
             string accountType = null;
             string username = null;
@@ -60,57 +61,52 @@ namespace DataSupport
             RelayAddress relayAddress;
             List<BlackEmailAddress> blacklist;
             List<Address> data = new List<Address>();
-        
-                if (userData[0] != null && userData[0].Trim().StartsWith("password"))
-                {
-                    password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
 
-                    if (userData[1] != null && userData[1].Trim().StartsWith("account"))
-                    {
-                        accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
-                    }
+            if (userData[0] != null && userData[0].Trim().StartsWith("password"))
+            {
+                password = userData[0].Trim().Substring(userData[0].IndexOf(":") + 1).Trim();
+
+                if (userData[1] != null && userData[1].Trim().StartsWith("account"))
+                {
+                    accountType = userData[1].Trim().Substring(userData[1].IndexOf(":") + 1).Trim();
                 }
-                User u = new User(username, password, accountType);
+            }
+            User u = new User(username, password, accountType);
 
-         for (int i = 3; i < userData.Length; i++)
+            for (int i = 3; i < userData.Length; i++)
+            {
+                if (userData[i] != null && userData[i].Trim().StartsWith("address"))
                 {
-                    if (userData[i] != null && userData[i].Trim().StartsWith("address"))
+                    mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                    i++;
+                    if (userData[i] != null && userData[i].Trim().StartsWith("description"))
                     {
-                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                        description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
                         i++;
-                        if (userData[i] != null && userData[i].Trim().StartsWith("description"))
+
+                        if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
                         {
-                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
+                            relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
                             i++;
 
-                            if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
+                            if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
                             {
-                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                                i++;
+                                blacklist = new List<BlackEmailAddress>();
 
-                                if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
+                                while (i < userData.Length && userData[i] != "")
                                 {
-                                    blacklist = new List<BlackEmailAddress>();
 
-                                    while (i < userData.Length && userData[i] != "")
+                                    if (userData[i].Trim().StartsWith("ignore"))
                                     {
-                                        
-                                        if (userData[i].Trim().StartsWith("ignore"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
-                                        }
-                                        else if (userData[i].Trim().StartsWith("fuck"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
-                                        }
-                                        i++;
+                                        blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
                                     }
-                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
+                                    else if (userData[i].Trim().StartsWith("fuck"))
+                                    {
+                                        blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), true));
+                                    }
+                                    i++;
                                 }
-                                else
-                                {
-                                    break;
-                                }
+                                data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
                             }
                             else
                             {
@@ -127,7 +123,12 @@ namespace DataSupport
                         break;
                     }
                 }
-            
+                else
+                {
+                    break;
+                }
+            }
+
             u.Data = data;
             return u;
         }
@@ -138,7 +139,7 @@ namespace DataSupport
             string accountType;
 
 
-            string fileUser = path + "\\User\\" + username + ".txt";
+            string fileUser = Path.Combine(path, username + ".txt");
 
             if (File.Exists(fileUser))
             {
@@ -161,26 +162,28 @@ namespace DataSupport
 
         public static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
-            string directoryPath = path + "\\User\\";
+            string directoryPath = path;
             string _description = "Main adress";
-            string fileUser = directoryPath + username + ".txt";
-            User NewUser = new User(username, password, AccountType);
+            string fileUser = Path.Combine(directoryPath, username + ".txt");
+            User newUser = new User(username, password, AccountType);
             List<Address> data = new List<Address>();
-            NewUser.Data = new List<Address>();
-            AddAdress(NewUser, newAdress, _description, newAdress);
+            newUser.Data = new List<Address>();
+            AddAdress(newUser, newAdress, _description, newAdress);
 
             if (!Directory.Exists(directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);
-                File.Create(fileUser);
+                newUser.Write(path);
             }
             else if (!File.Exists(fileUser))
             {
-                File.Create(fileUser);
+                newUser.Write(directoryPath);
             }
-            User.Write(NewUser, path);
-            
-            if(GetInfo(username, path) != null)
+            else
+            {
+                newUser.Write(directoryPath);
+            }
+
+            if (GetInfo(username, path) != null)
             {
                 return true;
             }
@@ -196,7 +199,7 @@ namespace DataSupport
             else return true;
         }
 
-        public static User AddBlacklist(string username, string blacklistFrom,string addressToBlacklist, string datapath)
+        public static User AddBlacklist(string username, string blacklistFrom, string addressToBlacklist, string datapath)
         {
             User user = Read(username, datapath);
             foreach (Address a in user.Data)
@@ -228,7 +231,7 @@ namespace DataSupport
                 }
             }
         }
-        
+
         public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
         {
             User User = Read(username, dataPath);
@@ -292,17 +295,17 @@ namespace DataSupport
 
         public static User GetData(User user, string path)
         {
-            string fileUser = path + "\\User\\" + user._username + ".txt";
+            string fileUser = Path.Combine(path, user._username + ".txt");
             EmailAddress mailUser;
             Description description;
             RelayAddress relayAddress;
             List<BlackEmailAddress> blacklist;
             List<Address> data = new List<Address>();
-            
+
 
             if (File.Exists(fileUser))
             {
-                
+
                 string[] userData = File.ReadAllLines(fileUser);
                 for (int i = 3; i < userData.Length; i++)
                 {
@@ -326,14 +329,14 @@ namespace DataSupport
 
                                     while (i < userData.Length && userData[i] != "")
                                     {
-                                        
+
                                         if (userData[i].Trim().StartsWith("ignore"))
                                         {
                                             blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
                                         }
                                         else if (userData[i].Trim().StartsWith("fuck"))
                                         {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":")+1).Trim(), false));
+                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
                                         }
                                         i++;
                                     }
@@ -365,13 +368,13 @@ namespace DataSupport
         }
 
         public static User ModifyType(User user, string path, string type)
-         {
-             if (type == "admin" || type == "user")
-             {
-                 user.AccountType = type;
-             }
-             return user;
-         }
+        {
+            if (type == "admin" || type == "user")
+            {
+                user.AccountType = type;
+            }
+            return user;
+        }
 
         public static User ModifyPassword(User user, string path, string password)
         {
@@ -379,72 +382,70 @@ namespace DataSupport
             return user;
         }
 
-        public static void Write(User user, string path)
+        public void Write(string usersDiretory)
         {
-            if (user.Username != null && user.Password != null && user.AccountType != null)
+            Directory.CreateDirectory(usersDiretory);
+            string dataPath = Path.Combine(usersDiretory, Username + ".txt");
+            using (StreamWriter stream = File.CreateText(dataPath))
             {
-                string dataPath = path + "\\User\\" + user.Username + ".txt";
-                if (File.Exists(dataPath))
+                Write(stream);
+            }
+        }
+
+        void Write(TextWriter stream)
+        {
+            stream.WriteLine("password: {0} ", Password);
+            stream.WriteLine("account: {0}", AccountType);
+            stream.WriteLine();
+            if (Data != null && Data.Count > 0)
+            {
+                foreach (Address a in Data)
                 {
-                    string dataFile = "password: " + user.Password + Environment.NewLine;
-                    dataFile += "account: " + user.AccountType + Environment.NewLine + Environment.NewLine;
-                    if (user.Data != null && user.Data.Count > 0)
+                    stream.WriteLine("address: {0}", a.UserAddress.Address);
+                    stream.WriteLine("description: {0}", a.AddressDescription.Content);
+                    stream.WriteLine("relay address: {0}", a.RelayAddress.RelayAddressName);
+                    stream.WriteLine("blacklist: ");
+                    if (a.AddressBlacklist != null)
                     {
-                        foreach (Address a in user.Data)
+                        foreach (BlackEmailAddress address in a.AddressBlacklist.list)
                         {
-                            dataFile += "address: " + a.UserAddress.Address + Environment.NewLine;
-                            dataFile += "description: " + a.AddressDescription.Content + Environment.NewLine;
-                            dataFile += "relay address: " + a.RelayAddress.RelayAddressName + Environment.NewLine;
-                            dataFile += "blacklist: " + Environment.NewLine;
-                            if (a.AddressBlacklist != null)
-                            {
-                                foreach (BlackEmailAddress address in a.AddressBlacklist.list)
-                                {
-                                    if (address.IsFucking == true)
-                                    {
-                                        dataFile += "fuck: ";
-                                    }
-                                    else
-                                    {
-                                        dataFile += "ignore: ";
-                                    }
-                                    if (address.Address != null)
-                                    {
-                                        dataFile += address.Address;
-                                    }
-                                    dataFile += Environment.NewLine;
-                                }
-                            }
-                            dataFile += Environment.NewLine;                           
+                            stream.WriteLine("{0} {1}",
+                                                address.IsFucking ? "fuck: " : "ignore: ",
+                                                address.Address);
                         }
                     }
+                    stream.WriteLine();
 
-                    File.WriteAllText(dataPath, dataFile);
                 }
             }
-
         }
+
 
         public static User Read(string username, string dataPath)
         {
             User u = GetInfo(username, dataPath);
-            u.Data = new List<Address>();
+            if (u.Data == null)
+            {
+                u.Data = new List<Address>();
+            }
             u = GetData(u, dataPath);
             return u;
         }
 
         public static string GetAllInformations(string username, string dataPath)
         {
-            string path = dataPath + "\\User\\" + username + ".txt";
-            return File.ReadAllText(path);
+            string path = Path.Combine(dataPath, username + ".txt");
+
+            return File.ReadAllText(path).Replace(Environment.NewLine, "/"); ;
         }
 
-        public static bool CheckAddress(string address, string path)
+        public static bool CheckAddress(string address, string datapath)
         {
-            string datapath = path + "\\User\\";
             foreach (string s in Directory.GetFiles(datapath))
             {
-                User u = User.Read(s.Trim().Substring(s.LastIndexOf("\\")), s);
+                string username = s.Trim().Substring((s.LastIndexOf("\\") + 1)).Trim();
+                username = username.Substring(0, username.IndexOf("."));
+                User u = User.Read(username, datapath);
                 foreach (Address a in u.Data)
                 {
                     if (a.UserAddress.Address == address)
@@ -452,7 +453,7 @@ namespace DataSupport
                         return true;
                     }
                 }
-                
+
             }
             return false;
         }
@@ -473,10 +474,9 @@ namespace DataSupport
         public static System.Net.Mail.MailAddressCollection CheckSpammer(System.Net.Mail.MailAddressCollection recipientAddress, string sender, string dataPath)
         {
             MailAddressCollection collectionSpammed = new MailAddressCollection();
-            string path = dataPath + "//User//";
             foreach (MailAddress a in recipientAddress)
             {
-                string userPath = path + a.Address + ".txt";
+                string userPath = dataPath + a.Address + ".txt";
                 if (File.Exists(userPath))
                 {
                     foreach (Address b in Read(a.Address, userPath).Data)
