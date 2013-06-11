@@ -9,29 +9,16 @@ namespace ClientWindow
 {
     public class Session
     {
-        string _username;
-        string _password;
         bool _isInitialized;
-        List<Address> _data;
+        User _user;
 
-        public string Username
+
+
+        public User User
         {
-            get { return _username; }
-            set { _username = value; }
+            get { return _user; }
+            set { _user = value; }
         }
-
-        public string Password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
-
-        public List<Address> Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
-
         public bool IsInitialized
         {
             get { return _isInitialized; }
