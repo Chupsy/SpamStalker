@@ -33,5 +33,14 @@ namespace DataSupport
         {
             stream.WriteLine("{0} {1}", IsFucking ? "fuck: " : "ignore: ", Address);
         }
+
+        public static BlackEmailAddress Read(string line)
+        {
+            string parse;
+            User.ParseLine(line , "fuck", out parse);
+            if (parse == null && User.ParseLine(line, "ignore", out parse) == false) return null;
+
+            return new BlackEmailAddress(parse);
+        }
     }
 }
