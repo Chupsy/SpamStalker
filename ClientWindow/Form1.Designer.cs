@@ -37,6 +37,7 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -70,17 +71,18 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(403, 442);
+            this.button2.Location = new System.Drawing.Point(204, 445);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(41, 20);
             this.button2.TabIndex = 3;
             this.button2.Text = "+";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
             this.button3.BackgroundImage = global::ClientWindow.Properties.Resources.poubelle_bouton2;
-            this.button3.Location = new System.Drawing.Point(315, 435);
+            this.button3.Location = new System.Drawing.Point(437, 428);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(39, 38);
             this.button3.TabIndex = 4;
@@ -99,7 +101,7 @@
             // 
             this.button5.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.button5.Image = global::ClientWindow.Properties.Resources.medium_doigt_d_honneur_outon;
-            this.button5.Location = new System.Drawing.Point(266, 435);
+            this.button5.Location = new System.Drawing.Point(388, 428);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(43, 38);
             this.button5.TabIndex = 7;
@@ -110,19 +112,27 @@
             // 
             this.button6.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.button6.Image = global::ClientWindow.Properties.Resources.no_doigt_d_honneur_outon;
-            this.button6.Location = new System.Drawing.Point(216, 435);
+            this.button6.Location = new System.Drawing.Point(338, 428);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(44, 38);
             this.button6.TabIndex = 8;
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(22, 446);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(176, 20);
+            this.textBox1.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(497, 482);
+            this.ClientSize = new System.Drawing.Size(497, 474);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.listBox2);
@@ -135,6 +145,7 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -148,6 +159,7 @@
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
