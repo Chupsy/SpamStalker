@@ -424,22 +424,18 @@ namespace DataSupport
             return user;
         }
 
-        public static User ModifyType(User user, string path, string type)
+        public void ModifyType(string type)
         {
             if (type == "admin" || type == "user")
             {
-                user.AccountType = type;
+                AccountType = type;
             }
-            return user;
         }
 
-        public static User ModifyPassword(User user, string path, string password)
+        public void ModifyPassword(string password)
         {
-            user.Password = password;
-            return user;
+            Password = password;
         }
-
-
 
         public static User Read(string username, string dataPath)
         {

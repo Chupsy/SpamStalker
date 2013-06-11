@@ -24,9 +24,9 @@ namespace SMTPSupport
             if (firstLine.Substring(5).Trim() != null && firstLine.Substring(5).Trim() != "")
             {
                 if (firstLine.Substring(5).Trim().Contains(" "))
-                {
+                {                    
                     modify = firstLine.Substring(5).Trim().Substring(0, firstLine.Substring(5).Trim().IndexOf(" "));
-                    username = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().IndexOf(" ") + 1, firstLine.Substring(5).Trim().LastIndexOf(" "));
+                    username = firstLine.Substring(5).Trim().Substring(firstLine.Substring(modify.Length).Trim().IndexOf(" ") + 1, firstLine.Substring(5).Trim().LastIndexOf(" "));
                     value = firstLine.Substring(5).Trim().Substring(firstLine.Substring(5).Trim().LastIndexOf(" ") + 1);
 
                     return new SMTPCommandParseResult(new MetaMODUserCommandToExecute(modify, username, value));
