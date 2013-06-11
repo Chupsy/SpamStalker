@@ -6,17 +6,20 @@ using System.Net.Mail;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.IO;
+using SMTPSupport;
+using DataSupport;
 
 
 namespace FakeSmtp
 {
     public class SMTPServer
     {
-        
-        bool _shutdown;
-        bool _pause = false;
 
-        [STAThread] 
+        TcpListener _listener;
+        ServerStatus _status;
+        string dataPath;
+
+        [STAThread]
         static void Main(string[] args)
         {
             SMTPServer server = new SMTPServer();
@@ -25,157 +28,169 @@ namespace FakeSmtp
 
         public void RunServer()
         {
-<<<<<<< Updated upstream
-=======
-
-            
->>>>>>> Stashed changes
+            dataPath = ConfigurationManager.AppSettings["dataDirectory"];
+            dataPath = Path.Combine( dataPath, "User\\");
             IPAddress ipadress;
             ipadress = IPAddress.Parse(ConfigurationManager.AppSettings["hostAdressReception"]);
             int receptionPort = Convert.ToInt32(ConfigurationManager.AppSettings["receptionPort"]);
 
             #region Admin System file creation
 
-            string path = Environment.CurrentDirectory.ToString() + "\\Users";
-            Directory.CreateDirectory(path);
-            path = path + "\\System";
-            Directory.CreateDirectory(path);
-            string fileSystem = path + "\\Informations.txt";
+
+            Directory.CreateDirectory(dataPath);
+            string fileSystem = dataPath + "system" + ".txt";
             if (!File.Exists(fileSystem))
             {
                 File.Create(fileSystem);
-                StreamWriter stream = new StreamWriter(@fileSystem);
-                stream.Write("System Password Admin");
+                User.CreateUser("system", "password", "coucou@hotmail.com", "admin", dataPath);
             }
-            
+
             #endregion
 
-            TcpListener listener = new TcpListener(ipadress, receptionPort);
-            listener.Start();
+            _listener = new TcpListener(ipadress, receptionPort);
+            _listener.Start();
             List<Thread> allThreads = new List<Thread>();
             do
             {
-                while (_pause == true)
+                TcpClient client;
+                try
                 {
-
+                    client = _listener.AcceptTcpClient();
                 }
-                TcpClient client = listener.AcceptTcpClient();
-                ProtocolHandler p = new ProtocolHandler( client );
-                Thread t = new Thread( p.Start );
+                catch (SocketException ex)
+                {
+                    if (ex.ErrorCode == 10004 && _status == ServerStatus.ShuttingDown) break;
+                    throw;
+                }
+                ProtocolHandler p = new ProtocolHandler(client);
+                Thread t = new Thread(p.Start);
                 allThreads.Add(t);
+                p.AddServer(this);
                 t.Start();
-                for (int i = 0; i < allThreads.Count; ++i )
+
+                for (int i = 0; i < allThreads.Count; ++i)
                 {
-                    if (!allThreads[i].IsAlive) allThreads.RemoveAt( i-- );
+                    if (!allThreads[i].IsAlive) allThreads.RemoveAt(i--);
                 }
-            } 
-            while (!_shutdown);
-            listener.Stop();
+            }
+            while (_status != ServerStatus.ShuttingDown);
+            _listener.Stop();
             foreach (Thread t in allThreads) t.Join();
 
         }
 
         #region MetaCommandAPI Functions
-        public bool ShutDown
+        public void ShutDown()
         {
-            get{ return _shutdown;}
-            set{ _shutdown = value;}
-        }
-
-        public bool Pause
-        {
-            get { return _pause; }
-            set { _pause = value; }
-        }
-
-        public void CreateUser(string username, string password, string accountType)
-        {
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
-            Directory.CreateDirectory(path);
-            string fileUser = path + "\\Informations.txt";
-            if (!File.Exists(fileUser))
+            if (_status != ServerStatus.ShuttingDown)
             {
-                File.Create(fileUser);
-                StreamWriter stream = new StreamWriter(@fileUser);
-                string line = username + " " + password + " " + accountType;
-                stream.Write(line);
+                _listener.Stop();
+                _status = ServerStatus.ShuttingDown;
             }
+        }
+
+        public void Pause()
+        {
+        }
+
+        public void Resume()
+        {
+        }
+
+        public void CreateUser(string username, string password, string newAdress, string accountType)
+        {
+            User.CreateUser(username, password, newAdress, accountType, dataPath);
+        }
+
+        public void RemoveAddress(string address, string username)
+        {
+<<<<<<< HEAD
+            User.Write(User.RemoveAdress(User.Read(username, dataPath), address), dataPath);
+=======
+            User.RemoveAdress(User.Read(username, dataPath), address).Write( dataPath);
+>>>>>>> 57a0559e296e385247fc0a581c804147d1a805e4
+        }
+
+        public void AddBlacklistAddress(string username, string referenceAdress, string blackListedAdress)
+        {
+            User.AddBlacklist(username, referenceAdress, blackListedAdress, dataPath).Write( dataPath);
+        }
+
+        public void AddAddress(string username, string newAdress, string relayAdress, string description)
+        {
+<<<<<<< HEAD
+            User.Write(User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress), dataPath);
+=======
+            User.AddAdress(User.Read(username, dataPath), newAdress, description, relayAdress).Write( dataPath);
+>>>>>>> 57a0559e296e385247fc0a581c804147d1a805e4
         }
 
         public void DeleteUser(string username)
         {
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
-            Directory.Delete(path, true);
+
+            string path = Path.Combine(dataPath, username + ".txt");
+            File.Delete(path);
         }
 
         public bool CheckUser(string username)
         {
-            string path = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username;
-            return Directory.Exists(path);
+            string path = Path.Combine(dataPath,username + ".txt");
+            return File.Exists(path);
         }
 
         public string Identify(string username, string password)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
+            User user = User.GetInfo(username, dataPath);
+            if (user.Username == username && user.Password == password)
             {
-                if (userInfos["username"] == username && userInfos["password"] == password)
-                {
-                    return userInfos["type"];
-                }
-                else
-                {
-                    return null;
-                }
+                return user.AccountType;
             }
             return null;
         }
-
 
         public void ModifyType(string username, string type)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
-            {
-                StreamWriter stream = new StreamWriter(@fileUser);
-
-                string line = userInfos["username"] + " " + userInfos["password"] + " " + type;
-                stream.Write(line);
-            }
+            User.ModifyType(User.Read(username, dataPath), dataPath, type);
         }
 
+        public User SetUser(string username)
+        {
+            return User.Read(username, dataPath);
+        }
         public void ModifyPassword(string username, string password)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> userInfos = GetIdentity(username);
-            if (File.Exists(fileUser) && userInfos != null)
-            {
-                StreamWriter stream = new StreamWriter(@fileUser);
-
-                string line = userInfos["username"] + " " + password +" " + userInfos["type"];
-                stream.Write(line);
-            }
+            User.ModifyPassword(User.Read(username, dataPath), dataPath, password);
         }
 
-        private Dictionary<string, string> GetIdentity(string username)
+        public ServerStatus Status { get { return _status; } }
+
+        public string GetAllInformations(string username)
         {
-            string fileUser = Directory.GetCurrentDirectory().ToString() + "\\Users\\" + username + "\\Informations.txt";
-            Dictionary<string, string> identity = new Dictionary<string, string>();
-            if (File.Exists(fileUser))
-            {
-                StreamReader reader = new StreamReader(@fileUser);
-
-                string infos = reader.ReadLine();
-                identity.Add("username", infos.Trim().Substring(0, infos.IndexOf(" ")));
-                identity.Add("password", infos.Trim().Substring(identity["username"].Length).Trim().Substring(0, infos.IndexOf(" ")));
-                identity.Add("type", infos.Trim().Substring(infos.LastIndexOf(" ")));
-                return identity;
-            }
-            return null;
+            return User.GetAllInformations(username, dataPath);
         }
 
+        public bool CheckAddress(string address)
+        {
+            return User.CheckAddress(address, dataPath);
+        }
+
+        public bool CheckAddressBelonging(string username, string belongAddress)
+        {
+            return User.CheckAddressBelonging(username, belongAddress, dataPath);
+        }
+
+        public bool CheckSpammer(string username, string userAddress, string blacklistedAddress)
+        {
+            return User.CheckSpammer(username, userAddress, blacklistedAddress, dataPath);
+        }
+
+        public MailAddressCollection CheckAllSpammer(MailAddressCollection recipientAddress, string sender)
+        {
+            MailAddressCollection blacklister = new MailAddressCollection();
+            blacklister = User.CheckSpammer(recipientAddress, sender, dataPath);
+            return blacklister;
+        }
         #endregion
+
     }
 }
