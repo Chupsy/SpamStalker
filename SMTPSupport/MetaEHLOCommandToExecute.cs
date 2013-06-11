@@ -36,15 +36,12 @@ namespace SMTPSupport
                 session.EnableMetaSession();
                 client.EnableMetaClient();
             }
-
-            string typeOfAccount = session.MetaSession.MetaAPI.Identify(_username, _password);
-            if( typeOfAccount != null)
+            session.MetaSession.User = session.MetaAPI.FindUser(_username);
+            if( session.MetaSession.User != null && session.MetaSession.User.Username == _username && session.MetaSession.User.Password == _password)
             {
                 client.SendError(ErrorCode.Ok);
-                session.MetaSession.UserName = _username;
-                session.MetaSession.TypeOfAccount = typeOfAccount;
                 session.Initialize("FakeSMTP");
-                if (session.MetaSession.TypeOfAccount == "admin")
+                if (session.MetaSession.User.AccountType == "admin")
                 {
                     client.EnableAdminCommands();
                     

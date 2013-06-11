@@ -20,7 +20,7 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.MetaSession.MetaAPI.CheckAddress(_newAddress) == true)
+            if (session.MetaSession.MetaAPI.FindUserAddress(_newAddress) == null)
             {
                 client.SendError(ErrorCode.AddressUsed);
                 return;
@@ -28,7 +28,8 @@ namespace SMTPSupport
             client.SendError(ErrorCode.GetDescription);
             _description = client.Meta.ReadLine();
             client.SendError(ErrorCode.Ok);
-            session.MetaSession.MetaAPI.AddAddress(session.MetaSession.UserName, _newAddress, _relayAddress, _description);
+            session.MetaSession.User.AddAddress( _newAddress, _relayAddress, _description);
+            session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
         }
 
     }

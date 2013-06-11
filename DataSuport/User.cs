@@ -145,8 +145,37 @@ namespace DataSupport
         }
 
 
+        public bool CheckSpammer(string blackListFrom, string blacklistedAddress)
+        {
+            foreach (Address a in Addresses)
+            {
+                if (a.SubscriptionAddress == blackListFrom)
+                {
+                    foreach (BlackEmailAddress b in a.Blacklist)
+                    {
+                        if (b.Address == blacklistedAddress)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
+        }
 
+        public void AddBlacklistAddress(string blacklistFrom, string addressToBlacklist)
+        {
+            foreach (Address a in Addresses)
+            {
 
+                if (a.SubscriptionAddress == blacklistFrom)
+                {
+                    a.Blacklist.Add(new BlackEmailAddress(addressToBlacklist, false));
+                    break;
+                }
+            }
+        }
 
         public static bool CreateUser(string username, string password, string newAdress, string AccountType, string path)
         {
@@ -187,20 +216,7 @@ namespace DataSupport
             else return true;
         }
 
-        public static User AddBlacklist(string username, string blacklistFrom, string addressToBlacklist, string datapath)
-        {
-            User user = Read(username, datapath);
-            foreach (Address a in user.Addresses)
-            {
 
-                if (a.SubscriptionAddress.Address == blacklistFrom)
-                {
-                    a.AddressBlacklist.list.Add(new BlackEmailAddress(addressToBlacklist, false));
-                    break;
-                }
-            }
-            return user;
-        }
 
         public static User ModifBlacklistedAddress(string username, string blacklistFrom, string addressToModify, string datapath, bool newStatus)
         {
@@ -219,26 +235,6 @@ namespace DataSupport
                 }
             }
             return u;
-        }
-
-        public static bool CheckSpammer(string username, string blackListFrom, string blacklistedAddress, string dataPath)
-        {
-            User User = Read(username, dataPath);
-            foreach (Address a in User.Addresses)
-            {
-                if (a.SubscriptionAddress.Address == blackListFrom)
-                {
-                    foreach (BlackEmailAddress b in a.AddressBlacklist.list)
-                    {
-                        if (b.Address == blacklistedAddress)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-            return false;
         }
 
         public static User RemoveBlacklistedAdress(string username, string blackListFrom, string addressToRemove, string datapath)
@@ -288,80 +284,7 @@ namespace DataSupport
             return User;
         }
 
-        public static User GetData(User user, string path)
-        {
-            string fileUser = Path.Combine(path, user._username + ".txt");
-            EmailAddress mailUser;
-            Description description;
-            RelayAddress relayAddress;
-            List<BlackEmailAddress> blacklist;
-            List<Address> data = new List<Address>();
-
-
-            if (File.Exists(fileUser))
-            {
-
-                string[] userData = File.ReadAllLines(fileUser);
-                for (int i = 3; i < userData.Length; i++)
-                {
-                    if (userData[i] != null && userData[i].Trim().StartsWith("address"))
-                    {
-                        mailUser = new EmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                        i++;
-                        if (userData[i] != null && userData[i].Trim().StartsWith("description"))
-                        {
-                            description = new Description(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                            i++;
-
-                            if (userData[i] != null && userData[i].Trim().StartsWith("relay address"))
-                            {
-                                relayAddress = new RelayAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim());
-                                i++;
-
-                                if (userData[i] != null && userData[i].Trim().StartsWith("blacklist"))
-                                {
-                                    blacklist = new List<BlackEmailAddress>();
-
-                                    while (i < userData.Length && userData[i] != "")
-                                    {
-
-                                        if (userData[i].Trim().StartsWith("ignore"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
-                                        }
-                                        else if (userData[i].Trim().StartsWith("fuck"))
-                                        {
-                                            blacklist.Add(new BlackEmailAddress(userData[i].Trim().Substring(userData[i].IndexOf(":") + 1).Trim(), false));
-                                        }
-                                        i++;
-                                    }
-                                    data.Add(new Address(mailUser, new Blacklist(blacklist), description, relayAddress));
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            user.Addresses = data;
-            return user;
-        }
-
+      
         public static User ModifyType(User user, string path, string type)
         {
             if (type == "admin" || type == "user")

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -13,6 +14,7 @@ namespace SMTPSupport
         readonly IMetaCommandAPI _metaAPI;
         string _userName;
         string _typeOfAccount;
+        User _currentUser;
 
         internal SMTPMetaSession( SMTPSession session, IMetaCommandAPI metaAPI )
         {
@@ -20,6 +22,11 @@ namespace SMTPSupport
             _metaAPI = metaAPI;
         }
 
+        public User User
+        {
+            get { return _currentUser; }
+            set { _currentUser = value; }
+        }
         public string UserName
         {
             get { return _userName; }

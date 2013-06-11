@@ -33,14 +33,19 @@ namespace FakeSmtp
            
         }
 
-        User FindUser(string username)
+        public User FindUser(string username)
         {
             return _server.FindUser(username);
         }
 
-        Address FindUserAddress(string subscriptionAddress)
+        public Address FindUserAddress(string subscriptionAddress)
         {
+            return _server.FindUserAddress(subscriptionAddress);
+        }
 
+        public void WriteUser(User u)
+        {
+            _server.Write(u);
         }
         
 

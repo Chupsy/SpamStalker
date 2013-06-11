@@ -18,7 +18,13 @@ namespace FakeSmtp
         TcpListener _listener;
         ServerStatus _status;
         string dataPath;
-        readonly List<User> _users;
+        List<User> _users;
+
+        public List<User> Users
+        {
+            get { return _users; }
+            set { _users = value; }
+        }
 
         [STAThread]
         static void Main(string[] args)
@@ -29,6 +35,8 @@ namespace FakeSmtp
 
         public void RunServer()
         {
+            _users = new List<User>();
+
             dataPath = ConfigurationManager.AppSettings["dataDirectory"];
             dataPath = Path.Combine( dataPath, "User\\");
             IPAddress ipadress;
@@ -49,7 +57,13 @@ namespace FakeSmtp
             #endregion
 
             #region User Load
-            Directory.GetFiles(
+            List<string> usernames = GetUserName(Directory.GetFiles(dataPath));
+            
+            foreach (string u in usernames)
+            {
+                _users.Add(User.Read(u, dataPath).User);
+            }
+
             #endregion
 
             _listener = new TcpListener(ipadress, receptionPort);
@@ -83,6 +97,8 @@ namespace FakeSmtp
             foreach (Thread t in allThreads) t.Join();
 
         }
+
+
 
         #region MetaCommandAPI Functions
         public void ShutDown()
@@ -210,11 +226,42 @@ namespace FakeSmtp
         }
 
 
+        
+        public Address FindUserAddress(string subscriptionAddress)
+        {
+            foreach (User u in _users)
+            {
+                foreach (Address a in u.Addresses)
+                {
+                    if (a.SubscriptionAddress == subscriptionAddress) return a;
+                }
+            }
+            return null;
+        }
+
 
 
         public User FindUser(string username)
         {
             return User.Read(username, dataPath).User;
+        }
+
+        private List<string> GetUserName(string[] usernames)
+        {
+            List<string> users = new List<string>();
+            string u;
+            foreach (string s in usernames)
+            {
+                u = s.Trim().Substring(s.Trim().LastIndexOf('/'));
+                u = u.Trim().Substring(0, u.Trim().LastIndexOf('.'));
+                users.Add(u);
+            }
+            return users;
+        }
+
+        public void Write(User u)
+        {
+            u.Write(dataPath);
         }
     }
 }

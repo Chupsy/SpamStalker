@@ -19,14 +19,15 @@ namespace SMTPSupport
 
         public override void Execute( SMTPSession session, SMTPCallingClient client )
         {
-            if (session.MetaSession.MetaAPI.CheckAddressBelonging(_referenceAddress, session.MetaSession.UserName) == true)
+            if (session.MetaSession.MetaAPI.FindUserAddress(_referenceAddress).User == session.MetaSession.User)
             {
-                if(session.MetaSession.MetaAPI.CheckSpammer(session.MetaSession.UserName, _referenceAddress, _blacklistedAddress))
+                if(session.MetaSession.User.CheckSpammer(_referenceAddress, _blacklistedAddress))
                 {
                     client.SendError(ErrorCode.AddressAlreadyBlacklisted);
                     return;
                 }
-                session.MetaSession.MetaAPI.AddBlacklistAddress(session.MetaSession.UserName, _referenceAddress, _blacklistedAddress);
+                session.MetaSession.User.AddBlacklistAddress( _referenceAddress, _blacklistedAddress);
+                session.MetaSession.MetaAPI.WriteUser(session.MetaSession.User);
                 client.SendError(ErrorCode.Ok);
                 return;
             }

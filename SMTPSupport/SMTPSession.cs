@@ -99,7 +99,7 @@ namespace SMTPSupport
         internal void EnableMetaSession()
         {
             Debug.Assert( _meta == null, "EnableMetaSession has already been called." );
-            _meta = new SMTPMetaSession( this, _metaAPI );
+            _meta = new SMTPMetaSession(this, _metaAPI);
         }
 
         public bool HasMetaSession
