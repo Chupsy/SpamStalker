@@ -30,6 +30,7 @@ namespace ClientWindow
         public Form1(Client client, User user, string username)
         {
             InitializeComponent();
+            this.MaximumSize = this.MinimumSize = this.Size;
             _username = username;
             _client = client;
             _user = user;
@@ -131,7 +132,6 @@ namespace ClientWindow
             BindingList<string> binding = new BindingList<string>(_blackList);
             listBox1.DataSource = binding;
             LoadFuckIndicator();
-
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -162,31 +162,44 @@ namespace ClientWindow
 
         private void button5_Click(object sender, EventArgs e)
         {
-            FuckCommand _fuckCommand = new FuckCommand(_user, _client, _user.Addresses[_selectedindex].SubscriptionAddress, _user.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address, _session);
-            if (_fuckCommand.Execute())
+            if (_blackList.Count != 0)
             {
+                FuckCommand _fuckCommand = new FuckCommand(_user, _client, _user.Addresses[_selectedindex].SubscriptionAddress, _user.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address, _session);
+                if (_fuckCommand.Execute())
+                {
                     _session.User.Username = _username;
                     _user = _session.User;
 
+                }
+                LoadAddresses();
+                LoadBlacklist();
+
             }
-            LoadAddresses();
-            LoadBlacklist();
-
-
+            else
+            {
+                MessageBox.Show("No blacklisted email address selected");
+            }
 
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            UnFuckCommand _unFuckCommand = new UnFuckCommand(_user, _client, _user.Addresses[_selectedindex].SubscriptionAddress, _user.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address, _session);
-            if (_unFuckCommand.Execute())
+            if (_blackList.Count != 0)
             {
-                _session.User.Username = _username;
-                _user = _session.User;
+                UnFuckCommand _unFuckCommand = new UnFuckCommand(_user, _client, _user.Addresses[_selectedindex].SubscriptionAddress, _user.Addresses[_selectedindex].Blacklist[_selectedblackadrs].Address, _session);
+                if (_unFuckCommand.Execute())
+                {
+                    _session.User.Username = _username;
+                    _user = _session.User;
 
+                }
+                LoadAddresses();
+                LoadBlacklist();
             }
-            LoadAddresses();
-            LoadBlacklist();
+            else
+            {
+                MessageBox.Show("No blacklisted email address selected");
+            }
         }
 
         private void AddBlackAddress_Click(object sender, EventArgs e)

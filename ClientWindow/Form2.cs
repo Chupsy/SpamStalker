@@ -21,6 +21,7 @@ namespace ClientWindow
         public Form2(Client client, Session session)
         {
             InitializeComponent();
+            this.MaximumSize = this.MinimumSize = this.Size;
             _client = client;
             _session = session;
         }

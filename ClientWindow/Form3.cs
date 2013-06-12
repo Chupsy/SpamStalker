@@ -25,6 +25,7 @@ namespace ClientWindow
             _session = session;
             _worked = false;
             InitializeComponent();
+            this.MaximumSize = this.MinimumSize = this.Size;
         }
 
         private void button1_Click(object sender, EventArgs e)
