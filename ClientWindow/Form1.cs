@@ -30,6 +30,7 @@ namespace ClientWindow
         public Form1(Client client, User user, string username)
         {
             InitializeComponent();
+            this.MaximumSize = this.MinimumSize = this.Size;
             _username = username;
             _client = client;
             _user = user;
