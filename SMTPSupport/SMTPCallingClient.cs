@@ -33,7 +33,8 @@ namespace SMTPSupport
         AddressAlreadyBlacklisted = 880,
         AddressNotBlacklisted = 881,
         GetDescription = 720,
-        NeedOneAddress = 832
+        NeedOneAddress = 832,
+         
     }
 
     public class SMTPCallingClient

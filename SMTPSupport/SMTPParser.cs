@@ -44,7 +44,6 @@ namespace SMTPSupport
 
         public void EnableMetaCommands()
         {
-            RegisterCommand(_commands, new MetaCLOSECommand());
             RegisterCommand(_commands, new MetaGETACommand());
             RegisterCommand(_commands, new MetaADDAddressCommand());
             RegisterCommand(_commands, new MetaRMVAddressCommand());
@@ -56,6 +55,7 @@ namespace SMTPSupport
 
         public void EnableAdminCommands()
         {
+            RegisterCommand(_commands, new MetaCLOSECommand());
             RegisterCommand(_commands, new MetaCREUserCommand());
             RegisterCommand(_commands, new MetaDELUserCommand());
             RegisterCommand(_commands, new MetaMODUserCommand());
