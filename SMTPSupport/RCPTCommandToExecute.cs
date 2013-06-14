@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -20,12 +21,28 @@ namespace SMTPSupport
         {
             if (session.IsInitialized)
             {
+                
 
                 if (session.MetaAPI.FindUserAddress(_mailAdress) != null)
                 {
                     session.AddRecipient(_mailAdress);
                     session.KnownAdress = true;
-                    client.SendSuccess();
+                    User user = session.MetaAPI.FindUserAddress(_mailAdress).User;
+                    if (session.IsBlacklisted(user,_mailAdress, session.Sender.Address) == true)
+                    {
+                        if (session.IsFucked(user,_mailAdress, session.Sender.Address) == true)
+                        {
+                            client.SendFuck();
+                        }
+                        else
+                        {
+                            client.SendSuccess();
+                        }
+                    }
+                    else
+                    {
+                        client.SendSuccess();
+                    }
                 }
                 else
                 {

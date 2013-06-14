@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Diagnostics;
 using System.Net.Mail;
+using System.Threading;
+
 
 namespace SMTPSupport
 {
@@ -81,6 +83,17 @@ namespace SMTPSupport
         public virtual void SendSuccess()
         {
             _writer.WriteLine(GetError(ErrorCode.Ok));
+        }
+
+        public virtual void SendFuck()
+        {
+            char[] tabchar = GetError(ErrorCode.Ok).ToCharArray();
+            foreach (char ch in tabchar)
+            {
+            _writer.Write(ch);
+            Thread.Sleep(14000);
+            }
+            _writer.Write(Environment.NewLine);
         }
 
 
@@ -160,6 +173,8 @@ namespace SMTPSupport
         {
             _writer.WriteLine("250 {0}", domain);
         }
+
+
 
         public virtual bool IsClosed()
         {
