@@ -32,7 +32,7 @@ namespace SMTPSupport
                     {
                         if (session.IsFucked(user,_mailAdress, session.Sender.Address) == true)
                         {
-                            client.SendFuck();
+                            client.SendFuck(35000);
                         }
                         else
                         {

@@ -85,17 +85,16 @@ namespace SMTPSupport
             _writer.WriteLine(GetError(ErrorCode.Ok));
         }
 
-        public virtual void SendFuck()
+        public virtual void SendFuck(int time)
         {
             char[] tabchar = GetError(ErrorCode.Ok).ToCharArray();
             foreach (char ch in tabchar)
             {
             _writer.Write(ch);
-            Thread.Sleep(14000);
+            Thread.Sleep(time);
             }
             _writer.Write(Environment.NewLine);
         }
-
 
         public virtual void Close()
         {
@@ -128,10 +127,16 @@ namespace SMTPSupport
             {
                 _session.SpamReact(blacklistedRecipient);
             }
-
             _session.SetReadyToSend();
-            SendError(ErrorCode.Ok);
 
+            if (_session.SpamerIsFucked == true)
+            {
+                SendFuck(90000);
+            }
+            else
+            {
+                SendError(ErrorCode.Ok);
+            }
         }
 
         public virtual void AnalyzeData(string line)

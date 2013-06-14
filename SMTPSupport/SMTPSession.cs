@@ -19,11 +19,18 @@ namespace SMTPSupport
         bool _knownAdress;
         SMTPMetaSession _meta;
         MailAddressCollection _mailAdressBlacklist;
+        bool _spamerIsFucked;
 
-        public SMTPSession( IMetaCommandAPI metaAPI )
+        public SMTPSession(IMetaCommandAPI metaAPI)
         {
             _metaAPI = metaAPI;
             _knownAdress = false;
+        }
+
+        public bool SpamerIsFucked
+        {
+            get { return _spamerIsFucked; }
+            set { _spamerIsFucked = value; }
         }
 
         public IMetaCommandAPI MetaAPI
@@ -44,13 +51,13 @@ namespace SMTPSupport
             get { return _sender; }
         }
 
-        public void Initialize( string domainName )
+        public void Initialize(string domainName)
         {
             if (domainName == null) throw new ArgumentNullException("domainName");
             _domainName = domainName;
         }
 
-        public void AddRecipient( string mailAddress )
+        public void AddRecipient(string mailAddress)
         {
             mail.To.Add(mailAddress);
         }
@@ -65,14 +72,14 @@ namespace SMTPSupport
         {
             _mailAdressBlacklist = mailAdressBlacklist;
         }
-    
+
         public void Clear()
         {
-           
+
             mail.To.Clear();
             _sender = null;
         }
-        
+
         public bool IsReady()
         {
             return _ready;
@@ -101,7 +108,7 @@ namespace SMTPSupport
 
         internal void EnableMetaSession()
         {
-            Debug.Assert( _meta == null, "EnableMetaSession has already been called." );
+            Debug.Assert(_meta == null, "EnableMetaSession has already been called.");
             _meta = new SMTPMetaSession(this, _metaAPI);
         }
 
@@ -127,7 +134,6 @@ namespace SMTPSupport
                         else return false;
                     }
                 }
-                else return false;
             }
             return false;
         }
@@ -140,11 +146,14 @@ namespace SMTPSupport
                 {
                     foreach (BlackEmailAddress blackMail in b.Blacklist)
                     {
-                        if (blackMail.IsFucking == true) return true;
+                        if (blackMail.IsFucking == true)
+                        {
+                            _spamerIsFucked = true;
+                            return true;
+                        }
                         else if (blackMail.IsFucking == false) return false;
                     }
                 }
-                else return false;
             }
             return false;
         }
