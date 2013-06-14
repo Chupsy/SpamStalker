@@ -34,15 +34,6 @@ namespace FakeSmtp
 
         public void ResetUsers() { _server.ResetUsers(); }
 
-        public bool IsBlacklisted(User user, string receptionMail, string mailFrom)
-        {
-            return _server.IsBlacklisted(user, receptionMail, mailFrom);
-        }
-
-        public bool IsFucked()
-        {
-
-        }
 
         public User FindUser(string username)
         {
