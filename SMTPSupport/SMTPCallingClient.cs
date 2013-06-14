@@ -86,6 +86,10 @@ namespace SMTPSupport
 
         public virtual void Close()
         {
+            if (!_session.IsReady())
+            {
+                SendError(ErrorCode.AddressUnknown);
+            }
             _writer.WriteLine(GetError(ErrorCode.Closing));
             _clientTcp.Close();
             _closed = true;
@@ -113,16 +117,8 @@ namespace SMTPSupport
             }
 
             _session.SetReadyToSend();
-            if (!_session.IsReady())
-            {
-                SendError(ErrorCode.AddressUnknown);
-            }
-            else
-            {
-                SendError(ErrorCode.Closing);
-            }
-            Close();
-            _closed = true;
+            SendError(ErrorCode.Ok);
+
         }
 
         public virtual void AnalyzeData(string line)
@@ -131,6 +127,10 @@ namespace SMTPSupport
             {
                 _session.mail.Subject = line.Substring("Subject: ".Length);
                 return;
+            }
+            else if (line.Contains(": "))
+            {
+                _session.mail.Headers.Add(line.Substring(0, line.IndexOf(":")), line.Substring(line.IndexOf(":")+1));
             }
             else
             {
