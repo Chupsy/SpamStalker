@@ -5,7 +5,11 @@
     <add key="receptionPort" value="85"/>
     <add key="hostAdressDestination" value="10.8.111.251"/>
     <add key="destinationPort" value="25"/>
+<<<<<<< HEAD
     <add key="dataDirectory" value="C:\Users\Yopif\Travail\PI"/>
+=======
+    <add key="dataDirectory" value="C:\Users\martin\Documents\INTECH\semestre 3\test spam"/>
+>>>>>>> origin/Develop
   </appSettings>
 <startup>
   <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5"/>

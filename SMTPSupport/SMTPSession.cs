@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Diagnostics;
+using DataSupport;
 
 namespace SMTPSupport
 {
@@ -67,6 +68,7 @@ namespace SMTPSupport
     
         public void Clear()
         {
+           
             mail.To.Clear();
             _sender = null;
         }
@@ -111,6 +113,40 @@ namespace SMTPSupport
         public SMTPMetaSession MetaSession
         {
             get { return _meta; }
+        }
+
+        internal bool IsBlacklisted(User user, string receptionAddress, string mailFrom)
+        {
+            foreach (Address b in user.Addresses)
+            {
+                if (b.SubscriptionAddress == receptionAddress)
+                {
+                    foreach (BlackEmailAddress blackMail in b.Blacklist)
+                    {
+                        if (blackMail.Address == mailFrom) return true;
+                        else return false;
+                    }
+                }
+                else return false;
+            }
+            return false;
+        }
+
+        internal bool IsFucked(User user, string receptionAddress, string mailFrom)
+        {
+            foreach (Address b in user.Addresses)
+            {
+                if (b.SubscriptionAddress == receptionAddress)
+                {
+                    foreach (BlackEmailAddress blackMail in b.Blacklist)
+                    {
+                        if (blackMail.IsFucking == true) return true;
+                        else if (blackMail.IsFucking == false) return false;
+                    }
+                }
+                else return false;
+            }
+            return false;
         }
 
     }
