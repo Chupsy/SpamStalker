@@ -24,7 +24,7 @@ namespace SMTPSupport
         {
             if(!session.MetaSession.MetaAPI.CheckUserExist(_username)) 
             {
-                client.SendError(ErrorCode.Abort);
+                client.SendError(ErrorCode.AddressUnknown);
                 return;
             }
                 User u = session.MetaSession.MetaAPI.FindUser(_username);

@@ -67,6 +67,7 @@ namespace SMTPSupport
     
         public void Clear()
         {
+           
             mail.To.Clear();
             _sender = null;
         }
